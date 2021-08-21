@@ -2,14 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://eugenesu0515.github.io/2021/08/21/rabbitmq-install/</loc>
+    <loc>https://eugenesu0515.github.io/about/index.html</loc>
     
     <lastmod>2021-08-21</lastmod>
     
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/about/index.html</loc>
+    <loc>https://eugenesu0515.github.io/2021/08/21/rabbitmq-install/</loc>
     
     <lastmod>2021-08-21</lastmod>
     
@@ -137,34 +137,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
-    <lastmod>2021-08-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/cap/</loc>
-    <lastmod>2021-08-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/rabbitmq/</loc>
-    <lastmod>2021-08-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
-    <lastmod>2021-08-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/tags/socket/</loc>
     <lastmod>2021-08-21</lastmod>
     <changefreq>daily</changefreq>
@@ -179,7 +151,35 @@
   </url>
   
   <url>
+    <loc>https://eugenesu0515.github.io/tags/rabbitmq/</loc>
+    <lastmod>2021-08-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/tags/message-queue/</loc>
+    <lastmod>2021-08-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/cap/</loc>
+    <lastmod>2021-08-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
+    <lastmod>2021-08-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
     <lastmod>2021-08-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
