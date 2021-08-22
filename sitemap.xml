@@ -44,14 +44,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/package.json</loc>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
     
     <lastmod>2021-08-20</lastmod>
     
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/package.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -137,13 +137,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
-    <lastmod>2021-08-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/tags/cap/</loc>
     <lastmod>2021-08-22</lastmod>
     <changefreq>daily</changefreq>
@@ -159,6 +152,13 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
+    <lastmod>2021-08-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
     <lastmod>2021-08-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
