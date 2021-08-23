@@ -22,25 +22,21 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前提情要筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用MySQL Tutorial所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。">
+  <meta name="description" content="前提情要筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含sql log、ap log以及error log，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的logging框架，dotnet core中也不乏候選套件:NLog、SeriLog、Log4net等等，筆者選擇NL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[MySQL]範例資料庫設定">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/index.html">
+<meta property="og:title" content="[DotnetCore]NLog使用">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/23/nlog/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
-<meta property="og:description" content="前提情要筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用MySQL Tutorial所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。">
+<meta property="og:description" content="前提情要筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含sql log、ap log以及error log，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的logging框架，dotnet core中也不乏候選套件:NLog、SeriLog、Log4net等等，筆者選擇NL">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/ShowDatabases.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/ChooseMySQL.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/SettingConnection.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/classicmodels-table.png">
-<meta property="article:published_time" content="2021-08-23T02:06:01.000Z">
-<meta property="article:modified_time" content="2021-08-23T02:43:26.176Z">
+<meta property="article:published_time" content="2021-08-23T08:49:43.000Z">
+<meta property="article:modified_time" content="2021-08-23T09:01:50.653Z">
 <meta property="article:author" content="Eugene Su">
-<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="dotnetcore">
+<meta property="article:tag" content="nlog">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/ShowDatabases.png">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/23/nlog/">
 
 
 <script id="page-configurations">
@@ -53,7 +49,7 @@
   };
 </script>
 
-  <title>[MySQL]範例資料庫設定 | Eugene's Blog</title>
+  <title>[DotnetCore]NLog使用 | Eugene's Blog</title>
   
 
 
@@ -202,7 +198,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/23/nlog/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -215,7 +211,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [MySQL]範例資料庫設定
+          [DotnetCore]NLog使用
         </h1>
 
         <div class="post-meta">
@@ -226,7 +222,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-08-23 10:06:01 / 修改時間：10:43:26" itemprop="dateCreated datePublished" datetime="2021-08-23T10:06:01+08:00">2021-08-23</time>
+              <time title="創建時間：2021-08-23 16:49:43 / 修改時間：17:01:50" itemprop="dateCreated datePublished" datetime="2021-08-23T16:49:43+08:00">2021-08-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,7 +230,7 @@
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
                 </span>
             </span>
 
@@ -250,13 +246,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>531</span>
+              <span>2.6k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>1 分鐘</span>
+              <span>5 分鐘</span>
             </span>
 
         </div>
@@ -268,35 +264,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含<code>sql log</code>、<code>ap log</code>以及<code>error log</code>，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的<code>logging框架</code>，<code>dotnet core</code>中也不乏候選套件:<code>NLog</code>、<code>SeriLog</code>、<code>Log4net</code>等等，筆者選擇NLog當作主要Logging機制的底層框架。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
-<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝NLog相關套件"><a href="#安裝NLog相關套件" class="headerlink" title="安裝NLog相關套件"></a>安裝NLog相關套件</h2><p>NLog，屬眾多Log套件其中一種，主要搭配一個nlog.config，依照其設定執行Log作業，因此主要安裝套件如下：</p>
+<ul>
+<li>NLog</li>
+<li>NLog.Config</li>
+<li>NLog.AspNetCore</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package NLog</span><br><span class="line">dotnet add package NLog.Config</span><br><span class="line">dotnet add package NLog.AspNetCore</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>以下皆為已進入MySQL cli後進行</p>
-</blockquote>
-<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+<h2 id="NLog-Config設置"><a href="#NLog-Config設置" class="headerlink" title="NLog.Config設置"></a>NLog.Config設置</h2><p>安裝完成後編輯nlog.config檔案，記得將其屬性中的Copy To Output Directory選為Copy always選項。主要有兩個區塊要去設定：targets及rules；targets部份則設定輸出形式，可以設定多個；rules部份則設定套用規則。</p>
+<p>筆者這邊簡單舉個例子，假設targets部份有兩個輸出形式：檔案及資料庫，rules套用規則部份，我們可以這樣設定，Info等級以上的輸出於檔案中，Error等級以上才需輸出於資料庫中，意即重要錯誤資訊再塞到資料庫中即可，畢竟資料庫空間比較值錢。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">autoReload</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">throwExceptions</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">internalLogLevel</span>=<span class="string">&quot;Off&quot;</span> <span class="attr">internalLogFile</span>=<span class="string">&quot;c:\temp\nlog-internal.log&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- optional, add some variables</span></span><br><span class="line"><span class="comment">  https://github.com/nlog/NLog/wiki/Configuration-file#variables</span></span><br><span class="line"><span class="comment">  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">variable</span> <span class="attr">name</span>=<span class="string">&quot;myvar&quot;</span> <span class="attr">value</span>=<span class="string">&quot;myvalue&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  See https://github.com/nlog/nlog/wiki/Configuration-file</span></span><br><span class="line"><span class="comment">  for information on customizing logging rules and outputs.</span></span><br><span class="line"><span class="comment">   --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">targets</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">xsi:type</span>=<span class="string">&quot;File&quot;</span> <span class="attr">name</span>=<span class="string">&quot;f&quot;</span> <span class="attr">fileName</span>=<span class="string">&quot;$&#123;basedir&#125;/logs/$&#123;shortdate&#125;.log&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">layout</span>=<span class="string">&quot;$&#123;longdate&#125; $&#123;uppercase:$&#123;level&#125;&#125; $&#123;message&#125;&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">targets</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- add your logging rules here --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;f&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+<h2 id="NLog套用"><a href="#NLog套用" class="headerlink" title="NLog套用"></a>NLog套用</h2><p>將NLog初始化於Program.cs中</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog.Web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> &#123;</span><br><span class="line">			<span class="comment">// Confi註冊</span></span><br><span class="line">      NLogBuilder.ConfigureNLog(<span class="string">&quot;NLog.config&quot;</span>).GetCurrentClassLogger();</span><br><span class="line">      CreateHostBuilder(args).Build().Run();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">      Host.CreateDefaultBuilder(args)</span><br><span class="line">      .ConfigureWebHostDefaults(webBuilder =&gt; &#123;</span><br><span class="line">          webBuilder.UseStartup&lt;Startup&gt;();</span><br><span class="line">      &#125;)</span><br><span class="line">      .UseNLog();<span class="comment">// NLog註冊</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
+<h2 id="Client端套用"><a href="#Client端套用" class="headerlink" title="Client端套用"></a>Client端套用</h2><p>使用NLog，只要於每個Class最上方宣告</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br></pre></td></tr></table></figure>
 
-<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a target="_blank" rel="noopener" href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
-<ol>
-<li><p>資料庫選擇MySql</p>
-<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
-<li><p>設定連線字串並測試連線</p>
-<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
-<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
-<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
-</ol>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
-<p>參考<br><a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>使用NLog超級容易，生態圈也很豐富，要以Database形式存紀錄，或者寄信通知紀錄等等皆有現成的套件可以使用，筆者覺得說它是Loggin入門套件一點也不為過。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-5">https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-5</a></li>
+</ul>
 
     </div>
 
@@ -306,7 +299,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
+              <a href="/tags/nlog/" rel="tag"># nlog</a>
           </div>
 
         
@@ -315,12 +309,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/23/mysql-install/" rel="prev" title="[MySQL]安裝與設定">
-      <i class="fa fa-chevron-left"></i> [MySQL]安裝與設定
+    <a href="/2021/08/23/mysql-sample-db/" rel="prev" title="[MySQL]範例資料庫設定">
+      <i class="fa fa-chevron-left"></i> [MySQL]範例資料庫設定
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/08/23/nlog/" rel="next" title="[DotnetCore]NLog使用">
-      [DotnetCore]NLog使用 <i class="fa fa-chevron-right"></i>
+    <a href="/2021/08/23/nlog-loggermanager/" rel="next" title="[DotnetCore]NLog-ILoggerManager設計">
+      [DotnetCore]NLog-ILoggerManager設計 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -381,7 +375,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BC%89%E7%AF%84%E4%BE%8B%E8%B3%87%E6%96%99%E5%BA%AB%E7%94%A2%E7%94%9F%E8%AA%9E%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">下載範例資料庫產生語法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%B7%E8%A1%8C%E5%BB%BA%E7%AB%8B%E7%AF%84%E4%BE%8B%E8%B3%87%E6%96%99%E5%BA%AB%E8%AA%9E%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">執行建立範例資料庫語法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8GUI%E8%BB%9F%E9%AB%94%E8%A7%80%E7%9C%8B%E8%B3%87%E6%96%99%E5%BA%AB"><span class="nav-number">2.3.</span> <span class="nav-text">使用GUI軟體觀看資料庫</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9DNLog%E7%9B%B8%E9%97%9C%E5%A5%97%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">安裝NLog相關套件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NLog-Config%E8%A8%AD%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">NLog.Config設置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NLog%E5%A5%97%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">NLog套用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Client%E7%AB%AF%E5%A5%97%E7%94%A8"><span class="nav-number">2.4.</span> <span class="nav-text">Client端套用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -716,7 +710,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'eugenesu0515.github.io',
       owner       : 'eugenesu0515',
       admin       : ['eugenesu0515'],
-      id          : '617ea51c8d3adad0ef065d762899c947',
+      id          : '16789890b74b751ba8fdb4d04d5e8caf',
         language: 'zh-TW',
       distractionFreeMode: true
     });
