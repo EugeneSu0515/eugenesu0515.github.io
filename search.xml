@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>[DotnetCore]ActionFilter實作</title>
-    <url>/2021/08/20/dotnetcore-actionfilter/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者公司因為需要符合資安要求，系統規劃中需要設計留下使用者足跡，筆者這邊第一個想到就是用ActionFilter設計，將Htpp Request對應的相關資訊，存到對應的紀錄表中。</p>
-<span id="more"></span>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="設計系統操作紀錄表"><a href="#設計系統操作紀錄表" class="headerlink" title="設計系統操作紀錄表"></a>設計系統操作紀錄表</h2><p>需要先設計一個存放系統操作紀錄的表</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [dbo].[SysAPLog](</span><br><span class="line">	[LogNo] [<span class="type">bigint</span>] <span class="keyword">IDENTITY</span>(<span class="number">1</span>,<span class="number">1</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[AuditTime] [datetime] <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[HostName] [<span class="type">varchar</span>](<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[HostAddress] [<span class="type">varchar</span>](<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[UserAgent] [<span class="type">varchar</span>](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[FilePath] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[AuditUser] [<span class="type">varchar</span>](<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[LogType] [<span class="type">varchar</span>](<span class="number">30</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo1] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo2] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo3] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo4] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo5] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">CONSTRAINT</span> [PK_SysAPLog] <span class="keyword">PRIMARY</span> KEY CLUSTERED </span><br><span class="line">(</span><br><span class="line">	[LogNo] <span class="keyword">ASC</span></span><br><span class="line">)<span class="keyword">WITH</span> (PAD_INDEX <span class="operator">=</span> OFF, STATISTICS_NORECOMPUTE <span class="operator">=</span> OFF, IGNORE_DUP_KEY <span class="operator">=</span> OFF, ALLOW_ROW_LOCKS <span class="operator">=</span> <span class="keyword">ON</span>, ALLOW_PAGE_LOCKS <span class="operator">=</span> <span class="keyword">ON</span>) <span class="keyword">ON</span> [<span class="keyword">PRIMARY</span>]</span><br><span class="line">) <span class="keyword">ON</span> [<span class="keyword">PRIMARY</span>] TEXTIMAGE_ON [<span class="keyword">PRIMARY</span>]</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
-<h2 id="撰寫ActionFilter"><a href="#撰寫ActionFilter" class="headerlink" title="撰寫ActionFilter"></a>撰寫ActionFilter</h2><p>接著是本文的主軸，設計一個ActionFilter，攔截使用者的Request，並存回Table做紀錄，以便以後追縱用</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">APLogActionFilter</span> : <span class="title">IActionFilter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ISysAPLogService _apLogService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SKActionFilter</span>(<span class="params">ISysAPLogService apLogService</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _apLogService = apLogService;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnActionExecuted</span>(<span class="params">ActionExecutedContext context</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Nothing to do</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnActionExecuting</span>(<span class="params">ActionExecutingContext context</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> action = context.RouteData.Values[<span class="string">&quot;action&quot;</span>].ToString().ToLower();</span><br><span class="line">        <span class="comment">//AuditTime</span></span><br><span class="line">        <span class="comment">//HostName</span></span><br><span class="line">        <span class="comment">//HostAddress</span></span><br><span class="line">        <span class="comment">//UserAgent</span></span><br><span class="line">        <span class="comment">//FilePath(route)</span></span><br><span class="line">        <span class="comment">//AuditUser</span></span><br><span class="line">        <span class="comment">//LogType</span></span><br><span class="line">        <span class="comment">//Memo1~5</span></span><br><span class="line">        <span class="keyword">var</span> apLog = <span class="keyword">new</span> SysAplog()</span><br><span class="line">        &#123;</span><br><span class="line">            AuditTime = DateTime.Now,</span><br><span class="line">            HostName = context.HttpContext.Connection.RemoteIpAddress.ToString(),</span><br><span class="line">            HostAddress = context.HttpContext.Connection.RemoteIpAddress.ToString(),</span><br><span class="line">            UserAgent = context.HttpContext.Request.Headers[<span class="string">&quot;User-Agent&quot;</span>],</span><br><span class="line">            FilePath = <span class="string">$&quot;<span class="subst">&#123;context.RouteData.Values[<span class="string">&quot;controller&quot;</span>]&#125;</span>/<span class="subst">&#123;context.RouteData.Values[<span class="string">&quot;action&quot;</span>]&#125;</span>&quot;</span>,</span><br><span class="line">            AuditUser = context.HttpContext.User.FindFirst(<span class="string">&quot;name&quot;</span>)?.Value ?? <span class="string">&quot;&quot;</span>,</span><br><span class="line">            LogType = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo1 = JsonConvert.SerializeObject(context.ActionArguments.FirstOrDefault().Value),</span><br><span class="line">            Memo2 = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo3 = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo4 = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo5 = <span class="string">&quot;&quot;</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (action != <span class="string">&quot;login&quot;</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _logger.Warn(JsonConvert.SerializeObject(<span class="string">$&quot;<span class="subst">&#123;apLog.FilePath&#125;</span>: <span class="subst">&#123;apLog.Memo1&#125;</span>&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        _apLogService.InsertAPLog(apLog);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="撰寫相關Service"><a href="#撰寫相關Service" class="headerlink" title="撰寫相關Service"></a>撰寫相關Service</h2><p>裡頭有用到「ISysAPLogService 」，參考如下:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ISysAPLogService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">InsertAPLog</span>(<span class="params">SysAplog apLog</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著實作這個Service</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SysAPLogService</span> : <span class="title">ISysAPLogService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">InsertAPLog</span>(<span class="params">SysAplog apLog</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//_db.SysAplogs.Add(apLog);</span></span><br><span class="line">        <span class="comment">//_db.SaveChanges();</span></span><br><span class="line">        <span class="keyword">using</span>(<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_db.Database.GetDbConnection().ConnectionString))</span><br><span class="line">        &#123;</span><br><span class="line">            _conn.Execute(<span class="string">@&quot;INSERT INTO [dbo].[SysAPLog]</span></span><br><span class="line"><span class="string">                    ([AuditTime], [HostName], [HostAddress], [UserAgent], [FilePath], [AuditUser]</span></span><br><span class="line"><span class="string">                    , [LogType], [Memo1], [Memo2], [Memo3], [Memo4], [Memo5])</span></span><br><span class="line"><span class="string">                VALUES</span></span><br><span class="line"><span class="string">                    (@AuditTime, @HostName, @HostAddress, @UserAgent, @FilePath, @AuditUser</span></span><br><span class="line"><span class="string">                    , @LogType, @Memo1,@Memo2, @Memo3, @Memo4, @Memo5)&quot;</span>, apLog);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="引用ActionFilter"><a href="#引用ActionFilter" class="headerlink" title="引用ActionFilter"></a>引用ActionFilter</h2><p>於<code>Startup</code>中注入使用</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">services.AddMvc(options =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    options.Filters.Add&lt;APLogActionFilter&gt;();</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>主要的ActionFilter中有使用到將使用者的<code>Request Data</code>，使用<code>JsonConvert.SerializeObject</code>序列化後轉成字串，切記若<code>Request Data</code>中的<code>get, set</code>會執行過一遍，若其中邏輯有錯，可能會crash掉，筆者就遇到了，因此特別紀錄一下。</p>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>[DotnetCore]Batch檔案執行及追縱</title>
     <url>/2021/08/21/dotnetcore-batch/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放<code>batch file</code>，讓我們方便去執行。</p>
@@ -74,6 +47,33 @@
       <tags>
         <tag>dotnetcore</tag>
         <tag>bat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[DotnetCore]ActionFilter實作</title>
+    <url>/2021/08/20/dotnetcore-actionfilter/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者公司因為需要符合資安要求，系統規劃中需要設計留下使用者足跡，筆者這邊第一個想到就是用ActionFilter設計，將Htpp Request對應的相關資訊，存到對應的紀錄表中。</p>
+<span id="more"></span>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="設計系統操作紀錄表"><a href="#設計系統操作紀錄表" class="headerlink" title="設計系統操作紀錄表"></a>設計系統操作紀錄表</h2><p>需要先設計一個存放系統操作紀錄的表</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [dbo].[SysAPLog](</span><br><span class="line">	[LogNo] [<span class="type">bigint</span>] <span class="keyword">IDENTITY</span>(<span class="number">1</span>,<span class="number">1</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[AuditTime] [datetime] <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[HostName] [<span class="type">varchar</span>](<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[HostAddress] [<span class="type">varchar</span>](<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[UserAgent] [<span class="type">varchar</span>](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[FilePath] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[AuditUser] [<span class="type">varchar</span>](<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[LogType] [<span class="type">varchar</span>](<span class="number">30</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo1] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo2] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo3] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo4] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[Memo5] [<span class="type">varchar</span>](max) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">CONSTRAINT</span> [PK_SysAPLog] <span class="keyword">PRIMARY</span> KEY CLUSTERED </span><br><span class="line">(</span><br><span class="line">	[LogNo] <span class="keyword">ASC</span></span><br><span class="line">)<span class="keyword">WITH</span> (PAD_INDEX <span class="operator">=</span> OFF, STATISTICS_NORECOMPUTE <span class="operator">=</span> OFF, IGNORE_DUP_KEY <span class="operator">=</span> OFF, ALLOW_ROW_LOCKS <span class="operator">=</span> <span class="keyword">ON</span>, ALLOW_PAGE_LOCKS <span class="operator">=</span> <span class="keyword">ON</span>) <span class="keyword">ON</span> [<span class="keyword">PRIMARY</span>]</span><br><span class="line">) <span class="keyword">ON</span> [<span class="keyword">PRIMARY</span>] TEXTIMAGE_ON [<span class="keyword">PRIMARY</span>]</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+<h2 id="撰寫ActionFilter"><a href="#撰寫ActionFilter" class="headerlink" title="撰寫ActionFilter"></a>撰寫ActionFilter</h2><p>接著是本文的主軸，設計一個ActionFilter，攔截使用者的Request，並存回Table做紀錄，以便以後追縱用</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">APLogActionFilter</span> : <span class="title">IActionFilter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ISysAPLogService _apLogService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SKActionFilter</span>(<span class="params">ISysAPLogService apLogService</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _apLogService = apLogService;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnActionExecuted</span>(<span class="params">ActionExecutedContext context</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Nothing to do</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnActionExecuting</span>(<span class="params">ActionExecutingContext context</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> action = context.RouteData.Values[<span class="string">&quot;action&quot;</span>].ToString().ToLower();</span><br><span class="line">        <span class="comment">//AuditTime</span></span><br><span class="line">        <span class="comment">//HostName</span></span><br><span class="line">        <span class="comment">//HostAddress</span></span><br><span class="line">        <span class="comment">//UserAgent</span></span><br><span class="line">        <span class="comment">//FilePath(route)</span></span><br><span class="line">        <span class="comment">//AuditUser</span></span><br><span class="line">        <span class="comment">//LogType</span></span><br><span class="line">        <span class="comment">//Memo1~5</span></span><br><span class="line">        <span class="keyword">var</span> apLog = <span class="keyword">new</span> SysAplog()</span><br><span class="line">        &#123;</span><br><span class="line">            AuditTime = DateTime.Now,</span><br><span class="line">            HostName = context.HttpContext.Connection.RemoteIpAddress.ToString(),</span><br><span class="line">            HostAddress = context.HttpContext.Connection.RemoteIpAddress.ToString(),</span><br><span class="line">            UserAgent = context.HttpContext.Request.Headers[<span class="string">&quot;User-Agent&quot;</span>],</span><br><span class="line">            FilePath = <span class="string">$&quot;<span class="subst">&#123;context.RouteData.Values[<span class="string">&quot;controller&quot;</span>]&#125;</span>/<span class="subst">&#123;context.RouteData.Values[<span class="string">&quot;action&quot;</span>]&#125;</span>&quot;</span>,</span><br><span class="line">            AuditUser = context.HttpContext.User.FindFirst(<span class="string">&quot;name&quot;</span>)?.Value ?? <span class="string">&quot;&quot;</span>,</span><br><span class="line">            LogType = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo1 = JsonConvert.SerializeObject(context.ActionArguments.FirstOrDefault().Value),</span><br><span class="line">            Memo2 = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo3 = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo4 = <span class="string">&quot;&quot;</span>,</span><br><span class="line">            Memo5 = <span class="string">&quot;&quot;</span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (action != <span class="string">&quot;login&quot;</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            _logger.Warn(JsonConvert.SerializeObject(<span class="string">$&quot;<span class="subst">&#123;apLog.FilePath&#125;</span>: <span class="subst">&#123;apLog.Memo1&#125;</span>&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        _apLogService.InsertAPLog(apLog);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="撰寫相關Service"><a href="#撰寫相關Service" class="headerlink" title="撰寫相關Service"></a>撰寫相關Service</h2><p>裡頭有用到「ISysAPLogService 」，參考如下:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ISysAPLogService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">InsertAPLog</span>(<span class="params">SysAplog apLog</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接著實作這個Service</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SysAPLogService</span> : <span class="title">ISysAPLogService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">InsertAPLog</span>(<span class="params">SysAplog apLog</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//_db.SysAplogs.Add(apLog);</span></span><br><span class="line">        <span class="comment">//_db.SaveChanges();</span></span><br><span class="line">        <span class="keyword">using</span>(<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_db.Database.GetDbConnection().ConnectionString))</span><br><span class="line">        &#123;</span><br><span class="line">            _conn.Execute(<span class="string">@&quot;INSERT INTO [dbo].[SysAPLog]</span></span><br><span class="line"><span class="string">                    ([AuditTime], [HostName], [HostAddress], [UserAgent], [FilePath], [AuditUser]</span></span><br><span class="line"><span class="string">                    , [LogType], [Memo1], [Memo2], [Memo3], [Memo4], [Memo5])</span></span><br><span class="line"><span class="string">                VALUES</span></span><br><span class="line"><span class="string">                    (@AuditTime, @HostName, @HostAddress, @UserAgent, @FilePath, @AuditUser</span></span><br><span class="line"><span class="string">                    , @LogType, @Memo1,@Memo2, @Memo3, @Memo4, @Memo5)&quot;</span>, apLog);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="引用ActionFilter"><a href="#引用ActionFilter" class="headerlink" title="引用ActionFilter"></a>引用ActionFilter</h2><p>於<code>Startup</code>中注入使用</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">services.AddMvc(options =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    options.Filters.Add&lt;APLogActionFilter&gt;();</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>主要的ActionFilter中有使用到將使用者的<code>Request Data</code>，使用<code>JsonConvert.SerializeObject</code>序列化後轉成字串，切記若<code>Request Data</code>中的<code>get, set</code>會執行過一遍，若其中邏輯有錯，可能會crash掉，筆者就遇到了，因此特別紀錄一下。</p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
       </tags>
   </entry>
   <entry>
@@ -138,10 +138,11 @@
   <entry>
     <title>[DotnetCore]SMTP寄信服務設計</title>
     <url>/2021/08/21/dotnetcore-smtp/</url>
-    <content><![CDATA[<h1 id="前台情要"><a href="#前台情要" class="headerlink" title="前台情要"></a>前台情要</h1><p>這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。</p>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。</p>
 <p>我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。</p>
-<p>大概運作方式就是，排程服務時間到要運行時，會將 <code>Status = &#39;N&#39;</code> 符合的資料撈出來，一筆一筆進行寄信作業，但由於在<code>foreach</code>中若用同步的方式寄信則會大塞車，當然要考慮最差狀況，因此必須要使用非同步方式進行寄信。但非同步方式的話，只要 <code>SendMailAsync()</code> 後會與主程式脫鉤，無法掌握寄信成功與否，更新其對應的紀錄，將<code>Status</code>更新為<code>Y</code> 或 <code>F</code>。</p>
 <span id="more"></span>
+
+<p>大概運作方式就是，排程服務時間到要運行時，會將 <code>Status = &#39;N&#39;</code> 符合的資料撈出來，一筆一筆進行寄信作業，但由於在<code>foreach</code>中若用同步的方式寄信則會大塞車，當然要考慮最差狀況，因此必須要使用非同步方式進行寄信。但非同步方式的話，只要 <code>SendMailAsync()</code> 後會與主程式脫鉤，無法掌握寄信成功與否，更新其對應的紀錄，將<code>Status</code>更新為<code>Y</code> 或 <code>F</code>。</p>
 <h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者第一步是想到<code>SmtpClient</code>本身應該會有提供相對應的事件，查一下就會看到有<code>SendCompleted</code> 可以觸發，但此<code>call back function</code>帶回的參數，為<code>object sender, AsyncCompletedEventArgs e</code>，只知道寄信結果及<code>SmtpClient(Sender)</code>相關資訊，無法取得寄信資料表對應的資料，才有辦法做更新作業。</p>
 <p><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.net.mail.smtpclient.sendcompleted?view=net-5.0">SmtpClient.SendCompleted 事件 (System.Net.Mail)</a></p>
 <p>筆者接下去思考，自己必須要包一個類別，把寄信資料表對應的資料接進來變內部變數，對外開放<code>Event</code>，使外部使用端可以接受寄信結果完成事件觸發，再由該<code>Event</code>時丟出</p>
@@ -170,6 +171,46 @@
       <tags>
         <tag>dotnetcore</tag>
         <tag>smtp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[MySQL]範例資料庫設定</title>
+    <url>/2021/08/23/mysql-sample-db/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
+<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以下皆為已進入MySQL cli後進行</p>
+</blockquote>
+<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
+
+<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
+<ol>
+<li><p>資料庫選擇MySql</p>
+<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
+<li><p>設定連線字串並測試連線</p>
+<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
+<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
+<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
+</ol>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
+<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -242,46 +283,6 @@
         <tag>dotnetcore</tag>
         <tag>socket</tag>
         <tag>netcoreserver</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[MySQL]安裝與設定</title>
-    <url>/2021/08/23/mysql-install/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
-
-<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
-
-<p>使用root登入並更改root密碼</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-
-<p>確認更改密碼是否有效</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
-
-<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
-<blockquote>
-<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
-</blockquote>
-<p>請使用以下指令修復</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
-<p>參考</p>
-<ul>
-<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
-<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -367,43 +368,81 @@
       </tags>
   </entry>
   <entry>
-    <title>[MySQL]範例資料庫設定</title>
-    <url>/2021/08/23/mysql-sample-db/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+    <title>[MySQL]安裝與設定</title>
+    <url>/2021/08/23/mysql-install/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
-<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
 
+<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
+
+<p>使用root登入並更改root密碼</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>確認更改密碼是否有效</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
+
+<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
 <blockquote>
-<p>以下皆為已進入MySQL cli後進行</p>
+<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
 </blockquote>
-<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+<p>請使用以下指令修復</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
-
-<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
-<ol>
-<li><p>資料庫選擇MySql</p>
-<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
-<li><p>設定連線字串並測試連線</p>
-<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
-<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
-<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
-</ol>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
-<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
+<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
+</ul>
 ]]></content>
       <categories>
         <category>mysql</category>
       </categories>
       <tags>
         <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[DotnetCore]NLog使用</title>
+    <url>/2021/08/23/nlog/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含<code>sql log</code>、<code>ap log</code>以及<code>error log</code>，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的<code>logging框架</code>，<code>dotnet core</code>中也不乏候選套件:<code>NLog</code>、<code>SeriLog</code>、<code>Log4net</code>等等，筆者選擇NLog當作主要Logging機制的底層框架。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝NLog相關套件"><a href="#安裝NLog相關套件" class="headerlink" title="安裝NLog相關套件"></a>安裝NLog相關套件</h2><p>NLog，屬眾多Log套件其中一種，主要搭配一個nlog.config，依照其設定執行Log作業，因此主要安裝套件如下：</p>
+<ul>
+<li>NLog</li>
+<li>NLog.Config</li>
+<li>NLog.AspNetCore</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package NLog</span><br><span class="line">dotnet add package NLog.Config</span><br><span class="line">dotnet add package NLog.AspNetCore</span><br></pre></td></tr></table></figure>
+
+<h2 id="NLog-Config設置"><a href="#NLog-Config設置" class="headerlink" title="NLog.Config設置"></a>NLog.Config設置</h2><p>安裝完成後編輯nlog.config檔案，記得將其屬性中的Copy To Output Directory選為Copy always選項。主要有兩個區塊要去設定：targets及rules；targets部份則設定輸出形式，可以設定多個；rules部份則設定套用規則。</p>
+<p>筆者這邊簡單舉個例子，假設targets部份有兩個輸出形式：檔案及資料庫，rules套用規則部份，我們可以這樣設定，Info等級以上的輸出於檔案中，Error等級以上才需輸出於資料庫中，意即重要錯誤資訊再塞到資料庫中即可，畢竟資料庫空間比較值錢。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">autoReload</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">throwExceptions</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">internalLogLevel</span>=<span class="string">&quot;Off&quot;</span> <span class="attr">internalLogFile</span>=<span class="string">&quot;c:\temp\nlog-internal.log&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- optional, add some variables</span></span><br><span class="line"><span class="comment">  https://github.com/nlog/NLog/wiki/Configuration-file#variables</span></span><br><span class="line"><span class="comment">  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">variable</span> <span class="attr">name</span>=<span class="string">&quot;myvar&quot;</span> <span class="attr">value</span>=<span class="string">&quot;myvalue&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  See https://github.com/nlog/nlog/wiki/Configuration-file</span></span><br><span class="line"><span class="comment">  for information on customizing logging rules and outputs.</span></span><br><span class="line"><span class="comment">   --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">targets</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">xsi:type</span>=<span class="string">&quot;File&quot;</span> <span class="attr">name</span>=<span class="string">&quot;f&quot;</span> <span class="attr">fileName</span>=<span class="string">&quot;$&#123;basedir&#125;/logs/$&#123;shortdate&#125;.log&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">layout</span>=<span class="string">&quot;$&#123;longdate&#125; $&#123;uppercase:$&#123;level&#125;&#125; $&#123;message&#125;&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">targets</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- add your logging rules here --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;f&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="NLog套用"><a href="#NLog套用" class="headerlink" title="NLog套用"></a>NLog套用</h2><p>將NLog初始化於Program.cs中</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog.Web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> &#123;</span><br><span class="line">			<span class="comment">// Confi註冊</span></span><br><span class="line">      NLogBuilder.ConfigureNLog(<span class="string">&quot;NLog.config&quot;</span>).GetCurrentClassLogger();</span><br><span class="line">      CreateHostBuilder(args).Build().Run();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">      Host.CreateDefaultBuilder(args)</span><br><span class="line">      .ConfigureWebHostDefaults(webBuilder =&gt; &#123;</span><br><span class="line">          webBuilder.UseStartup&lt;Startup&gt;();</span><br><span class="line">      &#125;)</span><br><span class="line">      .UseNLog();<span class="comment">// NLog註冊</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Client端套用"><a href="#Client端套用" class="headerlink" title="Client端套用"></a>Client端套用</h2><p>使用NLog，只要於每個Class最上方宣告</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>使用NLog超級容易，生態圈也很豐富，要以Database形式存紀錄，或者寄信通知紀錄等等皆有現成的套件可以使用，筆者覺得說它是Loggin入門套件一點也不為過。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-5">https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-5</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>nlog</tag>
       </tags>
   </entry>
   <entry>
@@ -463,44 +502,6 @@
       <tags>
         <tag>rabbitmq</tag>
         <tag>message queue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[DotnetCore]NLog使用</title>
-    <url>/2021/08/23/nlog/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含<code>sql log</code>、<code>ap log</code>以及<code>error log</code>，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的<code>logging框架</code>，<code>dotnet core</code>中也不乏候選套件:<code>NLog</code>、<code>SeriLog</code>、<code>Log4net</code>等等，筆者選擇NLog當作主要Logging機制的底層框架。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝NLog相關套件"><a href="#安裝NLog相關套件" class="headerlink" title="安裝NLog相關套件"></a>安裝NLog相關套件</h2><p>NLog，屬眾多Log套件其中一種，主要搭配一個nlog.config，依照其設定執行Log作業，因此主要安裝套件如下：</p>
-<ul>
-<li>NLog</li>
-<li>NLog.Config</li>
-<li>NLog.AspNetCore</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package NLog</span><br><span class="line">dotnet add package NLog.Config</span><br><span class="line">dotnet add package NLog.AspNetCore</span><br></pre></td></tr></table></figure>
-
-<h2 id="NLog-Config設置"><a href="#NLog-Config設置" class="headerlink" title="NLog.Config設置"></a>NLog.Config設置</h2><p>安裝完成後編輯nlog.config檔案，記得將其屬性中的Copy To Output Directory選為Copy always選項。主要有兩個區塊要去設定：targets及rules；targets部份則設定輸出形式，可以設定多個；rules部份則設定套用規則。</p>
-<p>筆者這邊簡單舉個例子，假設targets部份有兩個輸出形式：檔案及資料庫，rules套用規則部份，我們可以這樣設定，Info等級以上的輸出於檔案中，Error等級以上才需輸出於資料庫中，意即重要錯誤資訊再塞到資料庫中即可，畢竟資料庫空間比較值錢。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">autoReload</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">throwExceptions</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">internalLogLevel</span>=<span class="string">&quot;Off&quot;</span> <span class="attr">internalLogFile</span>=<span class="string">&quot;c:\temp\nlog-internal.log&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- optional, add some variables</span></span><br><span class="line"><span class="comment">  https://github.com/nlog/NLog/wiki/Configuration-file#variables</span></span><br><span class="line"><span class="comment">  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">variable</span> <span class="attr">name</span>=<span class="string">&quot;myvar&quot;</span> <span class="attr">value</span>=<span class="string">&quot;myvalue&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  See https://github.com/nlog/nlog/wiki/Configuration-file</span></span><br><span class="line"><span class="comment">  for information on customizing logging rules and outputs.</span></span><br><span class="line"><span class="comment">   --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">targets</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">xsi:type</span>=<span class="string">&quot;File&quot;</span> <span class="attr">name</span>=<span class="string">&quot;f&quot;</span> <span class="attr">fileName</span>=<span class="string">&quot;$&#123;basedir&#125;/logs/$&#123;shortdate&#125;.log&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">layout</span>=<span class="string">&quot;$&#123;longdate&#125; $&#123;uppercase:$&#123;level&#125;&#125; $&#123;message&#125;&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">targets</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- add your logging rules here --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;f&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="NLog套用"><a href="#NLog套用" class="headerlink" title="NLog套用"></a>NLog套用</h2><p>將NLog初始化於Program.cs中</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog.Web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> &#123;</span><br><span class="line">			<span class="comment">// Confi註冊</span></span><br><span class="line">      NLogBuilder.ConfigureNLog(<span class="string">&quot;NLog.config&quot;</span>).GetCurrentClassLogger();</span><br><span class="line">      CreateHostBuilder(args).Build().Run();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">      Host.CreateDefaultBuilder(args)</span><br><span class="line">      .ConfigureWebHostDefaults(webBuilder =&gt; &#123;</span><br><span class="line">          webBuilder.UseStartup&lt;Startup&gt;();</span><br><span class="line">      &#125;)</span><br><span class="line">      .UseNLog();<span class="comment">// NLog註冊</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Client端套用"><a href="#Client端套用" class="headerlink" title="Client端套用"></a>Client端套用</h2><p>使用NLog，只要於每個Class最上方宣告</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>使用NLog超級容易，生態圈也很豐富，要以Database形式存紀錄，或者寄信通知紀錄等等皆有現成的套件可以使用，筆者覺得說它是Loggin入門套件一點也不為過。</p>
-<p>參考</p>
-<ul>
-<li><a href="https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-5">https://github.com/NLog/NLog/wiki/Getting-started-with-ASP.NET-Core-5</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>nlog</tag>
       </tags>
   </entry>
   <entry>
