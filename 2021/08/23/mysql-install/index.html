@@ -22,15 +22,20 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Eugene&#39;s Blog">
-<meta property="og:url" content="https://eugenesu0515.github.io/tags/bat/index.html">
+  <meta name="description" content="前提情要筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MyS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[MySQL]安裝與設定">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/23/mysql-install/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前提情要筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MyS">
 <meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-08-23T01:17:17.000Z">
+<meta property="article:modified_time" content="2021-08-23T01:39:08.234Z">
 <meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/tags/bat/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/23/mysql-install/">
 
 
 <script id="page-configurations">
@@ -38,12 +43,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-TW'
   };
 </script>
 
-  <title>標籤: bat | Eugene's Blog</title>
+  <title>[MySQL]安裝與設定 | Eugene's Blog</title>
   
 
 
@@ -185,57 +190,143 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">bat
-          <small>標籤</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/23/mysql-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [MySQL]安裝與設定
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-08-23 09:17:17 / 修改時間：09:39:08" itemprop="dateCreated datePublished" datetime="2021-08-23T09:17:17+08:00">2021-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>949</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>2 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
+
+<p>使用root登入並更改root密碼</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>確認更改密碼是否有效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
+
+<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
+<blockquote>
+<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
+</blockquote>
+<p>請使用以下指令修復</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T12:59:16+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-batch/" itemprop="url">
-            <span itemprop="name">[DotnetCore]Batch檔案執行及追縱</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/21/rabbitmq-install/" rel="prev" title="[RabbitMQ]安裝及設定">
+      <i class="fa fa-chevron-left"></i> [RabbitMQ]安裝及設定
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -282,6 +373,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E9%81%8Ebrew%E5%AE%89%E8%A3%9Dmysql"><span class="nav-number">2.1.</span> <span class="nav-text">透過brew安裝mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%95%9F%E5%8B%95mysql%E6%9C%8D%E5%8B%99"><span class="nav-number">2.2.</span> <span class="nav-text">啟動mysql服務</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E7%AE%A1%E7%90%86%E4%BB%8B%E9%9D%A2"><span class="nav-number">2.3.</span> <span class="nav-text">安裝管理介面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%8C%AF%E8%AA%A4%E8%99%95%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">錯誤處理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -605,6 +697,25 @@ window.addEventListener('pjax:success', () => {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '9a13d983ea4e508377ac',
+      clientSecret: 'f1ffbf947bbc56c5b76e27bc899ffabefb2fed88',
+      repo        : 'eugenesu0515.github.io',
+      owner       : 'eugenesu0515',
+      admin       : ['eugenesu0515'],
+      id          : '48a526e803073848f0b854ebd815c0a7',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
     </div>
 </body>
