@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://eugenesu0515.github.io/2021/08/24/fluent-validation/</loc>
+    
+    <lastmod>2021-08-24</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/</loc>
     
     <lastmod>2021-08-23</lastmod>
@@ -58,14 +65,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/three/renovate.json</loc>
+    <loc>https://eugenesu0515.github.io/lib/three/package.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/three/package.json</loc>
+    <loc>https://eugenesu0515.github.io/lib/three/renovate.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -79,14 +86,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/package.json</loc>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
     
     <lastmod>2021-08-20</lastmod>
     
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/package.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -151,7 +158,7 @@
 
   <url>
     <loc>https://eugenesu0515.github.io/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -159,70 +166,70 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/dotnetcore/</loc>
-    <lastmod>2021-08-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/cap/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/rabbitmq/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
-    <lastmod>2021-08-23</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/mysql/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/socket/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/netcoreserver/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/mysql/</loc>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/nlog/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/message-queue/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -231,21 +238,21 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/mysql/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/message-queue/</loc>
-    <lastmod>2021-08-23</lastmod>
+    <lastmod>2021-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
