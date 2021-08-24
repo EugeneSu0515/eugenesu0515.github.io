@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Eugene&#39;s Blog</title>
+  <icon>https://eugenesu0515.github.io/icon.png</icon>
+  
+  <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://eugenesu0515.github.io/"/>
+  <updated>2021-08-24T07:57:06.988Z</updated>
+  <id>https://eugenesu0515.github.io/</id>
+  
+  <author>
+    <name>Eugene Su</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]後端驗證神器:Fluent Validation</title>
+    <link href="https://eugenesu0515.github.io/2021/08/24/fluent-validation/"/>
+    <id>https://eugenesu0515.github.io/2021/08/24/fluent-validation/</id>
+    <published>2021-08-24T07:50:13.000Z</published>
+    <updated>2021-08-24T07:57:06.988Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;現在開發網頁幾乎都切換成前後端分離的開發方式，前端採用 &lt;code&gt;Angular&lt;/code&gt;, &lt;code&gt;Vue&lt;/code&gt;, &lt;code&gt;React&lt;/code&gt;三大框架之一，後端則只要撰寫API服務即可，一來職責分離，前端適合處理畫面的互動效果，後端搭配資料庫處理商業邏輯的運算，使用&lt;code&gt;json&lt;/code&gt;格式傳送結果至前端，多完美的協作阿。&lt;/p&gt;
+&lt;p&gt;通常簡單驗證邏輯會放在前端做處理，畢竟不用花費傳送成本，例如必填、長度等簡單邏輯驗證，直接在前端實作即可，但畢竟後端需要將資料儲存至資料庫，若沒有再做進一步驗證則資料儲存失敗的風險，以及日後資料運算使用時的困難。又或者系統本身需要透過&lt;code&gt;http&lt;/code&gt;與其他系統介接，其他系統直接打我方API，這種情境就不需多說，需要在後端做驗證，連必填、長度等簡單邏輯驗證也必須做在後端。&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]NLog-ILoggerManager設計</title>
+    <link href="https://eugenesu0515.github.io/2021/08/23/nlog-loggermanager/"/>
+    <id>https://eugenesu0515.github.io/2021/08/23/nlog-loggermanager/</id>
+    <published>2021-08-23T08:50:56.000Z</published>
+    <updated>2021-08-23T10:18:32.322Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者有幸參與到科內負責的大系統，不能單靠一個API站台就解決所有的需求，必須搭配&lt;code&gt;Scheduler&lt;/code&gt;、&lt;code&gt;WindowsService&lt;/code&gt;等服務，介接技術上，可能會用&lt;code&gt;Socket&lt;/code&gt;或是&lt;code&gt;HttpClient&lt;/code&gt;介接，再加上自己系統本身，分散多個專案，中間使用&lt;code&gt;Message Queue&lt;/code&gt;技術串聯起來，算是一個滿有挑戰性的系統了，挑戰主要是在串連服務的難度上，而非高流量。因此追蹤問題上，需要靠Loggin機制，由於各式各樣的服務，不能單靠底層Logging套件:NLog預設的紀錄欄位，針對不同種類的服務，做一個客製化屬性欄位的擴充才行。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu0515.github.io/tags/nlog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]NLog使用</title>
+    <link href="https://eugenesu0515.github.io/2021/08/23/nlog/"/>
+    <id>https://eugenesu0515.github.io/2021/08/23/nlog/</id>
+    <published>2021-08-23T08:49:43.000Z</published>
+    <updated>2021-08-23T09:01:50.653Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含&lt;code&gt;sql log&lt;/code&gt;、&lt;code&gt;ap log&lt;/code&gt;以及&lt;code&gt;error log&lt;/code&gt;，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的&lt;code&gt;logging框架&lt;/code&gt;，&lt;code&gt;dotnet core&lt;/code&gt;中也不乏候選套件:&lt;code&gt;NLog&lt;/code&gt;、&lt;code&gt;SeriLog&lt;/code&gt;、&lt;code&gt;Log4net&lt;/code&gt;等等，筆者選擇NLog當作主要Logging機制的底層框架。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu0515.github.io/tags/nlog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[MySQL]範例資料庫設定</title>
+    <link href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/"/>
+    <id>https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/</id>
+    <published>2021-08-23T02:06:01.000Z</published>
+    <updated>2021-08-23T02:43:26.176Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用&lt;a href=&quot;https://www.mysqltutorial.org/&quot;&gt;MySQL Tutorial&lt;/a&gt;所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="mysql" scheme="https://eugenesu0515.github.io/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://eugenesu0515.github.io/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[MySQL]安裝與設定</title>
+    <link href="https://eugenesu0515.github.io/2021/08/23/mysql-install/"/>
+    <id>https://eugenesu0515.github.io/2021/08/23/mysql-install/</id>
+    <published>2021-08-23T01:17:17.000Z</published>
+    <updated>2021-08-23T01:39:08.234Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="mysql" scheme="https://eugenesu0515.github.io/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://eugenesu0515.github.io/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[RabbitMQ]安裝及設定</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/rabbitmq-install/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/rabbitmq-install/</id>
+    <published>2021-08-21T05:12:02.000Z</published>
+    <updated>2021-08-21T12:53:28.605Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;RabbitMQ&lt;/code&gt;是實現&lt;code&gt;AMQP(Advanced Message Queuing Protocol)&lt;/code&gt;的伺服器，使用&lt;code&gt;Er lang&lt;/code&gt;撰寫而成，且提供&lt;code&gt;HA&lt;/code&gt;及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="message queue" scheme="https://eugenesu0515.github.io/categories/message-queue/"/>
+    
+    
+    <category term="rabbitmq" scheme="https://eugenesu0515.github.io/tags/rabbitmq/"/>
+    
+    <category term="message queue" scheme="https://eugenesu0515.github.io/tags/message-queue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Batch檔案執行及追縱</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-batch/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-batch/</id>
+    <published>2021-08-21T04:59:16.000Z</published>
+    <updated>2021-08-21T05:02:31.198Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放&lt;code&gt;batch file&lt;/code&gt;，讓我們方便去執行。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="bat" scheme="https://eugenesu0515.github.io/tags/bat/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Socket程式實作-切割封包</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-slicing/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-slicing/</id>
+    <published>2021-08-20T18:53:57.000Z</published>
+    <updated>2021-08-20T18:55:26.545Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發&lt;code&gt;OnReceive&lt;/code&gt;事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出&lt;code&gt;offset&lt;/code&gt;及&lt;code&gt;size&lt;/code&gt;，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
+    
+    <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Socket程式實作-解析封包</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/</id>
+    <published>2021-08-20T18:49:20.000Z</published>
+    <updated>2021-08-20T18:50:48.311Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在上篇把該有的&lt;code&gt;Socket&lt;/code&gt;底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
+    
+    <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Socket程式實作</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket/</id>
+    <published>2021-08-20T18:38:24.000Z</published>
+    <updated>2021-08-20T18:46:20.538Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者目前於金融業資訊部門就職，如大家所知，核心系統大都維持使用&lt;code&gt;cobol&lt;/code&gt;程式語言開發，我們這種寫&lt;code&gt;C#&lt;/code&gt;程式語言的，只能攻外圍系統，但不免俗的需要與各核心相關系統做打交道，不管是取得資料或者是更新資料等，比較舊型的架構都是透過&lt;code&gt;TCP/IP&lt;/code&gt;交換資料，也就是透過&lt;code&gt;socket&lt;/code&gt;程式交換資料。界於此，筆者需要實作socket程式基礎框架適應各種Client程式的開發需求，今天就來寫一支&lt;code&gt;socket core&lt;/code&gt;程式吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
+    
+    <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]EventBus套件CAP:以RabbitMQ為例</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-cap/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-cap/</id>
+    <published>2021-08-20T18:26:03.000Z</published>
+    <updated>2021-08-20T18:29:13.505Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則&lt;code&gt;Database Pooling&lt;/code&gt;的方式進行監聽，若有撈出一筆&lt;code&gt;Status = N&lt;/code&gt;的資料則進行邏輯處裡，進行完成後壓回&lt;code&gt;Status = Y 或 N&lt;/code&gt;的註記方式來完成該次的串接需求，當然途中也會壓&lt;code&gt;Status = P&lt;/code&gt;作為下次&lt;code&gt;Pooling&lt;/code&gt;會撈到的防呆，大概就是這麼簡單的技術完成串接的需求。&lt;/p&gt;
+&lt;p&gt;筆者因前一份公司有接觸過Message Queue，主要是&lt;a href=&quot;https://www.rabbitmq.com/&quot;&gt;Rabbit MQ&lt;/a&gt;，覺得使用Message Queue當作中間交換資訊平台，確實有其發展性，不論是之後需求變大時可以做分散式的處理，系統間也間接解偶了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="cap" scheme="https://eugenesu0515.github.io/tags/cap/"/>
+    
+    <category term="rabbitmq" scheme="https://eugenesu0515.github.io/tags/rabbitmq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]SMTP寄信服務設計</title>
+    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/"/>
+    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/</id>
+    <published>2021-08-20T18:19:36.000Z</published>
+    <updated>2021-08-23T13:55:51.039Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。&lt;/p&gt;
+&lt;p&gt;我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="smtp" scheme="https://eugenesu0515.github.io/tags/smtp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ActionFilter實作</title>
+    <link href="https://eugenesu0515.github.io/2021/08/20/dotnetcore-actionfilter/"/>
+    <id>https://eugenesu0515.github.io/2021/08/20/dotnetcore-actionfilter/</id>
+    <published>2021-08-20T15:58:31.000Z</published>
+    <updated>2021-08-20T17:08:06.784Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司因為需要符合資安要求，系統規劃中需要設計留下使用者足跡，筆者這邊第一個想到就是用ActionFilter設計，將Htpp Request對應的相關資訊，存到對應的紀錄表中。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+  </entry>
+  
+</feed>

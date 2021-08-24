@@ -87,6 +87,44 @@
       </tags>
   </entry>
   <entry>
+    <title>[DotnetCore]SMTP寄信服務設計</title>
+    <url>/2021/08/21/dotnetcore-smtp/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。</p>
+<p>我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。</p>
+<span id="more"></span>
+
+<p>大概運作方式就是，排程服務時間到要運行時，會將 <code>Status = &#39;N&#39;</code> 符合的資料撈出來，一筆一筆進行寄信作業，但由於在<code>foreach</code>中若用同步的方式寄信則會大塞車，當然要考慮最差狀況，因此必須要使用非同步方式進行寄信。但非同步方式的話，只要 <code>SendMailAsync()</code> 後會與主程式脫鉤，無法掌握寄信成功與否，更新其對應的紀錄，將<code>Status</code>更新為<code>Y</code> 或 <code>F</code>。</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者第一步是想到<code>SmtpClient</code>本身應該會有提供相對應的事件，查一下就會看到有<code>SendCompleted</code> 可以觸發，但此<code>call back function</code>帶回的參數，為<code>object sender, AsyncCompletedEventArgs e</code>，只知道寄信結果及<code>SmtpClient(Sender)</code>相關資訊，無法取得寄信資料表對應的資料，才有辦法做更新作業。</p>
+<p><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.net.mail.smtpclient.sendcompleted?view=net-5.0">SmtpClient.SendCompleted 事件 (System.Net.Mail)</a></p>
+<p>筆者接下去思考，自己必須要包一個類別，把寄信資料表對應的資料接進來變內部變數，對外開放<code>Event</code>，使外部使用端可以接受寄信結果完成事件觸發，再由該<code>Event</code>時丟出</p>
+<ul>
+<li>寄信資料表對應的資料</li>
+<li>寄信作業結果</li>
+</ul>
+<h2 id="寄信需求資料"><a href="#寄信需求資料" class="headerlink" title="寄信需求資料"></a>寄信需求資料</h2><p>來實作吧，首先先規劃出寄信需求資料結構，如下:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MailToDoItem</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> SeqNo &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 服務名稱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SourceId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 主要收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_To &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 副本收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_Cc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件主旨</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Subject &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件內容</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Message &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信狀態(N, P, Y, F)</span></span><br><span class="line">		<span class="comment">// N: 尚未寄信</span></span><br><span class="line">		<span class="comment">// P: 寄信中</span></span><br><span class="line">		<span class="comment">// Y: 寄信完成</span></span><br><span class="line">		<span class="comment">// F: 寄信失敗(搭配ErrMessage)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Status &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信者</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SendUser &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信時間</span></span><br><span class="line">    <span class="keyword">public</span> DateTime? SendTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 錯誤訊息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ErrMessage &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="寄信服務類別"><a href="#寄信服務類別" class="headerlink" title="寄信服務類別"></a>寄信服務類別</h2><p>接著自己的寄信服務類別:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MySmtpClient</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    <span class="keyword">private</span> MailToDoItem _mailToDo;</span><br><span class="line">    <span class="keyword">private</span> SmtpClient _smtpClient;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;MailToDoItem, AsyncCompletedEventArgs&gt; MySendCompleted;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SKBSmtpClient</span>(<span class="params">MailToDoItem mailToDoCfm, EmailSetting emailSetting</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _mailToDo = mailToDo;</span><br><span class="line">        _smtpClient = <span class="keyword">new</span> SmtpClient(emailSetting.SmtpServer);</span><br><span class="line">        _smtpClient.SendCompleted += <span class="keyword">new</span> SendCompletedEventHandler(_smtpClient_SendCompleted);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> _smtpClient_SendCompleted(<span class="built_in">object</span> sender, AsyncCompletedEventArgs e)</span><br><span class="line">    &#123;</span><br><span class="line">        MySendCompleted(_mailToDo, e);</span><br><span class="line">        _smtpClient.SendCompleted -= _smtpClient_SendCompleted;</span><br><span class="line">        <span class="keyword">this</span>.Dispose();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMailProcess</span>(<span class="params"><span class="built_in">string</span> systemId</span></span></span><br><span class="line"><span class="params"><span class="function">        , <span class="built_in">byte</span>[] attach, <span class="built_in">string</span> attachName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MailMessage mailMessage = <span class="keyword">new</span> MailMessage();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> mailFrom = <span class="keyword">new</span> MailAddress(<span class="string">$&quot;<span class="subst">&#123;systemId&#125;</span>@company.com.tw&quot;</span>, systemId);</span><br><span class="line">        mailMessage.From = mailFrom;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_To?.Split(<span class="string">&quot;;&quot;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.To.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_Cc?.Split(<span class="string">&#x27;;&#x27;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.CC.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        mailMessage.Body = _mailToDo.Message;</span><br><span class="line">        mailMessage.Subject = _mailToDo.Subject;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (attach != <span class="literal">null</span> &amp;&amp; attach?.Length &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Attachment attachment = <span class="keyword">new</span> Attachment(<span class="keyword">new</span> MemoryStream(attach), attachName);</span><br><span class="line">            mailMessage.Attachments.Add(attachment);</span><br><span class="line">        &#125;</span><br><span class="line">        _smtpClient.SendMailAsync(mailMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Info(<span class="string">$&quot;[MySmtpClient Dispose]!!&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>._smtpClient.Dispose();</span><br><span class="line">        <span class="comment">// Suppress finalization.</span></span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上 <code>MySmtpClient</code> 包裝<code>SmtpClient</code>，達到物件導向設計三大特性中的封裝，你不需要知道我怎麼寄信，把<code>寄信資料表對應的資料</code>及<code>SmtpServer</code>相關的資訊給我，我幫你完成寄信，且寄信完成後會再由你自定義的事件觸發讓你知道已完成。</p>
+<p>使用端使用方式也很簡單，第一步宣告事件對應的<code>Action</code>:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">MailSendCompleted</span>(<span class="params">MailToDoItem mailToDoItem, AsyncCompletedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _logger.Info(<span class="string">$&quot;[Send Completed]: <span class="subst">&#123;JsonConvert.SerializeObject(mailToDoItem)&#125;</span>&quot;</span>);</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = e.Error != <span class="literal">null</span> ? <span class="string">&quot;F&quot;</span> : <span class="string">&quot;Y&quot;</span>;</span><br><span class="line">        <span class="keyword">var</span> errMsg = e.Error != <span class="literal">null</span> ? e.Error.ToString() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">        _conn.Execute(<span class="string">@&quot;UPDATE MailToDo SET Status = @Status, ErrMessage = @ErrMessage</span></span><br><span class="line"><span class="string">                            , SendUser = @SendUser, SendTime = @SendTime WHERE SeqNo = @SeqNo&quot;</span></span><br><span class="line">                                , <span class="keyword">new</span></span><br><span class="line">                                &#123;</span><br><span class="line">                                    Status = result,</span><br><span class="line">                                    mailToDoItem.SeqNo,</span><br><span class="line">                                    SendUser = <span class="string">&quot;SYS&quot;</span>,</span><br><span class="line">                                    SendTime = DateTime.Now,</span><br><span class="line">                                    ErrMessage = errMsg</span><br><span class="line">                                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="寄信Client端"><a href="#寄信Client端" class="headerlink" title="寄信Client端"></a>寄信Client端</h2><p>再寄信需求程式片段中呼叫:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mySmtpClient = <span class="keyword">new</span> MySmtpClient(mailToDoItem, emailSetting);</span><br><span class="line">mySmtpClient.SKBSendCompleted += MailSendCompleted;</span><br><span class="line">mySmtpClient.SendMailProcess(<span class="string">&quot;MySystem.Admin&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以上，筆者在實際掛排程服務跑過，是沒有問題的，確實感受到非同步的好處，以及 <code>event, action</code>的搭配，堪稱是完美。要記住<code>event, action</code>的搭配，筆者會在爾後會常使用到該技巧。</p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>smtp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]Batch檔案執行及追縱</title>
     <url>/2021/08/21/dotnetcore-batch/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放<code>batch file</code>，讓我們方便去執行。</p>
@@ -136,74 +174,6 @@
       </tags>
   </entry>
   <entry>
-    <title>[DotnetCore]SMTP寄信服務設計</title>
-    <url>/2021/08/21/dotnetcore-smtp/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。</p>
-<p>我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。</p>
-<span id="more"></span>
-
-<p>大概運作方式就是，排程服務時間到要運行時，會將 <code>Status = &#39;N&#39;</code> 符合的資料撈出來，一筆一筆進行寄信作業，但由於在<code>foreach</code>中若用同步的方式寄信則會大塞車，當然要考慮最差狀況，因此必須要使用非同步方式進行寄信。但非同步方式的話，只要 <code>SendMailAsync()</code> 後會與主程式脫鉤，無法掌握寄信成功與否，更新其對應的紀錄，將<code>Status</code>更新為<code>Y</code> 或 <code>F</code>。</p>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者第一步是想到<code>SmtpClient</code>本身應該會有提供相對應的事件，查一下就會看到有<code>SendCompleted</code> 可以觸發，但此<code>call back function</code>帶回的參數，為<code>object sender, AsyncCompletedEventArgs e</code>，只知道寄信結果及<code>SmtpClient(Sender)</code>相關資訊，無法取得寄信資料表對應的資料，才有辦法做更新作業。</p>
-<p><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.net.mail.smtpclient.sendcompleted?view=net-5.0">SmtpClient.SendCompleted 事件 (System.Net.Mail)</a></p>
-<p>筆者接下去思考，自己必須要包一個類別，把寄信資料表對應的資料接進來變內部變數，對外開放<code>Event</code>，使外部使用端可以接受寄信結果完成事件觸發，再由該<code>Event</code>時丟出</p>
-<ul>
-<li>寄信資料表對應的資料</li>
-<li>寄信作業結果</li>
-</ul>
-<h2 id="寄信需求資料"><a href="#寄信需求資料" class="headerlink" title="寄信需求資料"></a>寄信需求資料</h2><p>來實作吧，首先先規劃出寄信需求資料結構，如下:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MailToDoItem</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> SeqNo &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 服務名稱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SourceId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 主要收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_To &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 副本收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_Cc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件主旨</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Subject &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件內容</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Message &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信狀態(N, P, Y, F)</span></span><br><span class="line">		<span class="comment">// N: 尚未寄信</span></span><br><span class="line">		<span class="comment">// P: 寄信中</span></span><br><span class="line">		<span class="comment">// Y: 寄信完成</span></span><br><span class="line">		<span class="comment">// F: 寄信失敗(搭配ErrMessage)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Status &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信者</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SendUser &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信時間</span></span><br><span class="line">    <span class="keyword">public</span> DateTime? SendTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 錯誤訊息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ErrMessage &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="寄信服務類別"><a href="#寄信服務類別" class="headerlink" title="寄信服務類別"></a>寄信服務類別</h2><p>接著自己的寄信服務類別:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MySmtpClient</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    <span class="keyword">private</span> MailToDoItem _mailToDo;</span><br><span class="line">    <span class="keyword">private</span> SmtpClient _smtpClient;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;MailToDoItem, AsyncCompletedEventArgs&gt; MySendCompleted;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SKBSmtpClient</span>(<span class="params">MailToDoItem mailToDoCfm, EmailSetting emailSetting</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _mailToDo = mailToDo;</span><br><span class="line">        _smtpClient = <span class="keyword">new</span> SmtpClient(emailSetting.SmtpServer);</span><br><span class="line">        _smtpClient.SendCompleted += <span class="keyword">new</span> SendCompletedEventHandler(_smtpClient_SendCompleted);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> _smtpClient_SendCompleted(<span class="built_in">object</span> sender, AsyncCompletedEventArgs e)</span><br><span class="line">    &#123;</span><br><span class="line">        MySendCompleted(_mailToDo, e);</span><br><span class="line">        _smtpClient.SendCompleted -= _smtpClient_SendCompleted;</span><br><span class="line">        <span class="keyword">this</span>.Dispose();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMailProcess</span>(<span class="params"><span class="built_in">string</span> systemId</span></span></span><br><span class="line"><span class="params"><span class="function">        , <span class="built_in">byte</span>[] attach, <span class="built_in">string</span> attachName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MailMessage mailMessage = <span class="keyword">new</span> MailMessage();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> mailFrom = <span class="keyword">new</span> MailAddress(<span class="string">$&quot;<span class="subst">&#123;systemId&#125;</span>@company.com.tw&quot;</span>, systemId);</span><br><span class="line">        mailMessage.From = mailFrom;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_To?.Split(<span class="string">&quot;;&quot;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.To.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_Cc?.Split(<span class="string">&#x27;;&#x27;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.CC.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        mailMessage.Body = _mailToDo.Message;</span><br><span class="line">        mailMessage.Subject = _mailToDo.Subject;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (attach != <span class="literal">null</span> &amp;&amp; attach?.Length &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Attachment attachment = <span class="keyword">new</span> Attachment(<span class="keyword">new</span> MemoryStream(attach), attachName);</span><br><span class="line">            mailMessage.Attachments.Add(attachment);</span><br><span class="line">        &#125;</span><br><span class="line">        _smtpClient.SendMailAsync(mailMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Info(<span class="string">$&quot;[MySmtpClient Dispose]!!&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>._smtpClient.Dispose();</span><br><span class="line">        <span class="comment">// Suppress finalization.</span></span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上 <code>MySmtpClient</code> 包裝<code>SmtpClient</code>，達到物件導向設計三大特性中的封裝，你不需要知道我怎麼寄信，把<code>寄信資料表對應的資料</code>及<code>SmtpServer</code>相關的資訊給我，我幫你完成寄信，且寄信完成後會再由你自定義的事件觸發讓你知道已完成。</p>
-<p>使用端使用方式也很簡單，第一步宣告事件對應的<code>Action</code>:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">MailSendCompleted</span>(<span class="params">MailToDoItem mailToDoItem, AsyncCompletedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _logger.Info(<span class="string">$&quot;[Send Completed]: <span class="subst">&#123;JsonConvert.SerializeObject(mailToDoItem)&#125;</span>&quot;</span>);</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = e.Error != <span class="literal">null</span> ? <span class="string">&quot;F&quot;</span> : <span class="string">&quot;Y&quot;</span>;</span><br><span class="line">        <span class="keyword">var</span> errMsg = e.Error != <span class="literal">null</span> ? e.Error.ToString() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">        _conn.Execute(<span class="string">@&quot;UPDATE MailToDo SET Status = @Status, ErrMessage = @ErrMessage</span></span><br><span class="line"><span class="string">                            , SendUser = @SendUser, SendTime = @SendTime WHERE SeqNo = @SeqNo&quot;</span></span><br><span class="line">                                , <span class="keyword">new</span></span><br><span class="line">                                &#123;</span><br><span class="line">                                    Status = result,</span><br><span class="line">                                    mailToDoItem.SeqNo,</span><br><span class="line">                                    SendUser = <span class="string">&quot;SYS&quot;</span>,</span><br><span class="line">                                    SendTime = DateTime.Now,</span><br><span class="line">                                    ErrMessage = errMsg</span><br><span class="line">                                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="寄信Client端"><a href="#寄信Client端" class="headerlink" title="寄信Client端"></a>寄信Client端</h2><p>再寄信需求程式片段中呼叫:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mySmtpClient = <span class="keyword">new</span> MySmtpClient(mailToDoItem, emailSetting);</span><br><span class="line">mySmtpClient.SKBSendCompleted += MailSendCompleted;</span><br><span class="line">mySmtpClient.SendMailProcess(<span class="string">&quot;MySystem.Admin&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以上，筆者在實際掛排程服務跑過，是沒有問題的，確實感受到非同步的好處，以及 <code>event, action</code>的搭配，堪稱是完美。要記住<code>event, action</code>的搭配，筆者會在爾後會常使用到該技巧。</p>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>smtp</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[DotnetCore]Socket程式實作-切割封包</title>
-    <url>/2021/08/21/dotnetcore-socket-slicing/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發<code>OnReceive</code>事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出<code>offset</code>及<code>size</code>，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。</p>
-<span id="more"></span>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>以筆者剛出社會時也實作過<code>Socket</code>相關程式，基本上都會將封包設計成知道該<code>byte</code>內容為多少，表示該封包已結束，可以進行處理了，這只是一種方式，有千千萬萬種的設計。筆者目前的公司會設計封包開頭幾個<code>byte</code>位置的內容即整段<code>封包的長度</code>，取得這幾個<code>byte</code>位置的內容，讓筆者有一個切割封包的依據。</p>
-<h2 id="封包切割方法"><a href="#封包切割方法" class="headerlink" title="封包切割方法"></a>封包切割方法</h2><p>筆者就照這樣設計一個封包切割的方法，但是要注意一點是筆者撰寫的底層元件是要給各個需要<code>Socket</code>功能Client端使用，基本上不一應該寫死封包切割方法，這時<code>Func</code>就派上用場了，若外部有傳入<code>Func</code>實作方法就使用該方法，若無則使用底層元件已寫好的切割方法。先貼上底層元件的封包切割方法﹔</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt; CommSlicingByteFunc(List&lt;<span class="built_in">byte</span>&gt; source)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt;(<span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;(), <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>[]&gt;());</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (source.Count &gt; <span class="number">4</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> totalLength = <span class="built_in">int</span>.Parse(CoreHelper.Encoding.GetString(ByteExtensions.GetSubByte(source.ToArray(), <span class="number">0</span>, <span class="number">4</span>)));</span><br><span class="line">            _logger.Info(<span class="string">$&quot;[Total Length]: <span class="subst">&#123;totalLength&#125;</span>&quot;</span>);</span><br><span class="line">            <span class="keyword">while</span> (totalLength &lt;= source.Count)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> subBytes = <span class="keyword">new</span> <span class="built_in">byte</span>[totalLength];</span><br><span class="line">                System.Buffer.BlockCopy(source.ToArray(), <span class="number">0</span>, subBytes, <span class="number">0</span>, totalLength);</span><br><span class="line">                _logger.Info(<span class="string">$&quot;[Sub byte]: <span class="subst">&#123;CoreHelper.Encoding.GetString(subBytes)&#125;</span>&quot;</span>);</span><br><span class="line">                <span class="keyword">var</span> newQueue = ByteExtensions.GetSubByte(source.ToArray(), totalLength, source.Count - totalLength);</span><br><span class="line">                _logger.Info(<span class="string">$&quot;[newQueue]: <span class="subst">&#123;CoreHelper.Encoding.GetString(newQueue)&#125;</span>&quot;</span>);</span><br><span class="line">                source = <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;();</span><br><span class="line">                <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newQueue.Length; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    source.Add(newQueue[i]);</span><br><span class="line">                &#125;</span><br><span class="line">                result.Item2.Add(subBytes);</span><br><span class="line">                <span class="keyword">if</span> (newQueue.Length &gt; <span class="number">4</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    totalLength = <span class="built_in">int</span>.Parse(CoreHelper.Encoding.GetString(ByteExtensions.GetSubByte(newQueue, <span class="number">0</span>, <span class="number">4</span>)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Error(<span class="string">$&quot;[CommSlicingByteFunc]: <span class="subst">&#123;ex&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="comment">//throw;</span></span><br><span class="line">        result.Item2.Add(source.ToArray());</span><br><span class="line">        source = <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> source)</span><br><span class="line">    &#123;</span><br><span class="line">        result.Item1.Add(item);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>簡單解釋一下上述程式碼，我會先把前四碼封包內容解讀出來當作是切割的依據，切割完的封包加入至回傳封包資料集中，剩下的封包中繼續使用該方法切割到不能切割為止，若切割有錯誤當作byte內容有誤，整包原封不動往外拋出。</p>
-<h2 id="套用外部傳入之封包切割方法"><a href="#套用外部傳入之封包切割方法" class="headerlink" title="套用外部傳入之封包切割方法"></a>套用外部傳入之封包切割方法</h2><p>筆者當初設計時有些參數是從外部傳入，類似像<code>Socket</code>設定，<code>IP、Port</code>等等資訊，將包裝成<code>IOptions</code>項目，筆者於<code>SocketServiceRegistration</code>中設定，這樣任何物件中只要注入對應的<code>IOptions</code>項目即可使用外部傳入之參數，筆者這邊使用的物件為</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SocketSettingOption</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MainSocketSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SubSocketSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> HubUrlSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 封包切割方法</span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; ClientSliceByteFunc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; ServerSliceByteFunc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> DisconnectAfterClientReceive &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AppId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AppName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ServiceName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> MonitorService &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">region</span> ---ForLogging---</span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;<span class="built_in">byte</span>[], Type&gt; GetHeaderResponseModelType &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        = (data) =&gt; &#123; <span class="keyword">return</span> <span class="keyword">typeof</span>(HeaderResponseModel); &#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ConnectionStringKey &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="string">&quot;FMTR&quot;</span>;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endregion</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用方式為建構式中注入，並判斷是否為null，若為非<code>null</code>則使用外部串入之切割方法</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// BaseClient.cs</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> MyTcpClient _client;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BaseClient</span>(<span class="params">IAnalyzeService analyzeService</span></span></span><br><span class="line"><span class="params"><span class="function">            , IOptions&lt;SocketSettingOption&gt; socketSettingOption</span></span></span><br><span class="line"><span class="params"><span class="function">            , IConfiguration config</span></span></span><br><span class="line"><span class="params"><span class="function">            , SocketSettingType socketSettingType</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// ...以上省略</span></span><br><span class="line">		<span class="keyword">if</span> (options.ClientSliceByteFunc != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">				<span class="comment">// 若為非null則指定該切割方法</span></span><br><span class="line">        _client.SliceByteFunc = options.ClientSliceByteFunc;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...以下省略</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// MyTcpClient.cs</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyTcpClient</span> : <span class="title">NetCoreServer.TcpClient</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// ...以上省略</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 切割byte內容</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; SliceByteFunc;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">MyTcpClient</span>(<span class="params">IPAddress address, <span class="built_in">int</span> port</span></span></span><br><span class="line"><span class="params"><span class="function">            , IOptions&lt;SocketSettingOption&gt; options</span>) : <span class="title">base</span>(<span class="params">address, port</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (SliceByteFunc == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">						<span class="comment">// 若為null則使用預設的切割方法</span></span><br><span class="line">            SliceByteFunc = ByteExtensions.CommSlicingByteFunc;</span><br><span class="line">        &#125;</span><br><span class="line">        _socketSetting = options.Value;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Client端使用方式"><a href="#Client端使用方式" class="headerlink" title="Client端使用方式"></a>Client端使用方式</h2><p>Client端使用方式參考，若自己切割方法與底層元件不符則自己宣告切割邏輯。</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">services.AddSkBSocket(option =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// ...以上省略</span></span><br><span class="line">    option.ClientSliceByteFunc = ((source) =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="keyword">new</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt;(<span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;(), <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>[]&gt;());</span><br><span class="line">        result.Item2.Add(source.ToArray());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// ...以下省略 </span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者自從會使用<code>Func、Event、Action</code>這三個資料型別後，真的是有一種挖到寶的感覺，尤其是筆者偏向撰寫底層元件為主，為底層元件的邏輯處理更有彈性，且具有擴充性。</p>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>socket</tag>
-        <tag>netcoreserver</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>[DotnetCore]Socket程式實作-解析封包</title>
     <url>/2021/08/21/dotnetcore-socket-analyze/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇把該有的<code>Socket</code>底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。</p>
@@ -246,43 +216,33 @@
       </tags>
   </entry>
   <entry>
-    <title>[MySQL]安裝與設定</title>
-    <url>/2021/08/23/mysql-install/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
+    <title>[DotnetCore]Socket程式實作-切割封包</title>
+    <url>/2021/08/21/dotnetcore-socket-slicing/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發<code>OnReceive</code>事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出<code>offset</code>及<code>size</code>，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。</p>
 <span id="more"></span>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>以筆者剛出社會時也實作過<code>Socket</code>相關程式，基本上都會將封包設計成知道該<code>byte</code>內容為多少，表示該封包已結束，可以進行處理了，這只是一種方式，有千千萬萬種的設計。筆者目前的公司會設計封包開頭幾個<code>byte</code>位置的內容即整段<code>封包的長度</code>，取得這幾個<code>byte</code>位置的內容，讓筆者有一個切割封包的依據。</p>
+<h2 id="封包切割方法"><a href="#封包切割方法" class="headerlink" title="封包切割方法"></a>封包切割方法</h2><p>筆者就照這樣設計一個封包切割的方法，但是要注意一點是筆者撰寫的底層元件是要給各個需要<code>Socket</code>功能Client端使用，基本上不一應該寫死封包切割方法，這時<code>Func</code>就派上用場了，若外部有傳入<code>Func</code>實作方法就使用該方法，若無則使用底層元件已寫好的切割方法。先貼上底層元件的封包切割方法﹔</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt; CommSlicingByteFunc(List&lt;<span class="built_in">byte</span>&gt; source)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt;(<span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;(), <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>[]&gt;());</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (source.Count &gt; <span class="number">4</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> totalLength = <span class="built_in">int</span>.Parse(CoreHelper.Encoding.GetString(ByteExtensions.GetSubByte(source.ToArray(), <span class="number">0</span>, <span class="number">4</span>)));</span><br><span class="line">            _logger.Info(<span class="string">$&quot;[Total Length]: <span class="subst">&#123;totalLength&#125;</span>&quot;</span>);</span><br><span class="line">            <span class="keyword">while</span> (totalLength &lt;= source.Count)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> subBytes = <span class="keyword">new</span> <span class="built_in">byte</span>[totalLength];</span><br><span class="line">                System.Buffer.BlockCopy(source.ToArray(), <span class="number">0</span>, subBytes, <span class="number">0</span>, totalLength);</span><br><span class="line">                _logger.Info(<span class="string">$&quot;[Sub byte]: <span class="subst">&#123;CoreHelper.Encoding.GetString(subBytes)&#125;</span>&quot;</span>);</span><br><span class="line">                <span class="keyword">var</span> newQueue = ByteExtensions.GetSubByte(source.ToArray(), totalLength, source.Count - totalLength);</span><br><span class="line">                _logger.Info(<span class="string">$&quot;[newQueue]: <span class="subst">&#123;CoreHelper.Encoding.GetString(newQueue)&#125;</span>&quot;</span>);</span><br><span class="line">                source = <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;();</span><br><span class="line">                <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newQueue.Length; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    source.Add(newQueue[i]);</span><br><span class="line">                &#125;</span><br><span class="line">                result.Item2.Add(subBytes);</span><br><span class="line">                <span class="keyword">if</span> (newQueue.Length &gt; <span class="number">4</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    totalLength = <span class="built_in">int</span>.Parse(CoreHelper.Encoding.GetString(ByteExtensions.GetSubByte(newQueue, <span class="number">0</span>, <span class="number">4</span>)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Error(<span class="string">$&quot;[CommSlicingByteFunc]: <span class="subst">&#123;ex&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="comment">//throw;</span></span><br><span class="line">        result.Item2.Add(source.ToArray());</span><br><span class="line">        source = <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> source)</span><br><span class="line">    &#123;</span><br><span class="line">        result.Item1.Add(item);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
+<p>簡單解釋一下上述程式碼，我會先把前四碼封包內容解讀出來當作是切割的依據，切割完的封包加入至回傳封包資料集中，剩下的封包中繼續使用該方法切割到不能切割為止，若切割有錯誤當作byte內容有誤，整包原封不動往外拋出。</p>
+<h2 id="套用外部傳入之封包切割方法"><a href="#套用外部傳入之封包切割方法" class="headerlink" title="套用外部傳入之封包切割方法"></a>套用外部傳入之封包切割方法</h2><p>筆者當初設計時有些參數是從外部傳入，類似像<code>Socket</code>設定，<code>IP、Port</code>等等資訊，將包裝成<code>IOptions</code>項目，筆者於<code>SocketServiceRegistration</code>中設定，這樣任何物件中只要注入對應的<code>IOptions</code>項目即可使用外部傳入之參數，筆者這邊使用的物件為</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SocketSettingOption</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MainSocketSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SubSocketSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> HubUrlSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 封包切割方法</span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; ClientSliceByteFunc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; ServerSliceByteFunc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> DisconnectAfterClientReceive &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AppId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AppName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ServiceName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> MonitorService &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">region</span> ---ForLogging---</span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;<span class="built_in">byte</span>[], Type&gt; GetHeaderResponseModelType &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        = (data) =&gt; &#123; <span class="keyword">return</span> <span class="keyword">typeof</span>(HeaderResponseModel); &#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ConnectionStringKey &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="string">&quot;FMTR&quot;</span>;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endregion</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
+<p>使用方式為建構式中注入，並判斷是否為null，若為非<code>null</code>則使用外部串入之切割方法</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// BaseClient.cs</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> MyTcpClient _client;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BaseClient</span>(<span class="params">IAnalyzeService analyzeService</span></span></span><br><span class="line"><span class="params"><span class="function">            , IOptions&lt;SocketSettingOption&gt; socketSettingOption</span></span></span><br><span class="line"><span class="params"><span class="function">            , IConfiguration config</span></span></span><br><span class="line"><span class="params"><span class="function">            , SocketSettingType socketSettingType</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// ...以上省略</span></span><br><span class="line">		<span class="keyword">if</span> (options.ClientSliceByteFunc != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">				<span class="comment">// 若為非null則指定該切割方法</span></span><br><span class="line">        _client.SliceByteFunc = options.ClientSliceByteFunc;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...以下省略</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// MyTcpClient.cs</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyTcpClient</span> : <span class="title">NetCoreServer.TcpClient</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// ...以上省略</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 切割byte內容</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; SliceByteFunc;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">MyTcpClient</span>(<span class="params">IPAddress address, <span class="built_in">int</span> port</span></span></span><br><span class="line"><span class="params"><span class="function">            , IOptions&lt;SocketSettingOption&gt; options</span>) : <span class="title">base</span>(<span class="params">address, port</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (SliceByteFunc == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">						<span class="comment">// 若為null則使用預設的切割方法</span></span><br><span class="line">            SliceByteFunc = ByteExtensions.CommSlicingByteFunc;</span><br><span class="line">        &#125;</span><br><span class="line">        _socketSetting = options.Value;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>使用root登入並更改root密碼</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<h2 id="Client端使用方式"><a href="#Client端使用方式" class="headerlink" title="Client端使用方式"></a>Client端使用方式</h2><p>Client端使用方式參考，若自己切割方法與底層元件不符則自己宣告切割邏輯。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">services.AddSkBSocket(option =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// ...以上省略</span></span><br><span class="line">    option.ClientSliceByteFunc = ((source) =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="keyword">new</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt;(<span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;(), <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>[]&gt;());</span><br><span class="line">        result.Item2.Add(source.ToArray());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// ...以下省略 </span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>確認更改密碼是否有效</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
-
-<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
-<blockquote>
-<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
-</blockquote>
-<p>請使用以下指令修復</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
-<p>參考</p>
-<ul>
-<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
-<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
-</ul>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者自從會使用<code>Func、Event、Action</code>這三個資料型別後，真的是有一種挖到寶的感覺，尤其是筆者偏向撰寫底層元件為主，為底層元件的邏輯處理更有彈性，且具有擴充性。</p>
 ]]></content>
       <categories>
-        <category>mysql</category>
+        <category>dotnetcore</category>
       </categories>
       <tags>
-        <tag>mysql</tag>
+        <tag>dotnetcore</tag>
+        <tag>socket</tag>
+        <tag>netcoreserver</tag>
       </tags>
   </entry>
   <entry>
@@ -351,6 +311,145 @@
 <li><a href="https://docs.fluentvalidation.net/en/latest/collections.html">https://docs.fluentvalidation.net/en/latest/collections.html</a></li>
 </ul>
 ]]></content>
+  </entry>
+  <entry>
+    <title>[MySQL]安裝與設定</title>
+    <url>/2021/08/23/mysql-install/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
+
+<p>使用root登入並更改root密碼</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>確認更改密碼是否有效</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
+
+<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
+<blockquote>
+<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
+</blockquote>
+<p>請使用以下指令修復</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
+<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[MySQL]範例資料庫設定</title>
+    <url>/2021/08/23/mysql-sample-db/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
+<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以下皆為已進入MySQL cli後進行</p>
+</blockquote>
+<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
+
+<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
+<ol>
+<li><p>資料庫選擇MySql</p>
+<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
+<li><p>設定連線字串並測試連線</p>
+<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
+<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
+<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
+</ol>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
+<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[RabbitMQ]安裝及設定</title>
+    <url>/2021/08/21/rabbitmq-install/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p><code>RabbitMQ</code>是實現<code>AMQP(Advanced Message Queuing Protocol)</code>的伺服器，使用<code>Er lang</code>撰寫而成，且提供<code>HA</code>及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>首先因為<code>RabbitMQ</code>使用<code>ER Lang</code>撰寫而成，需要安裝執行環境，因此需先設定<code>ER Lang</code>的環境:</p>
+<h2 id="ERLang安裝及設定"><a href="#ERLang安裝及設定" class="headerlink" title="ERLang安裝及設定"></a>ERLang安裝及設定</h2><p>ERLang安裝檔案下載連結</p>
+<p><a href="https://www.erlang.org/news/135">Erlang Programming Language</a></p>
+<img src="/2021/08/21/rabbitmq-install/Untitled.png" class="" title="[ErlangInstallOptions]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled1.png" class="" title="[ErlanInstallPercentage]">
+
+<p>設定ERLang環境變數(新增系統變數)</p>
+<blockquote>
+<p>ERLANG_HOME C:\Program Files\erl10.6</p>
+</blockquote>
+<img src="/2021/08/21/rabbitmq-install/Untitled2.png" class="" title="[ErlanEnvironmentPath]">
+
+<h2 id="Rabbit-MQ安裝及設定"><a href="#Rabbit-MQ安裝及設定" class="headerlink" title="Rabbit MQ安裝及設定"></a>Rabbit MQ安裝及設定</h2><h3 id="使用choco安裝"><a href="#使用choco安裝" class="headerlink" title="使用choco安裝"></a>使用choco安裝</h3><p><a href="https://chocolatey.org/packages/rabbitmq">RabbitMQ 3.8.2</a></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">choco install rabbitmq</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用安裝檔案安裝"><a href="#使用安裝檔案安裝" class="headerlink" title="使用安裝檔案安裝"></a>使用安裝檔案安裝</h3><p>下載連結</p>
+<p><a href="https://www.rabbitmq.com/install-windows.html">Installing on Windows</a></p>
+<img src="/2021/08/21/rabbitmq-install/Untitled3.png" class="" title="[RabbitMQInstallOptions]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled4.png" class="" title="[RabbitMQInstallAlert]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled5.png" class="" title="[RabbitMQInstallPercentage]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled6.png" class="" title="[RabbitMQInstallComplete]">
+
+<h2 id="Rabbit-MQ設定及開啟管理介面"><a href="#Rabbit-MQ設定及開啟管理介面" class="headerlink" title="Rabbit MQ設定及開啟管理介面"></a>Rabbit MQ設定及開啟管理介面</h2><p>開啟Command line介面，筆者這邊以 <a href="https://cmder.net/">cmder</a>為例</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 進入Rabbit MQ bat檔案路徑</span><br><span class="line"><span class="built_in">cd</span> C:\Program Files\RabbitMQ Server\rabbitmq_server-3.8.2\sbin</span><br><span class="line"></span><br><span class="line">// 開啟管理介面</span><br><span class="line">rabbitmq-plugins.bat <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"></span><br><span class="line">// 重起服務</span><br><span class="line">net stop rabbitmq &amp;&amp; net start rabbitmq</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/08/21/rabbitmq-install/Untitled7.png" class="" title="[RabbitMQOpenManagement]">
+
+<p>接著打開瀏覽器，輸入 <a href="http://localhost:15672/">http://localhost:15672</a></p>
+<img src="/2021/08/21/rabbitmq-install/Untitled8.png" class="" title="[RabbitMQSuccess]">
+
+<p>出現以上的畫面，就恭喜你，你已經安裝成功了。預設登入者為</p>
+<blockquote>
+<p>帳號： guest</p>
+</blockquote>
+<blockquote>
+<p>密碼： guest</p>
+</blockquote>
+<img src="/2021/08/21/rabbitmq-install/Untitled9.png" class="" title="[RabbitMQPage]">
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>開啟圖形化管理介面後，基本上都可以透過管理網頁新增、編輯、刪除Queue相關的設定。這篇主要介紹到這邊，架一個<code>RabbitMQ</code>的步驟不會說太困難，留下筆記的同時，希望有幫助到有需求安裝<code>RabbitMQ</code>的朋友。</p>
+]]></content>
+      <categories>
+        <category>message queue</category>
+      </categories>
+      <tags>
+        <tag>rabbitmq</tag>
+        <tag>message queue</tag>
+      </tags>
   </entry>
   <entry>
     <title>[DotnetCore]NLog-ILoggerManager設計</title>
@@ -470,105 +569,6 @@
       <tags>
         <tag>dotnetcore</tag>
         <tag>nlog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[RabbitMQ]安裝及設定</title>
-    <url>/2021/08/21/rabbitmq-install/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p><code>RabbitMQ</code>是實現<code>AMQP(Advanced Message Queuing Protocol)</code>的伺服器，使用<code>Er lang</code>撰寫而成，且提供<code>HA</code>及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>首先因為<code>RabbitMQ</code>使用<code>ER Lang</code>撰寫而成，需要安裝執行環境，因此需先設定<code>ER Lang</code>的環境:</p>
-<h2 id="ERLang安裝及設定"><a href="#ERLang安裝及設定" class="headerlink" title="ERLang安裝及設定"></a>ERLang安裝及設定</h2><p>ERLang安裝檔案下載連結</p>
-<p><a href="https://www.erlang.org/news/135">Erlang Programming Language</a></p>
-<img src="/2021/08/21/rabbitmq-install/Untitled.png" class="" title="[ErlangInstallOptions]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled1.png" class="" title="[ErlanInstallPercentage]">
-
-<p>設定ERLang環境變數(新增系統變數)</p>
-<blockquote>
-<p>ERLANG_HOME C:\Program Files\erl10.6</p>
-</blockquote>
-<img src="/2021/08/21/rabbitmq-install/Untitled2.png" class="" title="[ErlanEnvironmentPath]">
-
-<h2 id="Rabbit-MQ安裝及設定"><a href="#Rabbit-MQ安裝及設定" class="headerlink" title="Rabbit MQ安裝及設定"></a>Rabbit MQ安裝及設定</h2><h3 id="使用choco安裝"><a href="#使用choco安裝" class="headerlink" title="使用choco安裝"></a>使用choco安裝</h3><p><a href="https://chocolatey.org/packages/rabbitmq">RabbitMQ 3.8.2</a></p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">choco install rabbitmq</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用安裝檔案安裝"><a href="#使用安裝檔案安裝" class="headerlink" title="使用安裝檔案安裝"></a>使用安裝檔案安裝</h3><p>下載連結</p>
-<p><a href="https://www.rabbitmq.com/install-windows.html">Installing on Windows</a></p>
-<img src="/2021/08/21/rabbitmq-install/Untitled3.png" class="" title="[RabbitMQInstallOptions]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled4.png" class="" title="[RabbitMQInstallAlert]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled5.png" class="" title="[RabbitMQInstallPercentage]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled6.png" class="" title="[RabbitMQInstallComplete]">
-
-<h2 id="Rabbit-MQ設定及開啟管理介面"><a href="#Rabbit-MQ設定及開啟管理介面" class="headerlink" title="Rabbit MQ設定及開啟管理介面"></a>Rabbit MQ設定及開啟管理介面</h2><p>開啟Command line介面，筆者這邊以 <a href="https://cmder.net/">cmder</a>為例</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 進入Rabbit MQ bat檔案路徑</span><br><span class="line"><span class="built_in">cd</span> C:\Program Files\RabbitMQ Server\rabbitmq_server-3.8.2\sbin</span><br><span class="line"></span><br><span class="line">// 開啟管理介面</span><br><span class="line">rabbitmq-plugins.bat <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"></span><br><span class="line">// 重起服務</span><br><span class="line">net stop rabbitmq &amp;&amp; net start rabbitmq</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/08/21/rabbitmq-install/Untitled7.png" class="" title="[RabbitMQOpenManagement]">
-
-<p>接著打開瀏覽器，輸入 <a href="http://localhost:15672/">http://localhost:15672</a></p>
-<img src="/2021/08/21/rabbitmq-install/Untitled8.png" class="" title="[RabbitMQSuccess]">
-
-<p>出現以上的畫面，就恭喜你，你已經安裝成功了。預設登入者為</p>
-<blockquote>
-<p>帳號： guest</p>
-</blockquote>
-<blockquote>
-<p>密碼： guest</p>
-</blockquote>
-<img src="/2021/08/21/rabbitmq-install/Untitled9.png" class="" title="[RabbitMQPage]">
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>開啟圖形化管理介面後，基本上都可以透過管理網頁新增、編輯、刪除Queue相關的設定。這篇主要介紹到這邊，架一個<code>RabbitMQ</code>的步驟不會說太困難，留下筆記的同時，希望有幫助到有需求安裝<code>RabbitMQ</code>的朋友。</p>
-]]></content>
-      <categories>
-        <category>message queue</category>
-      </categories>
-      <tags>
-        <tag>rabbitmq</tag>
-        <tag>message queue</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[MySQL]範例資料庫設定</title>
-    <url>/2021/08/23/mysql-sample-db/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
-<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>以下皆為已進入MySQL cli後進行</p>
-</blockquote>
-<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
-
-<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
-<ol>
-<li><p>資料庫選擇MySql</p>
-<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
-<li><p>設定連線字串並測試連線</p>
-<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
-<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
-<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
-</ol>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
-<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
