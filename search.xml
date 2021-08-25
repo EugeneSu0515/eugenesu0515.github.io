@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
+    <url>/2021/08/25/coravel-queue/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完<a href="https://docs.coravel.net/">Coravel</a>的<code>Scheduler</code>功能後，這篇要來實作<code>Queue</code>的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作<code>Data Migration</code>，為方便，不防做一個前端頁面，才可以有介面去點擊執行<code>Data Migration</code>作業，想當然爾，作業時間一定無法在一個<code>Request</code>時間內完成，一定會噴<code>Timeout Error</code>。</p>
+<p>再則為這點小功能，不想透過<a href="https://www.hangfire.io/">Hangfire</a>的<code>BackgroundJob.Enqueue</code>來實作，這時想到<code>Coravel</code>也有提供<code>Queue</code>功能，API站台的action收到Data Migration的request後，塞入一則<code>Coravel</code>的<code>Queue</code>，由<code>Queue</code>對應的Service去往下執行對應的作業，是個完美的方案吧。</p>
+<span id="more"></span>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝Coravel套件"><a href="#安裝Coravel套件" class="headerlink" title="安裝Coravel套件"></a>安裝Coravel套件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package coravel</span><br></pre></td></tr></table></figure>
+
+<h2 id="註冊Coravel的Queue服務"><a href="#註冊Coravel的Queue服務" class="headerlink" title="註冊Coravel的Queue服務"></a>註冊Coravel的Queue服務</h2><p>首先必須於<code>Startup.cs</code>中註冊Queue</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 以上省略</span></span><br><span class="line">    services.AddQueue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="建構值注入IQueue"><a href="#建構值注入IQueue" class="headerlink" title="建構值注入IQueue"></a>建構值注入IQueue</h2><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">IQueue _queue;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HomeController</span>(<span class="params">IQueue queue</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>._queue = queue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="QueueJob宣告"><a href="#QueueJob宣告" class="headerlink" title="QueueJob宣告"></a>QueueJob宣告</h2><h3 id="QueueJob"><a href="#QueueJob" class="headerlink" title="QueueJob"></a>QueueJob</h3><p>QueueJob與Scheduler一樣，需要實作<code>IInvocable</code></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogQueueJob</span> : <span class="title">IInvocable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogQueueJob</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _env = env;</span><br><span class="line">        _config = config;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(</span><br><span class="line">            <span class="string">$&quot;[QueueuService <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="QueueJobWithPayload"><a href="#QueueJobWithPayload" class="headerlink" title="QueueJobWithPayload"></a>QueueJobWithPayload</h3><p>為了示範PayLoad傳送，宣告一個Class</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserModel</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> UserName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因為需要做序列化成字串輸出，安裝老牌子序列化套件<a href="https://www.newtonsoft.com/json">Json.NET</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package Newtonsoft.Json</span><br></pre></td></tr></table></figure>
+
+<p>筆者就沿用Coravel那篇的Log形式</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogQueueJobWithPayLoad</span> : <span class="title">IInvocable</span>, <span class="title">IInvocableWithPayload</span>&lt;<span class="title">UserModel</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line">    <span class="keyword">public</span> UserModel Payload &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogQueueJobWithPayLoad</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _env = env;</span><br><span class="line">        _config = config;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">$&quot;Payload: <span class="subst">&#123;JsonConvert.SerializeObject(Payload)&#125;</span>&quot;</span>);</span><br><span class="line">        Console.WriteLine(</span><br><span class="line">            <span class="string">$&quot;[QueueServiceWithPayload <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中比LogQueueJob多了一個實作<code>IInvocableWithPayload&lt;T&gt;</code>，該<code>T</code>為要傳輸的<code>Model</code>型別，筆者這邊使用前一步宣告好的<code>UserModel</code>，再則需要宣告一個同樣T型別的參數，並且名為<code>Payload</code>，就大功告成了。</p>
+<h2 id="執行QueueJob"><a href="#執行QueueJob" class="headerlink" title="執行QueueJob"></a>執行QueueJob</h2><h3 id="QueueJob註冊"><a href="#QueueJob註冊" class="headerlink" title="QueueJob註冊"></a>QueueJob註冊</h3><p>筆者上篇也有提醒過，<code>Coravel</code>也是透過<code>Dotnet Core</code>的DI機制，取得<code>QueueJob</code>並執行，因此需要將<code>QueueJob</code>做註冊的動作</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 以上省略</span></span><br><span class="line">    services.AddQueue();</span><br><span class="line">    services.AddTransient&lt;LogQueueJob&gt;();</span><br><span class="line">    services.AddTransient&lt;LogQueueJobWithPayLoad&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="撰寫Demo-Action"><a href="#撰寫Demo-Action" class="headerlink" title="撰寫Demo Action"></a>撰寫Demo Action</h3><p>分別為<code>api/home/queue</code>以及<code>api/home/queuewithpayload</code></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> QueueJob示範</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;queue&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InvocableQueueJob</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _queue.QueueInvocable&lt;LogQueueJob&gt;();</span><br><span class="line">    <span class="keyword">return</span> Ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> QueueJobWithPayload示範</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;queuewithPayload&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InvocableQueueJobWithPayload</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> userModel = <span class="keyword">new</span> UserModel()</span><br><span class="line">    &#123;</span><br><span class="line">        UserName = <span class="string">&quot;Eugene Su&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    _queue.QueueInvocableWithPayload&lt;LogQueueJobWithPayLoad, UserModel&gt;(userModel);</span><br><span class="line">    <span class="keyword">return</span> Ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h2><p>筆者使用單純的<code>dotnet run</code>指令來啟動API站台</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet run</span><br></pre></td></tr></table></figure>
+
+<p>打開<code>Postman</code>，輸入<code>http://localhost:5000/api/home/queue</code>，<code>http method</code>選擇<code>Post</code></p>
+<img src="/2021/08/25/coravel-queue/Untitled.png" class="" title="[Postman-Queue]">
+
+<p>再則我們在<code>command line</code>畫面看輸出</p>
+<img src="/2021/08/25/coravel-queue/Untitled1.png" class="" title="[QueueResult]">
+
+<p>再來試Payload部份，調整一下<code>Postman</code>中的<code>url</code>，結尾改為<code>queuewithpayload</code></p>
+<img src="/2021/08/25/coravel-queue/Untitled2.png" class="" title="[Postman-QueueWithPayload]">
+
+<p>從<code>command line</code>看輸出</p>
+<img src="/2021/08/25/coravel-queue/Untitled3.png" class="" title="[QueueWithPayloadResult]">
+
+<p>可以從結果看出將<code>payload</code>序列化後輸出的結果，也正常輸出時間以及<code>environment</code>的<code>contentrootpath</code></p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>若有一些作業是不需要馬上回應，只要背景作業，筆者認為<code>Coravel</code>的<code>Queue</code>功能不失為一個選項，簡單設定，<code>符合dotnet core的DI機制</code>，簡單上手，推薦給大家。</p>
+<p>參考</p>
+<p><a href="https://docs.coravel.net/Queuing/">https://docs.coravel.net/Queuing/</a></p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>coravel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]ActionFilter實作</title>
     <url>/2021/08/20/dotnetcore-actionfilter/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者公司因為需要符合資安要求，系統規劃中需要設計留下使用者足跡，筆者這邊第一個想到就是用ActionFilter設計，將Htpp Request對應的相關資訊，存到對應的紀錄表中。</p>
@@ -134,66 +194,6 @@
       </tags>
   </entry>
   <entry>
-    <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
-    <url>/2021/08/25/coravel-queue/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完<a href="https://docs.coravel.net/">Coravel</a>的<code>Scheduler</code>功能後，這篇要來實作<code>Queue</code>的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作<code>Data Migration</code>，為方便，不防做一個前端頁面，才可以有介面去點擊執行<code>Data Migration</code>作業，想當然爾，作業時間一定無法在一個<code>Request</code>時間內完成，一定會噴<code>Timeout Error</code>。</p>
-<p>再則為這點小功能，不想透過<a href="https://www.hangfire.io/">Hangfire</a>的<code>BackgroundJob.Enqueue</code>來實作，這時想到<code>Coravel</code>也有提供<code>Queue</code>功能，API站台的action收到Data Migration的request後，塞入一則<code>Coravel</code>的<code>Queue</code>，由<code>Queue</code>對應的Service去往下執行對應的作業，是個完美的方案吧。</p>
-<span id="more"></span>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝Coravel套件"><a href="#安裝Coravel套件" class="headerlink" title="安裝Coravel套件"></a>安裝Coravel套件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package coravel</span><br></pre></td></tr></table></figure>
-
-<h2 id="註冊Coravel的Queue服務"><a href="#註冊Coravel的Queue服務" class="headerlink" title="註冊Coravel的Queue服務"></a>註冊Coravel的Queue服務</h2><p>首先必須於<code>Startup.cs</code>中註冊Queue</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 以上省略</span></span><br><span class="line">    services.AddQueue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="建構值注入IQueue"><a href="#建構值注入IQueue" class="headerlink" title="建構值注入IQueue"></a>建構值注入IQueue</h2><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">IQueue _queue;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HomeController</span>(<span class="params">IQueue queue</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>._queue = queue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="QueueJob宣告"><a href="#QueueJob宣告" class="headerlink" title="QueueJob宣告"></a>QueueJob宣告</h2><h3 id="QueueJob"><a href="#QueueJob" class="headerlink" title="QueueJob"></a>QueueJob</h3><p>QueueJob與Scheduler一樣，需要實作<code>IInvocable</code></p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogQueueJob</span> : <span class="title">IInvocable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogQueueJob</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _env = env;</span><br><span class="line">        _config = config;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(</span><br><span class="line">            <span class="string">$&quot;[QueueuService <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="QueueJobWithPayload"><a href="#QueueJobWithPayload" class="headerlink" title="QueueJobWithPayload"></a>QueueJobWithPayload</h3><p>為了示範PayLoad傳送，宣告一個Class</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserModel</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> UserName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>因為需要做序列化成字串輸出，安裝老牌子序列化套件<a href="https://www.newtonsoft.com/json">Json.NET</a></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package Newtonsoft.Json</span><br></pre></td></tr></table></figure>
-
-<p>筆者就沿用Coravel那篇的Log形式</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogQueueJobWithPayLoad</span> : <span class="title">IInvocable</span>, <span class="title">IInvocableWithPayload</span>&lt;<span class="title">UserModel</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line">    <span class="keyword">public</span> UserModel Payload &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogQueueJobWithPayLoad</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _env = env;</span><br><span class="line">        _config = config;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">$&quot;Payload: <span class="subst">&#123;JsonConvert.SerializeObject(Payload)&#125;</span>&quot;</span>);</span><br><span class="line">        Console.WriteLine(</span><br><span class="line">            <span class="string">$&quot;[QueueServiceWithPayload <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中比LogQueueJob多了一個實作<code>IInvocableWithPayload&lt;T&gt;</code>，該<code>T</code>為要傳輸的<code>Model</code>型別，筆者這邊使用前一步宣告好的<code>UserModel</code>，再則需要宣告一個同樣T型別的參數，並且名為<code>Payload</code>，就大功告成了。</p>
-<h2 id="執行QueueJob"><a href="#執行QueueJob" class="headerlink" title="執行QueueJob"></a>執行QueueJob</h2><h3 id="QueueJob註冊"><a href="#QueueJob註冊" class="headerlink" title="QueueJob註冊"></a>QueueJob註冊</h3><p>筆者上篇也有提醒過，<code>Coravel</code>也是透過<code>Dotnet Core</code>的DI機制，取得<code>QueueJob</code>並執行，因此需要將<code>QueueJob</code>做註冊的動作</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 以上省略</span></span><br><span class="line">    services.AddQueue();</span><br><span class="line">    services.AddTransient&lt;LogQueueJob&gt;();</span><br><span class="line">    services.AddTransient&lt;LogQueueJobWithPayLoad&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="撰寫Demo-Action"><a href="#撰寫Demo-Action" class="headerlink" title="撰寫Demo Action"></a>撰寫Demo Action</h3><p>分別為<code>api/home/queue</code>以及<code>api/home/queuewithpayload</code></p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> QueueJob示範</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;queue&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InvocableQueueJob</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _queue.QueueInvocable&lt;LogQueueJob&gt;();</span><br><span class="line">    <span class="keyword">return</span> Ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> QueueJobWithPayload示範</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;queuewithPayload&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InvocableQueueJobWithPayload</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> userModel = <span class="keyword">new</span> UserModel()</span><br><span class="line">    &#123;</span><br><span class="line">        UserName = <span class="string">&quot;Eugene Su&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    _queue.QueueInvocableWithPayload&lt;LogQueueJobWithPayLoad, UserModel&gt;(userModel);</span><br><span class="line">    <span class="keyword">return</span> Ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h2><p>筆者使用單純的<code>dotnet run</code>指令來啟動API站台</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet run</span><br></pre></td></tr></table></figure>
-
-<p>打開<code>Postman</code>，輸入<code>http://localhost:5000/api/home/queue</code>，<code>http method</code>選擇<code>Post</code></p>
-<img src="/2021/08/25/coravel-queue/Untitled.png" class="" title="[Postman-Queue]">
-
-<p>再則我們在<code>command line</code>畫面看輸出</p>
-<img src="/2021/08/25/coravel-queue/Untitled1.png" class="" title="[QueueResult]">
-
-<p>再來試Payload部份，調整一下<code>Postman</code>中的<code>url</code>，結尾改為<code>queuewithpayload</code></p>
-<img src="/2021/08/25/coravel-queue/Untitled2.png" class="" title="[Postman-QueueWithPayload]">
-
-<p>從<code>command line</code>看輸出</p>
-<img src="/2021/08/25/coravel-queue/Untitled3.png" class="" title="[QueueWithPayloadResult]">
-
-<p>可以從結果看出將<code>payload</code>序列化後輸出的結果，也正常輸出時間以及<code>environment</code>的<code>contentrootpath</code></p>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>若有一些作業是不需要馬上回應，只要背景作業，筆者認為<code>Coravel</code>的<code>Queue</code>功能不失為一個選項，簡單設定，<code>符合dotnet core的DI機制</code>，簡單上手，推薦給大家。</p>
-<p>參考</p>
-<p><a href="https://docs.coravel.net/Queuing/">https://docs.coravel.net/Queuing/</a></p>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>coravel</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>[DotnetCore]EventBus套件CAP:以RabbitMQ為例</title>
     <url>/2021/08/21/dotnetcore-cap/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則<code>Database Pooling</code>的方式進行監聽，若有撈出一筆<code>Status = N</code>的資料則進行邏輯處裡，進行完成後壓回<code>Status = Y 或 N</code>的註記方式來完成該次的串接需求，當然途中也會壓<code>Status = P</code>作為下次<code>Pooling</code>會撈到的防呆，大概就是這麼簡單的技術完成串接的需求。</p>
@@ -250,48 +250,6 @@
         <tag>dotnetcore</tag>
         <tag>cap</tag>
         <tag>rabbitmq</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[DotnetCore]Socket程式實作-解析封包</title>
-    <url>/2021/08/21/dotnetcore-socket-analyze/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇把該有的<code>Socket</code>底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者用過幾個Event設計的原件，基本上可以從<code>dotnet</code>預設的套件就可以看出諸多此類的設計，筆者自己也加工過幾個，例:<code>SMTP Send Mail</code>，使用<code>ProcessInfo</code>執行<code>bat file</code>皆使用上此類技巧。</p>
-<p>以筆者使用的<a href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>來說，他所設計的方式是繼承他原有的物件，將幾個<code>socket</code>發生的事件處裡邏輯封裝成<code>virtual</code>的形式，你可以<code>override</code>成自己想要的樣子，以套件github頁面上提供的範例來說，由幾個處裡事件方法是可以複寫的，如下:</p>
-<ul>
-<li>Server/Session/Client<ul>
-<li>OnConnected</li>
-<li>OnDisconnected</li>
-<li>OnReceived</li>
-<li>OnError</li>
-</ul>
-</li>
-</ul>
-<p>筆者將擴大成將常用的事件定義成契約<code>interface</code>，才會出現<code>IServer</code>及<code>IClient</code></p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IServer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 回傳特定Client封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Client連線事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnAccept</span>(<span class="params">Guid clientId</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;sent&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;pending&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client封包接受事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;buffer&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] buffer</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client關閉</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clietId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnClose</span>(<span class="params">Guid clietId</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IClient</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnClose</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnConnect</span>(<span class="params"><span class="built_in">bool</span> obj</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data, <span class="built_in">int</span> offset, <span class="built_in">int</span> length</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>筆者在中間有換過一次底層套件，<a href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>還是第二次套用的底層元件，為這個套件調整過一次上述Interface，不過因為上層相依的部份只有<code>OnReceive</code>，筆者當初的想法是對於最上層Client使用端來說只有解析封包這件事是客製化的，其他行為是不會改變的，因此才有了<code>IAnalyzeService</code>﹔</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IAnalyzeService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ClientAnalyze</span>(<span class="params"><span class="built_in">byte</span>[] receiveBytes</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ServerAnalyze</span>(<span class="params">Guid arg1, <span class="built_in">byte</span>[] arg2</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看出筆者只定義了Server收到封包後的解析邏輯以及Client收到封包後的解析邏輯，筆者於各自的BaseServer及BaseClient的OnReceive中呼叫IAnalyzeService中對應的Method﹔</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//BaseServer</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ServerAnalyze(clientId, data);</span><br><span class="line">		<span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//BaseClient</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ClientAnalyze(data);</span><br><span class="line">    <span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>意即最上層Client使用端只要注入對應的實作<code>IAnalyzeService</code>，只要<code>OnReceive</code>事件觸發，底層元件會呼叫其對應的解析封包方法。</p>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>藉由這邊來解釋一下底層元件與最上層Client使用端是如何連結的。</p>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>socket</tag>
-        <tag>netcoreserver</tag>
       </tags>
   </entry>
   <entry>
@@ -363,43 +321,45 @@
       </tags>
   </entry>
   <entry>
-    <title>[MySQL]範例資料庫設定</title>
-    <url>/2021/08/23/mysql-sample-db/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+    <title>[DotnetCore]Socket程式實作-解析封包</title>
+    <url>/2021/08/21/dotnetcore-socket-analyze/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇把該有的<code>Socket</code>底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
-<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者用過幾個Event設計的原件，基本上可以從<code>dotnet</code>預設的套件就可以看出諸多此類的設計，筆者自己也加工過幾個，例:<code>SMTP Send Mail</code>，使用<code>ProcessInfo</code>執行<code>bat file</code>皆使用上此類技巧。</p>
+<p>以筆者使用的<a href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>來說，他所設計的方式是繼承他原有的物件，將幾個<code>socket</code>發生的事件處裡邏輯封裝成<code>virtual</code>的形式，你可以<code>override</code>成自己想要的樣子，以套件github頁面上提供的範例來說，由幾個處裡事件方法是可以複寫的，如下:</p>
+<ul>
+<li>Server/Session/Client<ul>
+<li>OnConnected</li>
+<li>OnDisconnected</li>
+<li>OnReceived</li>
+<li>OnError</li>
+</ul>
+</li>
+</ul>
+<p>筆者將擴大成將常用的事件定義成契約<code>interface</code>，才會出現<code>IServer</code>及<code>IClient</code></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IServer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 回傳特定Client封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Client連線事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnAccept</span>(<span class="params">Guid clientId</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;sent&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;pending&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client封包接受事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;buffer&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] buffer</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client關閉</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clietId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnClose</span>(<span class="params">Guid clietId</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>以下皆為已進入MySQL cli後進行</p>
-</blockquote>
-<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IClient</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnClose</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnConnect</span>(<span class="params"><span class="built_in">bool</span> obj</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data, <span class="built_in">int</span> offset, <span class="built_in">int</span> length</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+<p>筆者在中間有換過一次底層套件，<a href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>還是第二次套用的底層元件，為這個套件調整過一次上述Interface，不過因為上層相依的部份只有<code>OnReceive</code>，筆者當初的想法是對於最上層Client使用端來說只有解析封包這件事是客製化的，其他行為是不會改變的，因此才有了<code>IAnalyzeService</code>﹔</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IAnalyzeService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ClientAnalyze</span>(<span class="params"><span class="built_in">byte</span>[] receiveBytes</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ServerAnalyze</span>(<span class="params">Guid arg1, <span class="built_in">byte</span>[] arg2</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
+<p>可以看出筆者只定義了Server收到封包後的解析邏輯以及Client收到封包後的解析邏輯，筆者於各自的BaseServer及BaseClient的OnReceive中呼叫IAnalyzeService中對應的Method﹔</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//BaseServer</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ServerAnalyze(clientId, data);</span><br><span class="line">		<span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
-<ol>
-<li><p>資料庫選擇MySql</p>
-<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
-<li><p>設定連線字串並測試連線</p>
-<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
-<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
-<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
-</ol>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
-<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//BaseClient</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ClientAnalyze(data);</span><br><span class="line">    <span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>意即最上層Client使用端只要注入對應的實作<code>IAnalyzeService</code>，只要<code>OnReceive</code>事件觸發，底層元件會呼叫其對應的解析封包方法。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>藉由這邊來解釋一下底層元件與最上層Client使用端是如何連結的。</p>
 ]]></content>
       <categories>
-        <category>mysql</category>
+        <category>dotnetcore</category>
       </categories>
       <tags>
-        <tag>mysql</tag>
+        <tag>dotnetcore</tag>
+        <tag>socket</tag>
+        <tag>netcoreserver</tag>
       </tags>
   </entry>
   <entry>
@@ -468,6 +428,46 @@
 <li><a href="https://docs.fluentvalidation.net/en/latest/collections.html">https://docs.fluentvalidation.net/en/latest/collections.html</a></li>
 </ul>
 ]]></content>
+  </entry>
+  <entry>
+    <title>[MySQL]安裝與設定</title>
+    <url>/2021/08/23/mysql-install/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
+
+<p>使用root登入並更改root密碼</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>確認更改密碼是否有效</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
+
+<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
+<blockquote>
+<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
+</blockquote>
+<p>請使用以下指令修復</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
+<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
   </entry>
   <entry>
     <title>[DotnetCore]NLog-ILoggerManager設計</title>
@@ -552,6 +552,46 @@
       </tags>
   </entry>
   <entry>
+    <title>[MySQL]範例資料庫設定</title>
+    <url>/2021/08/23/mysql-sample-db/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
+<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以下皆為已進入MySQL cli後進行</p>
+</blockquote>
+<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
+
+<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
+<ol>
+<li><p>資料庫選擇MySql</p>
+<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
+<li><p>設定連線字串並測試連線</p>
+<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
+<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
+<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
+</ol>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
+<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]NLog使用</title>
     <url>/2021/08/23/nlog/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含<code>sql log</code>、<code>ap log</code>以及<code>error log</code>，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的<code>logging框架</code>，<code>dotnet core</code>中也不乏候選套件:<code>NLog</code>、<code>SeriLog</code>、<code>Log4net</code>等等，筆者選擇NLog當作主要Logging機制的底層框架。</p>
@@ -587,46 +627,6 @@
       <tags>
         <tag>dotnetcore</tag>
         <tag>nlog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[MySQL]安裝與設定</title>
-    <url>/2021/08/23/mysql-install/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
-
-<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
-
-<p>使用root登入並更改root密碼</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-
-<p>確認更改密碼是否有效</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
-
-<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
-<blockquote>
-<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
-</blockquote>
-<p>請使用以下指令修復</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
-<p>參考</p>
-<ul>
-<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
-<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
