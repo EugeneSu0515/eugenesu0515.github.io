@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-24T07:57:06.988Z</updated>
+  <updated>2021-08-25T03:07:35.401Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,50 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
+    <link href="https://eugenesu0515.github.io/2021/08/25/coravel-queue/"/>
+    <id>https://eugenesu0515.github.io/2021/08/25/coravel-queue/</id>
+    <published>2021-08-25T02:58:11.000Z</published>
+    <updated>2021-08-25T03:07:35.401Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;a href=&quot;https://docs.coravel.net/&quot;&gt;Coravel&lt;/a&gt;的&lt;code&gt;Scheduler&lt;/code&gt;功能後，這篇要來實作&lt;code&gt;Queue&lt;/code&gt;的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作&lt;code&gt;Data Migration&lt;/code&gt;，為方便，不防做一個前端頁面，才可以有介面去點擊執行&lt;code&gt;Data Migration&lt;/code&gt;作業，想當然爾，作業時間一定無法在一個&lt;code&gt;Request&lt;/code&gt;時間內完成，一定會噴&lt;code&gt;Timeout Error&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;再則為這點小功能，不想透過&lt;a href=&quot;https://www.hangfire.io/&quot;&gt;Hangfire&lt;/a&gt;的&lt;code&gt;BackgroundJob.Enqueue&lt;/code&gt;來實作，這時想到&lt;code&gt;Coravel&lt;/code&gt;也有提供&lt;code&gt;Queue&lt;/code&gt;功能，API站台的action收到Data Migration的request後，塞入一則&lt;code&gt;Coravel&lt;/code&gt;的&lt;code&gt;Queue&lt;/code&gt;，由&lt;code&gt;Queue&lt;/code&gt;對應的Service去往下執行對應的作業，是個完美的方案吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu0515.github.io/tags/coravel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程利器-Coravel:Scheduler篇</title>
+    <link href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/"/>
+    <id>https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/</id>
+    <published>2021-08-25T02:48:46.000Z</published>
+    <updated>2021-08-25T03:02:15.426Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由&lt;code&gt;Windows排程&lt;/code&gt;去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。&lt;/p&gt;
+&lt;p&gt;筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注&lt;a href=&quot;https://github.com/MoienTajik/AspNetCore-Developer-Roadmap&quot;&gt;ASP.NET CORE Developer Roadmap&lt;/a&gt;，不時會在上面找好料，&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu0515.github.io/tags/coravel/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]後端驗證神器:Fluent Validation</title>
@@ -58,7 +102,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/23/nlog/"/>
     <id>https://eugenesu0515.github.io/2021/08/23/nlog/</id>
     <published>2021-08-23T08:49:43.000Z</published>
-    <updated>2021-08-23T09:01:50.653Z</updated>
+    <updated>2021-08-25T01:20:12.991Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含&lt;code&gt;sql log&lt;/code&gt;、&lt;code&gt;ap log&lt;/code&gt;以及&lt;code&gt;error log&lt;/code&gt;，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的&lt;code&gt;logging框架&lt;/code&gt;，&lt;code&gt;dotnet core&lt;/code&gt;中也不乏候選套件:&lt;code&gt;NLog&lt;/code&gt;、&lt;code&gt;SeriLog&lt;/code&gt;、&lt;code&gt;Log4net&lt;/code&gt;等等，筆者選擇NLog當作主要Logging機制的底層框架。&lt;/p&gt;</summary>

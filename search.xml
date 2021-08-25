@@ -28,6 +28,172 @@
       </tags>
   </entry>
   <entry>
+    <title>[DotnetCore]排程利器-Coravel:Scheduler篇</title>
+    <url>/2021/08/25/coravel-scheduler/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由<code>Windows排程</code>去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。</p>
+<p>筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注<a href="https://github.com/MoienTajik/AspNetCore-Developer-Roadmap">ASP.NET CORE Developer Roadmap</a>，不時會在上面找好料，<a href="https://github.com/jamesmh/coravel">Coravel</a>本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧</p>
+<span id="more"></span>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>Coravel本身支援諸多應用，免費版的<code>Scheduler</code>及<code>Queue</code>等等功能，至於<code>Dashboard</code>功能付費版才有，筆者這篇以<code>Scheduler</code>為主介紹其應用方式。</p>
+<h2 id="簡單應用"><a href="#簡單應用" class="headerlink" title="簡單應用"></a>簡單應用</h2><p>首先建立WebAPI專案</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet new webapi --output Coravel.API</span><br></pre></td></tr></table></figure>
+
+<p>請使用Visual Studio Code開啟專案</p>
+<img src="/2021/08/25/coravel-scheduler/Untitled.png" class="" title="[VSCodeProject]">
+
+<p>安裝Coravel套件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package coravel</span><br></pre></td></tr></table></figure>
+
+<p>請於<code>Startup.cs</code>中撰寫程式</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">services.AddScheduler();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> provider = app.ApplicationServices;</span><br><span class="line">provider.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">    scheduler.Schedule(() =&gt; &#123;</span><br><span class="line">        System.Console.WriteLine(<span class="string">$&quot;Hello World! <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>&quot;</span>);</span><br><span class="line">    &#125;).EveryMinute();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>完整程式碼如下：</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 以上省略</span></span><br><span class="line">        services.AddScheduler();</span><br><span class="line">        <span class="comment">// 以下省略</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 以上省略</span></span><br><span class="line">        app.ApplicationServices.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">            scheduler.Schedule(() =&gt; &#123;</span><br><span class="line">                System.Console.WriteLine(<span class="string">$&quot;Hello World! <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>&quot;</span>);</span><br><span class="line">            &#125;).EveryMinute();</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">// 以下省略</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果參考</p>
+<img src="/2021/08/25/coravel-scheduler/Untitled1.png" class="" title="[SchedulerResult]">
+
+
+<h2 id="進階應用"><a href="#進階應用" class="headerlink" title="進階應用"></a>進階應用</h2><h3 id="執行一個Service"><a href="#執行一個Service" class="headerlink" title="執行一個Service"></a>執行一個Service</h3><p>首先建立一個Class，筆者命名為「<code>SchedulerService.cs</code>」，需要實作「<code>IInvocable</code>」</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SchedulerService</span> : <span class="title">IInvocable</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">SchedulerService</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span> &#123;</span><br><span class="line">	    _env = env;</span><br><span class="line">	    _config = config;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">	    System.Console.WriteLine(<span class="string">$&quot;[SchedulerService <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">	    <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下來，要來改寫<code>Startup.cs</code>中的程式</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 注入Service</span></span><br><span class="line">services.AddTransient&lt;SchedulerService&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Schedule改執行自己撰寫的Service</span></span><br><span class="line"><span class="keyword">var</span> provider = app.ApplicationServices;</span><br><span class="line">provider.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">    scheduler.Schedule&lt;SchedulerService&gt;()</span><br><span class="line">        .EverySecond();<span class="comment">// 改為每秒執行</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>執行效果如下</p>
+<img src="/2021/08/25/coravel-scheduler/Untitled2.png" class="" title="[SchedulerResult]">
+
+<blockquote>
+<p>由執行結果可以發現，我們使用自己撰寫的Service是支援dotnet core的DI機制運作，亦即.net core可以使用的注入服務皆可使用，換言之，你也可以注DbContext，於Scheduler Service使用Entity Framework Core與資料庫連線並操作的。</p>
+</blockquote>
+<blockquote>
+<p>其中要特別注意，上述有提到Coravel本身有支援dotnet core的DI機制運作，因此本身自己的Service記得也要注入，不然會爆錯。</p>
+</blockquote>
+<h3 id="Worker-Service中應用"><a href="#Worker-Service中應用" class="headerlink" title="Worker Service中應用"></a>Worker Service中應用</h3><p>使用<code>Visual Studio</code>或<code>dotnet command</code>的方式新增 Worker Service專案</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet new worker -n &#123;ProjectName&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接著找到<code>program.cs</code>中設置<code>Scheduler</code>資訊，完整程式碼</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 原本是CreateHostBuilder(args).Build().Run();</span></span><br><span class="line">        IHost host = CreateHostBuilder(args).Build();</span><br><span class="line">        host.Services.UseScheduler(scheduler =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            scheduler.Schedule&lt;SchedulerService&gt;()</span><br><span class="line">                .EveryFiveMinutes();</span><br><span class="line">        &#125;);</span><br><span class="line">        host.Run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">        Host.CreateDefaultBuilder(args)</span><br><span class="line">            .ConfigureServices((hostContext, services) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                services.AddScheduler();</span><br><span class="line">                services.AddHostedService&lt;Worker&gt;();</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以簡易的排程來說，<code>Coravel</code>本身以足夠應用，算是短小精幹型的套件，其設定方式也是簡單，且也適用<code>dotnet core的DI機制</code>，筆者就覺得很棒了，下篇再來寫它的<code>Queue</code>功能。</p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>coravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[DotnetCore]Batch檔案執行及追縱</title>
+    <url>/2021/08/21/dotnetcore-batch/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放<code>batch file</code>，讓我們方便去執行。</p>
+<span id="more"></span>
+
+<p>上述中的第二種執行<code>batch file</code>變得格外繁瑣，為何這樣說呢，讓筆者娓娓道來，為各系統間不要互相影響，一定將各系統隔開，，試想若把各種不同系統都放在同一台，若該台伺服器遇到甚麼問題，其不就是自找死路，完全運作不下去。基於各種理由會將外部廠商系統獨立於一台伺服器中，這樣問題就來了，第一是<code>batch file</code>是一個落地的檔案，要由另一台伺服器(筆者部門的系統)去觸發執行該<code>batch file</code>，且也要能夠追蹤其執行狀況，因為有可能該bat作業會產生檔案，筆者部門系統需要該檔案做後續作業。</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>介紹完情境後，開始來思考一件事情，我們需要完成哪些事情，如下:</p>
+<ul>
+<li>通知執行</li>
+<li>執行Batch file</li>
+<li>執行結果監聽</li>
+</ul>
+<h2 id="通知執行"><a href="#通知執行" class="headerlink" title="通知執行"></a>通知執行</h2><p>通知執行部分，由諸多選擇，利用<code>SignalR</code>類的 <code>web socket</code>通訊、利用<code>Message Queue</code>、利用<code>資料庫pooling</code>方式，基本上前兩種為留下軌跡紀錄，必須搭配資料庫做紀錄查詢，筆者這邊索性選擇最後一種資料庫Pooling的方式，當然也可以透過<code>SqlDependency</code>的方式監聽資料表的變化，因該方式牽扯到資料庫權限問題，筆者公司環境不允許AP端擁有過高的資料庫權限，僅能有讀寫權限，只能放棄作罷。筆者會會再寫一篇單獨介紹<code>SqlDependency</code>的文章，到時再詳細討論。</p>
+<p>基本上是設計一張資料表存放欲執行的<code>batch file</code>路徑及檔名，以及執行完成後產生的檔案路徑及名稱，筆者工作環境需要由產生檔案的資料做一些邏輯處理，會再加一些執行<code>Store Procedure</code>的設定欄位。對應物件設計如下</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">BatchLog</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BatchId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BatFilePath &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BatFileName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment">// batch file執行完畢後產生檔案路徑及名稱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ResultFilePath &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ResultFileName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment">// 因為要解析產生檔案，資料部分可能會有表頭，其設定為資料列從哪一列開始</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span>? DataStartRow &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment">// 以下為筆者工作環境中用到的解析邏輯相關設定，這就因人而異</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CapPublishName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CapPublishParaFname &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CapPublishParaDataDate &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Result &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ErrorMessage &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AuditUser &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime? AuditTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行Batch-File"><a href="#執行Batch-File" class="headerlink" title="執行Batch File"></a>執行Batch File</h2><p>基本上外部廠商系統，已把執行邏輯包成一個<code>batch file</code>，筆者負責部份使用<code>command line</code>模式下執行該<code>batch file</code>即可。需要用到<code>ProcessStartInfo</code>及<code>Process</code>這兩個類別，參考如下:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> processStartInfo = <span class="keyword">new</span> ProcessStartInfo(<span class="string">&quot;cmd.exe&quot;</span>, <span class="string">$&quot;/c <span class="subst">&#123;_batchLog.BatFileName&#125;</span>&quot;</span>);</span><br><span class="line">    processStartInfo.CreateNoWindow = <span class="literal">true</span>;</span><br><span class="line">    processStartInfo.UseShellExecute = <span class="literal">false</span>;</span><br><span class="line">    processStartInfo.RedirectStandardError = <span class="literal">true</span>;</span><br><span class="line">    processStartInfo.RedirectStandardOutput = <span class="literal">true</span>;</span><br><span class="line">    processStartInfo.WorkingDirectory = _nxbatLog.BatFilePath;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> _process = Process.Start(processStartInfo);</span><br><span class="line">    _process.OutputDataReceived += OutputDataReceived;</span><br><span class="line">    _process.ErrorDataReceived += ErrorDataReceived;</span><br><span class="line">    _process.EnableRaisingEvents = <span class="literal">true</span>;</span><br><span class="line">    _process.Exited += Exited;</span><br><span class="line">    _process.BeginErrorReadLine();</span><br><span class="line">    _process.BeginOutputReadLine();</span><br><span class="line">    _process.WaitForExit();</span><br><span class="line">    _process.Close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ErrorDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OutputDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Exited</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行結果監聽"><a href="#執行結果監聽" class="headerlink" title="執行結果監聽"></a>執行結果監聽</h2><p>上節式碼部份，需要說明一下，筆者測驗的結果，需要配合設定才會有相對應的<code>event</code>事件觸發，須注意一下有些是針對<code>ProcessStartInfo</code>的設定，有些是對<code>Process</code>的設定，需釐清楚:</p>
+<h3 id="Error通知事件"><a href="#Error通知事件" class="headerlink" title="Error通知事件"></a>Error通知事件</h3><p>Error通知事件要特別注意，經由筆者測試發現，即便<code>batch file</code>執行完成後，<code>exitcode</code>為<code>0</code>，仍觸發<code>ErrorDataReceived</code>事件，最保險的方式是裡頭再判斷<code>string.IsNullOrEmpty(e.Data) == false</code>才做接下來要做的事情。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 須將該設定設為true</span></span><br><span class="line">processStartInfo.RedirectStandardError = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 以下掛載event才會作用</span></span><br><span class="line">_process.ErrorDataReceived += ErrorDataReceived;</span><br><span class="line"><span class="comment">// event觸發後處理邏輯</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ErrorDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Output通知事件"><a href="#Output通知事件" class="headerlink" title="Output通知事件"></a>Output通知事件</h3><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 須將該設定設為true</span></span><br><span class="line">processStartInfo.RedirectStandardOutput = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 以下掛載event才會作用</span></span><br><span class="line">_process.OutputDataReceived += OutputDataReceived;</span><br><span class="line"><span class="comment">// event觸發後處理邏輯</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OutputDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="結束通知事件"><a href="#結束通知事件" class="headerlink" title="結束通知事件"></a>結束通知事件</h3><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 須將該設定設為true</span></span><br><span class="line">_process.EnableRaisingEvents = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 以下掛載event才會作用</span></span><br><span class="line">_process.Exited += Exited;</span><br><span class="line"><span class="comment">// event觸發後處理邏輯</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Exited</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>筆者不免俗的利用<code>event</code>, <code>action</code>對最終端使用開放擴充性，附上完整程式碼:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyBatchJob</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> BatchLog _batchLog;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;BatchLog , DataReceivedEventArgs&gt; MyOutputDataReceived;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;BatchLog , DataReceivedEventArgs&gt; MyErrorDataReceived;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;BatchLog , <span class="built_in">int</span>, EventArgs&gt; MyExited;</span><br><span class="line">    <span class="keyword">private</span> Process _process;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyBatchJob</span>(<span class="params">BatchLog batchLog</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _batchLog= batchLog;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> processStartInfo = <span class="keyword">new</span> ProcessStartInfo(<span class="string">&quot;cmd.exe&quot;</span>, <span class="string">$&quot;/c <span class="subst">&#123;_batchLog.BatFileName&#125;</span>&quot;</span>);</span><br><span class="line">        processStartInfo.CreateNoWindow = <span class="literal">true</span>;</span><br><span class="line">        processStartInfo.UseShellExecute = <span class="literal">false</span>;</span><br><span class="line">        processStartInfo.RedirectStandardError = <span class="literal">true</span>;</span><br><span class="line">        processStartInfo.RedirectStandardOutput = <span class="literal">true</span>;</span><br><span class="line">        processStartInfo.WorkingDirectory = _batchLog.BatFilePath;</span><br><span class="line"></span><br><span class="line">        _process = Process.Start(processStartInfo);</span><br><span class="line">        _process.OutputDataReceived += OutputDataReceived;</span><br><span class="line">        _process.ErrorDataReceived += ErrorDataReceived;</span><br><span class="line">        _process.EnableRaisingEvents = <span class="literal">true</span>;</span><br><span class="line">        _process.Exited += Exited;</span><br><span class="line">        _process.BeginErrorReadLine();</span><br><span class="line">        _process.BeginOutputReadLine();</span><br><span class="line">        _process.WaitForExit();</span><br><span class="line">        _process.Close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ErrorDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyErrorDataReceived(_batchLog, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OutputDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyOutputDataReceived(_batchLog, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Exited</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyExited(_batchLog, _process.ExitCode, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Info(<span class="string">$&quot;[MyBatchJob Dispose]!!&quot;</span>);</span><br><span class="line">        _process.Dispose();</span><br><span class="line">        <span class="comment">// Suppress finalization.</span></span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Client端使用"><a href="#Client端使用" class="headerlink" title="Client端使用"></a>Client端使用</h2><p>最終使用端使用起來也很簡便，如下:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// item為BatchLog類別</span></span><br><span class="line"><span class="keyword">var</span> myBatchJob = <span class="keyword">new</span> MyBatchJob(item);</span><br><span class="line">myBatchJob .MyOutputDataReceived += MyOutputDataReceived;</span><br><span class="line">myBatchJob .MyErrorDataReceived += MyErrorDataReceived;</span><br><span class="line">myBatchJob .MyExited += MyExited;</span><br><span class="line">myBatchJob .Execute();</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者因工作環境需要執行<code>batch file</code>，藉機熟悉一下平常比較少使用到的<code>ProcessStartInfo</code>及<code>Process</code>，也因資料庫Pooling及Log，徹底研究了一下對應事件觸發及其設定方式，可以說是以後有類似的需求時，不用再爾外花時間研究其運作方式，基本上筆者程式碼片段中，可以將<code>BatchLog</code>改成<code>泛型T</code>基本上可以變成通用型，也不怕每份工作的不同資料結構設計。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.processstartinfo?view=netcore-3.1">https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.processstartinfo?view=netcore-3.1</a></li>
+<li><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.process?view=netcore-3.1">https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.process?view=netcore-3.1</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>bat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
+    <url>/2021/08/25/coravel-queue/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完<a href="https://docs.coravel.net/">Coravel</a>的<code>Scheduler</code>功能後，這篇要來實作<code>Queue</code>的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作<code>Data Migration</code>，為方便，不防做一個前端頁面，才可以有介面去點擊執行<code>Data Migration</code>作業，想當然爾，作業時間一定無法在一個<code>Request</code>時間內完成，一定會噴<code>Timeout Error</code>。</p>
+<p>再則為這點小功能，不想透過<a href="https://www.hangfire.io/">Hangfire</a>的<code>BackgroundJob.Enqueue</code>來實作，這時想到<code>Coravel</code>也有提供<code>Queue</code>功能，API站台的action收到Data Migration的request後，塞入一則<code>Coravel</code>的<code>Queue</code>，由<code>Queue</code>對應的Service去往下執行對應的作業，是個完美的方案吧。</p>
+<span id="more"></span>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝Coravel套件"><a href="#安裝Coravel套件" class="headerlink" title="安裝Coravel套件"></a>安裝Coravel套件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package coravel</span><br></pre></td></tr></table></figure>
+
+<h2 id="註冊Coravel的Queue服務"><a href="#註冊Coravel的Queue服務" class="headerlink" title="註冊Coravel的Queue服務"></a>註冊Coravel的Queue服務</h2><p>首先必須於<code>Startup.cs</code>中註冊Queue</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 以上省略</span></span><br><span class="line">    services.AddQueue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="建構值注入IQueue"><a href="#建構值注入IQueue" class="headerlink" title="建構值注入IQueue"></a>建構值注入IQueue</h2><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">IQueue _queue;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HomeController</span>(<span class="params">IQueue queue</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>._queue = queue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="QueueJob宣告"><a href="#QueueJob宣告" class="headerlink" title="QueueJob宣告"></a>QueueJob宣告</h2><h3 id="QueueJob"><a href="#QueueJob" class="headerlink" title="QueueJob"></a>QueueJob</h3><p>QueueJob與Scheduler一樣，需要實作<code>IInvocable</code></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogQueueJob</span> : <span class="title">IInvocable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogQueueJob</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _env = env;</span><br><span class="line">        _config = config;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(</span><br><span class="line">            <span class="string">$&quot;[QueueuService <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="QueueJobWithPayload"><a href="#QueueJobWithPayload" class="headerlink" title="QueueJobWithPayload"></a>QueueJobWithPayload</h3><p>為了示範PayLoad傳送，宣告一個Class</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UserModel</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> UserName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因為需要做序列化成字串輸出，安裝老牌子序列化套件<a href="https://www.newtonsoft.com/json">Json.NET</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package Newtonsoft.Json</span><br></pre></td></tr></table></figure>
+
+<p>筆者就沿用Coravel那篇的Log形式</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogQueueJobWithPayLoad</span> : <span class="title">IInvocable</span>, <span class="title">IInvocableWithPayload</span>&lt;<span class="title">UserModel</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line">    <span class="keyword">public</span> UserModel Payload &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogQueueJobWithPayLoad</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _env = env;</span><br><span class="line">        _config = config;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">$&quot;Payload: <span class="subst">&#123;JsonConvert.SerializeObject(Payload)&#125;</span>&quot;</span>);</span><br><span class="line">        Console.WriteLine(</span><br><span class="line">            <span class="string">$&quot;[QueueServiceWithPayload <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中比LogQueueJob多了一個實作<code>IInvocableWithPayload&lt;T&gt;</code>，該<code>T</code>為要傳輸的<code>Model</code>型別，筆者這邊使用前一步宣告好的<code>UserModel</code>，再則需要宣告一個同樣T型別的參數，並且名為<code>Payload</code>，就大功告成了。</p>
+<h2 id="執行QueueJob"><a href="#執行QueueJob" class="headerlink" title="執行QueueJob"></a>執行QueueJob</h2><h3 id="QueueJob註冊"><a href="#QueueJob註冊" class="headerlink" title="QueueJob註冊"></a>QueueJob註冊</h3><p>筆者上篇也有提醒過，<code>Coravel</code>也是透過<code>Dotnet Core</code>的DI機制，取得<code>QueueJob</code>並執行，因此需要將<code>QueueJob</code>做註冊的動作</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 以上省略</span></span><br><span class="line">    services.AddQueue();</span><br><span class="line">    services.AddTransient&lt;LogQueueJob&gt;();</span><br><span class="line">    services.AddTransient&lt;LogQueueJobWithPayLoad&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="撰寫Demo-Action"><a href="#撰寫Demo-Action" class="headerlink" title="撰寫Demo Action"></a>撰寫Demo Action</h3><p>分別為<code>api/home/queue</code>以及<code>api/home/queuewithpayload</code></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> QueueJob示範</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;queue&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InvocableQueueJob</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _queue.QueueInvocable&lt;LogQueueJob&gt;();</span><br><span class="line">    <span class="keyword">return</span> Ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> QueueJobWithPayload示範</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;queuewithPayload&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InvocableQueueJobWithPayload</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> userModel = <span class="keyword">new</span> UserModel()</span><br><span class="line">    &#123;</span><br><span class="line">        UserName = <span class="string">&quot;Eugene Su&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    _queue.QueueInvocableWithPayload&lt;LogQueueJobWithPayLoad, UserModel&gt;(userModel);</span><br><span class="line">    <span class="keyword">return</span> Ok(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h2><p>筆者使用單純的<code>dotnet run</code>指令來啟動API站台</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet run</span><br></pre></td></tr></table></figure>
+
+<p>打開<code>Postman</code>，輸入<code>http://localhost:5000/api/home/queue</code>，<code>http method</code>選擇<code>Post</code></p>
+<img src="/2021/08/25/coravel-queue/Untitled.png" class="" title="[Postman-Queue]">
+
+<p>再則我們在<code>command line</code>畫面看輸出</p>
+<img src="/2021/08/25/coravel-queue/Untitled1.png" class="" title="[QueueResult]">
+
+<p>再來試Payload部份，調整一下<code>Postman</code>中的<code>url</code>，結尾改為<code>queuewithpayload</code></p>
+<img src="/2021/08/25/coravel-queue/Untitled2.png" class="" title="[Postman-QueueWithPayload]">
+
+<p>從<code>command line</code>看輸出</p>
+<img src="/2021/08/25/coravel-queue/Untitled3.png" class="" title="[QueueWithPayloadResult]">
+
+<p>可以從結果看出將<code>payload</code>序列化後輸出的結果，也正常輸出時間以及<code>environment</code>的<code>contentrootpath</code></p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>若有一些作業是不需要馬上回應，只要背景作業，筆者認為<code>Coravel</code>的<code>Queue</code>功能不失為一個選項，簡單設定，<code>符合dotnet core的DI機制</code>，簡單上手，推薦給大家。</p>
+<p>參考</p>
+<p><a href="https://docs.coravel.net/Queuing/">https://docs.coravel.net/Queuing/</a></p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>coravel</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]EventBus套件CAP:以RabbitMQ為例</title>
     <url>/2021/08/21/dotnetcore-cap/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則<code>Database Pooling</code>的方式進行監聽，若有撈出一筆<code>Status = N</code>的資料則進行邏輯處裡，進行完成後壓回<code>Status = Y 或 N</code>的註記方式來完成該次的串接需求，當然途中也會壓<code>Status = P</code>作為下次<code>Pooling</code>會撈到的防呆，大概就是這麼簡單的技術完成串接的需求。</p>
@@ -87,93 +253,6 @@
       </tags>
   </entry>
   <entry>
-    <title>[DotnetCore]SMTP寄信服務設計</title>
-    <url>/2021/08/21/dotnetcore-smtp/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。</p>
-<p>我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。</p>
-<span id="more"></span>
-
-<p>大概運作方式就是，排程服務時間到要運行時，會將 <code>Status = &#39;N&#39;</code> 符合的資料撈出來，一筆一筆進行寄信作業，但由於在<code>foreach</code>中若用同步的方式寄信則會大塞車，當然要考慮最差狀況，因此必須要使用非同步方式進行寄信。但非同步方式的話，只要 <code>SendMailAsync()</code> 後會與主程式脫鉤，無法掌握寄信成功與否，更新其對應的紀錄，將<code>Status</code>更新為<code>Y</code> 或 <code>F</code>。</p>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者第一步是想到<code>SmtpClient</code>本身應該會有提供相對應的事件，查一下就會看到有<code>SendCompleted</code> 可以觸發，但此<code>call back function</code>帶回的參數，為<code>object sender, AsyncCompletedEventArgs e</code>，只知道寄信結果及<code>SmtpClient(Sender)</code>相關資訊，無法取得寄信資料表對應的資料，才有辦法做更新作業。</p>
-<p><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.net.mail.smtpclient.sendcompleted?view=net-5.0">SmtpClient.SendCompleted 事件 (System.Net.Mail)</a></p>
-<p>筆者接下去思考，自己必須要包一個類別，把寄信資料表對應的資料接進來變內部變數，對外開放<code>Event</code>，使外部使用端可以接受寄信結果完成事件觸發，再由該<code>Event</code>時丟出</p>
-<ul>
-<li>寄信資料表對應的資料</li>
-<li>寄信作業結果</li>
-</ul>
-<h2 id="寄信需求資料"><a href="#寄信需求資料" class="headerlink" title="寄信需求資料"></a>寄信需求資料</h2><p>來實作吧，首先先規劃出寄信需求資料結構，如下:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MailToDoItem</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> SeqNo &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 服務名稱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SourceId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 主要收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_To &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 副本收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_Cc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件主旨</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Subject &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件內容</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Message &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信狀態(N, P, Y, F)</span></span><br><span class="line">		<span class="comment">// N: 尚未寄信</span></span><br><span class="line">		<span class="comment">// P: 寄信中</span></span><br><span class="line">		<span class="comment">// Y: 寄信完成</span></span><br><span class="line">		<span class="comment">// F: 寄信失敗(搭配ErrMessage)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Status &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信者</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SendUser &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信時間</span></span><br><span class="line">    <span class="keyword">public</span> DateTime? SendTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 錯誤訊息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ErrMessage &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="寄信服務類別"><a href="#寄信服務類別" class="headerlink" title="寄信服務類別"></a>寄信服務類別</h2><p>接著自己的寄信服務類別:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MySmtpClient</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    <span class="keyword">private</span> MailToDoItem _mailToDo;</span><br><span class="line">    <span class="keyword">private</span> SmtpClient _smtpClient;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;MailToDoItem, AsyncCompletedEventArgs&gt; MySendCompleted;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SKBSmtpClient</span>(<span class="params">MailToDoItem mailToDoCfm, EmailSetting emailSetting</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _mailToDo = mailToDo;</span><br><span class="line">        _smtpClient = <span class="keyword">new</span> SmtpClient(emailSetting.SmtpServer);</span><br><span class="line">        _smtpClient.SendCompleted += <span class="keyword">new</span> SendCompletedEventHandler(_smtpClient_SendCompleted);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> _smtpClient_SendCompleted(<span class="built_in">object</span> sender, AsyncCompletedEventArgs e)</span><br><span class="line">    &#123;</span><br><span class="line">        MySendCompleted(_mailToDo, e);</span><br><span class="line">        _smtpClient.SendCompleted -= _smtpClient_SendCompleted;</span><br><span class="line">        <span class="keyword">this</span>.Dispose();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMailProcess</span>(<span class="params"><span class="built_in">string</span> systemId</span></span></span><br><span class="line"><span class="params"><span class="function">        , <span class="built_in">byte</span>[] attach, <span class="built_in">string</span> attachName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MailMessage mailMessage = <span class="keyword">new</span> MailMessage();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> mailFrom = <span class="keyword">new</span> MailAddress(<span class="string">$&quot;<span class="subst">&#123;systemId&#125;</span>@company.com.tw&quot;</span>, systemId);</span><br><span class="line">        mailMessage.From = mailFrom;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_To?.Split(<span class="string">&quot;;&quot;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.To.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_Cc?.Split(<span class="string">&#x27;;&#x27;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.CC.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        mailMessage.Body = _mailToDo.Message;</span><br><span class="line">        mailMessage.Subject = _mailToDo.Subject;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (attach != <span class="literal">null</span> &amp;&amp; attach?.Length &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Attachment attachment = <span class="keyword">new</span> Attachment(<span class="keyword">new</span> MemoryStream(attach), attachName);</span><br><span class="line">            mailMessage.Attachments.Add(attachment);</span><br><span class="line">        &#125;</span><br><span class="line">        _smtpClient.SendMailAsync(mailMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Info(<span class="string">$&quot;[MySmtpClient Dispose]!!&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>._smtpClient.Dispose();</span><br><span class="line">        <span class="comment">// Suppress finalization.</span></span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上 <code>MySmtpClient</code> 包裝<code>SmtpClient</code>，達到物件導向設計三大特性中的封裝，你不需要知道我怎麼寄信，把<code>寄信資料表對應的資料</code>及<code>SmtpServer</code>相關的資訊給我，我幫你完成寄信，且寄信完成後會再由你自定義的事件觸發讓你知道已完成。</p>
-<p>使用端使用方式也很簡單，第一步宣告事件對應的<code>Action</code>:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">MailSendCompleted</span>(<span class="params">MailToDoItem mailToDoItem, AsyncCompletedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _logger.Info(<span class="string">$&quot;[Send Completed]: <span class="subst">&#123;JsonConvert.SerializeObject(mailToDoItem)&#125;</span>&quot;</span>);</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = e.Error != <span class="literal">null</span> ? <span class="string">&quot;F&quot;</span> : <span class="string">&quot;Y&quot;</span>;</span><br><span class="line">        <span class="keyword">var</span> errMsg = e.Error != <span class="literal">null</span> ? e.Error.ToString() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">        _conn.Execute(<span class="string">@&quot;UPDATE MailToDo SET Status = @Status, ErrMessage = @ErrMessage</span></span><br><span class="line"><span class="string">                            , SendUser = @SendUser, SendTime = @SendTime WHERE SeqNo = @SeqNo&quot;</span></span><br><span class="line">                                , <span class="keyword">new</span></span><br><span class="line">                                &#123;</span><br><span class="line">                                    Status = result,</span><br><span class="line">                                    mailToDoItem.SeqNo,</span><br><span class="line">                                    SendUser = <span class="string">&quot;SYS&quot;</span>,</span><br><span class="line">                                    SendTime = DateTime.Now,</span><br><span class="line">                                    ErrMessage = errMsg</span><br><span class="line">                                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="寄信Client端"><a href="#寄信Client端" class="headerlink" title="寄信Client端"></a>寄信Client端</h2><p>再寄信需求程式片段中呼叫:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mySmtpClient = <span class="keyword">new</span> MySmtpClient(mailToDoItem, emailSetting);</span><br><span class="line">mySmtpClient.SKBSendCompleted += MailSendCompleted;</span><br><span class="line">mySmtpClient.SendMailProcess(<span class="string">&quot;MySystem.Admin&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以上，筆者在實際掛排程服務跑過，是沒有問題的，確實感受到非同步的好處，以及 <code>event, action</code>的搭配，堪稱是完美。要記住<code>event, action</code>的搭配，筆者會在爾後會常使用到該技巧。</p>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>smtp</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[DotnetCore]Batch檔案執行及追縱</title>
-    <url>/2021/08/21/dotnetcore-batch/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放<code>batch file</code>，讓我們方便去執行。</p>
-<span id="more"></span>
-
-<p>上述中的第二種執行<code>batch file</code>變得格外繁瑣，為何這樣說呢，讓筆者娓娓道來，為各系統間不要互相影響，一定將各系統隔開，，試想若把各種不同系統都放在同一台，若該台伺服器遇到甚麼問題，其不就是自找死路，完全運作不下去。基於各種理由會將外部廠商系統獨立於一台伺服器中，這樣問題就來了，第一是<code>batch file</code>是一個落地的檔案，要由另一台伺服器(筆者部門的系統)去觸發執行該<code>batch file</code>，且也要能夠追蹤其執行狀況，因為有可能該bat作業會產生檔案，筆者部門系統需要該檔案做後續作業。</p>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>介紹完情境後，開始來思考一件事情，我們需要完成哪些事情，如下:</p>
-<ul>
-<li>通知執行</li>
-<li>執行Batch file</li>
-<li>執行結果監聽</li>
-</ul>
-<h2 id="通知執行"><a href="#通知執行" class="headerlink" title="通知執行"></a>通知執行</h2><p>通知執行部分，由諸多選擇，利用<code>SignalR</code>類的 <code>web socket</code>通訊、利用<code>Message Queue</code>、利用<code>資料庫pooling</code>方式，基本上前兩種為留下軌跡紀錄，必須搭配資料庫做紀錄查詢，筆者這邊索性選擇最後一種資料庫Pooling的方式，當然也可以透過<code>SqlDependency</code>的方式監聽資料表的變化，因該方式牽扯到資料庫權限問題，筆者公司環境不允許AP端擁有過高的資料庫權限，僅能有讀寫權限，只能放棄作罷。筆者會會再寫一篇單獨介紹<code>SqlDependency</code>的文章，到時再詳細討論。</p>
-<p>基本上是設計一張資料表存放欲執行的<code>batch file</code>路徑及檔名，以及執行完成後產生的檔案路徑及名稱，筆者工作環境需要由產生檔案的資料做一些邏輯處理，會再加一些執行<code>Store Procedure</code>的設定欄位。對應物件設計如下</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">BatchLog</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BatchId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BatFilePath &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> BatFileName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment">// batch file執行完畢後產生檔案路徑及名稱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ResultFilePath &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ResultFileName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment">// 因為要解析產生檔案，資料部分可能會有表頭，其設定為資料列從哪一列開始</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span>? DataStartRow &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="comment">// 以下為筆者工作環境中用到的解析邏輯相關設定，這就因人而異</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CapPublishName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CapPublishParaFname &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CapPublishParaDataDate &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Result &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ErrorMessage &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AuditUser &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> DateTime? AuditTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="執行Batch-File"><a href="#執行Batch-File" class="headerlink" title="執行Batch File"></a>執行Batch File</h2><p>基本上外部廠商系統，已把執行邏輯包成一個<code>batch file</code>，筆者負責部份使用<code>command line</code>模式下執行該<code>batch file</code>即可。需要用到<code>ProcessStartInfo</code>及<code>Process</code>這兩個類別，參考如下:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> processStartInfo = <span class="keyword">new</span> ProcessStartInfo(<span class="string">&quot;cmd.exe&quot;</span>, <span class="string">$&quot;/c <span class="subst">&#123;_batchLog.BatFileName&#125;</span>&quot;</span>);</span><br><span class="line">    processStartInfo.CreateNoWindow = <span class="literal">true</span>;</span><br><span class="line">    processStartInfo.UseShellExecute = <span class="literal">false</span>;</span><br><span class="line">    processStartInfo.RedirectStandardError = <span class="literal">true</span>;</span><br><span class="line">    processStartInfo.RedirectStandardOutput = <span class="literal">true</span>;</span><br><span class="line">    processStartInfo.WorkingDirectory = _nxbatLog.BatFilePath;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> _process = Process.Start(processStartInfo);</span><br><span class="line">    _process.OutputDataReceived += OutputDataReceived;</span><br><span class="line">    _process.ErrorDataReceived += ErrorDataReceived;</span><br><span class="line">    _process.EnableRaisingEvents = <span class="literal">true</span>;</span><br><span class="line">    _process.Exited += Exited;</span><br><span class="line">    _process.BeginErrorReadLine();</span><br><span class="line">    _process.BeginOutputReadLine();</span><br><span class="line">    _process.WaitForExit();</span><br><span class="line">    _process.Close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ErrorDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OutputDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Exited</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="執行結果監聽"><a href="#執行結果監聽" class="headerlink" title="執行結果監聽"></a>執行結果監聽</h2><p>上節式碼部份，需要說明一下，筆者測驗的結果，需要配合設定才會有相對應的<code>event</code>事件觸發，須注意一下有些是針對<code>ProcessStartInfo</code>的設定，有些是對<code>Process</code>的設定，需釐清楚:</p>
-<h3 id="Error通知事件"><a href="#Error通知事件" class="headerlink" title="Error通知事件"></a>Error通知事件</h3><p>Error通知事件要特別注意，經由筆者測試發現，即便<code>batch file</code>執行完成後，<code>exitcode</code>為<code>0</code>，仍觸發<code>ErrorDataReceived</code>事件，最保險的方式是裡頭再判斷<code>string.IsNullOrEmpty(e.Data) == false</code>才做接下來要做的事情。</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 須將該設定設為true</span></span><br><span class="line">processStartInfo.RedirectStandardError = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 以下掛載event才會作用</span></span><br><span class="line">_process.ErrorDataReceived += ErrorDataReceived;</span><br><span class="line"><span class="comment">// event觸發後處理邏輯</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ErrorDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Output通知事件"><a href="#Output通知事件" class="headerlink" title="Output通知事件"></a>Output通知事件</h3><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 須將該設定設為true</span></span><br><span class="line">processStartInfo.RedirectStandardOutput = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 以下掛載event才會作用</span></span><br><span class="line">_process.OutputDataReceived += OutputDataReceived;</span><br><span class="line"><span class="comment">// event觸發後處理邏輯</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OutputDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="結束通知事件"><a href="#結束通知事件" class="headerlink" title="結束通知事件"></a>結束通知事件</h3><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 須將該設定設為true</span></span><br><span class="line">_process.EnableRaisingEvents = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 以下掛載event才會作用</span></span><br><span class="line">_process.Exited += Exited;</span><br><span class="line"><span class="comment">// event觸發後處理邏輯</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Exited</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// logic</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>筆者不免俗的利用<code>event</code>, <code>action</code>對最終端使用開放擴充性，附上完整程式碼:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyBatchJob</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> BatchLog _batchLog;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;BatchLog , DataReceivedEventArgs&gt; MyOutputDataReceived;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;BatchLog , DataReceivedEventArgs&gt; MyErrorDataReceived;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;BatchLog , <span class="built_in">int</span>, EventArgs&gt; MyExited;</span><br><span class="line">    <span class="keyword">private</span> Process _process;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyBatchJob</span>(<span class="params">BatchLog batchLog</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _batchLog= batchLog;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> processStartInfo = <span class="keyword">new</span> ProcessStartInfo(<span class="string">&quot;cmd.exe&quot;</span>, <span class="string">$&quot;/c <span class="subst">&#123;_batchLog.BatFileName&#125;</span>&quot;</span>);</span><br><span class="line">        processStartInfo.CreateNoWindow = <span class="literal">true</span>;</span><br><span class="line">        processStartInfo.UseShellExecute = <span class="literal">false</span>;</span><br><span class="line">        processStartInfo.RedirectStandardError = <span class="literal">true</span>;</span><br><span class="line">        processStartInfo.RedirectStandardOutput = <span class="literal">true</span>;</span><br><span class="line">        processStartInfo.WorkingDirectory = _batchLog.BatFilePath;</span><br><span class="line"></span><br><span class="line">        _process = Process.Start(processStartInfo);</span><br><span class="line">        _process.OutputDataReceived += OutputDataReceived;</span><br><span class="line">        _process.ErrorDataReceived += ErrorDataReceived;</span><br><span class="line">        _process.EnableRaisingEvents = <span class="literal">true</span>;</span><br><span class="line">        _process.Exited += Exited;</span><br><span class="line">        _process.BeginErrorReadLine();</span><br><span class="line">        _process.BeginOutputReadLine();</span><br><span class="line">        _process.WaitForExit();</span><br><span class="line">        _process.Close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ErrorDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyErrorDataReceived(_batchLog, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OutputDataReceived</span>(<span class="params"><span class="built_in">object</span> sender, DataReceivedEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyOutputDataReceived(_batchLog, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Exited</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyExited(_batchLog, _process.ExitCode, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Info(<span class="string">$&quot;[MyBatchJob Dispose]!!&quot;</span>);</span><br><span class="line">        _process.Dispose();</span><br><span class="line">        <span class="comment">// Suppress finalization.</span></span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Client端使用"><a href="#Client端使用" class="headerlink" title="Client端使用"></a>Client端使用</h2><p>最終使用端使用起來也很簡便，如下:</p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// item為BatchLog類別</span></span><br><span class="line"><span class="keyword">var</span> myBatchJob = <span class="keyword">new</span> MyBatchJob(item);</span><br><span class="line">myBatchJob .MyOutputDataReceived += MyOutputDataReceived;</span><br><span class="line">myBatchJob .MyErrorDataReceived += MyErrorDataReceived;</span><br><span class="line">myBatchJob .MyExited += MyExited;</span><br><span class="line">myBatchJob .Execute();</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者因工作環境需要執行<code>batch file</code>，藉機熟悉一下平常比較少使用到的<code>ProcessStartInfo</code>及<code>Process</code>，也因資料庫Pooling及Log，徹底研究了一下對應事件觸發及其設定方式，可以說是以後有類似的需求時，不用再爾外花時間研究其運作方式，基本上筆者程式碼片段中，可以將<code>BatchLog</code>改成<code>泛型T</code>基本上可以變成通用型，也不怕每份工作的不同資料結構設計。</p>
-<p>參考</p>
-<ul>
-<li><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.processstartinfo?view=netcore-3.1">https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.processstartinfo?view=netcore-3.1</a></li>
-<li><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.process?view=netcore-3.1">https://docs.microsoft.com/zh-tw/dotnet/api/system.diagnostics.process?view=netcore-3.1</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>dotnetcore</category>
-      </categories>
-      <tags>
-        <tag>dotnetcore</tag>
-        <tag>bat</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>[DotnetCore]Socket程式實作-解析封包</title>
     <url>/2021/08/21/dotnetcore-socket-analyze/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇把該有的<code>Socket</code>底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。</p>
@@ -216,6 +295,44 @@
       </tags>
   </entry>
   <entry>
+    <title>[DotnetCore]SMTP寄信服務設計</title>
+    <url>/2021/08/21/dotnetcore-smtp/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。</p>
+<p>我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。</p>
+<span id="more"></span>
+
+<p>大概運作方式就是，排程服務時間到要運行時，會將 <code>Status = &#39;N&#39;</code> 符合的資料撈出來，一筆一筆進行寄信作業，但由於在<code>foreach</code>中若用同步的方式寄信則會大塞車，當然要考慮最差狀況，因此必須要使用非同步方式進行寄信。但非同步方式的話，只要 <code>SendMailAsync()</code> 後會與主程式脫鉤，無法掌握寄信成功與否，更新其對應的紀錄，將<code>Status</code>更新為<code>Y</code> 或 <code>F</code>。</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者第一步是想到<code>SmtpClient</code>本身應該會有提供相對應的事件，查一下就會看到有<code>SendCompleted</code> 可以觸發，但此<code>call back function</code>帶回的參數，為<code>object sender, AsyncCompletedEventArgs e</code>，只知道寄信結果及<code>SmtpClient(Sender)</code>相關資訊，無法取得寄信資料表對應的資料，才有辦法做更新作業。</p>
+<p><a href="https://docs.microsoft.com/zh-tw/dotnet/api/system.net.mail.smtpclient.sendcompleted?view=net-5.0">SmtpClient.SendCompleted 事件 (System.Net.Mail)</a></p>
+<p>筆者接下去思考，自己必須要包一個類別，把寄信資料表對應的資料接進來變內部變數，對外開放<code>Event</code>，使外部使用端可以接受寄信結果完成事件觸發，再由該<code>Event</code>時丟出</p>
+<ul>
+<li>寄信資料表對應的資料</li>
+<li>寄信作業結果</li>
+</ul>
+<h2 id="寄信需求資料"><a href="#寄信需求資料" class="headerlink" title="寄信需求資料"></a>寄信需求資料</h2><p>來實作吧，首先先規劃出寄信需求資料結構，如下:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MailToDoItem</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> SeqNo &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 服務名稱</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SourceId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 主要收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_To &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 副本收信者(多個以;隔開)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Mail_Cc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件主旨</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Subject &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 信件內容</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Message &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信狀態(N, P, Y, F)</span></span><br><span class="line">		<span class="comment">// N: 尚未寄信</span></span><br><span class="line">		<span class="comment">// P: 寄信中</span></span><br><span class="line">		<span class="comment">// Y: 寄信完成</span></span><br><span class="line">		<span class="comment">// F: 寄信失敗(搭配ErrMessage)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Status &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信者</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SendUser &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 寄信時間</span></span><br><span class="line">    <span class="keyword">public</span> DateTime? SendTime &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		<span class="comment">// 錯誤訊息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ErrMessage &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="寄信服務類別"><a href="#寄信服務類別" class="headerlink" title="寄信服務類別"></a>寄信服務類別</h2><p>接著自己的寄信服務類別:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MySmtpClient</span> : <span class="title">IDisposable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger _logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">    <span class="keyword">private</span> MailToDoItem _mailToDo;</span><br><span class="line">    <span class="keyword">private</span> SmtpClient _smtpClient;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;MailToDoItem, AsyncCompletedEventArgs&gt; MySendCompleted;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SKBSmtpClient</span>(<span class="params">MailToDoItem mailToDoCfm, EmailSetting emailSetting</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _mailToDo = mailToDo;</span><br><span class="line">        _smtpClient = <span class="keyword">new</span> SmtpClient(emailSetting.SmtpServer);</span><br><span class="line">        _smtpClient.SendCompleted += <span class="keyword">new</span> SendCompletedEventHandler(_smtpClient_SendCompleted);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> _smtpClient_SendCompleted(<span class="built_in">object</span> sender, AsyncCompletedEventArgs e)</span><br><span class="line">    &#123;</span><br><span class="line">        MySendCompleted(_mailToDo, e);</span><br><span class="line">        _smtpClient.SendCompleted -= _smtpClient_SendCompleted;</span><br><span class="line">        <span class="keyword">this</span>.Dispose();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SendMailProcess</span>(<span class="params"><span class="built_in">string</span> systemId</span></span></span><br><span class="line"><span class="params"><span class="function">        , <span class="built_in">byte</span>[] attach, <span class="built_in">string</span> attachName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MailMessage mailMessage = <span class="keyword">new</span> MailMessage();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> mailFrom = <span class="keyword">new</span> MailAddress(<span class="string">$&quot;<span class="subst">&#123;systemId&#125;</span>@company.com.tw&quot;</span>, systemId);</span><br><span class="line">        mailMessage.From = mailFrom;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_To?.Split(<span class="string">&quot;;&quot;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.To.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> _mailToDo.Mail_Cc?.Split(<span class="string">&#x27;;&#x27;</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(item) == <span class="literal">false</span>)</span><br><span class="line">                mailMessage.CC.Add(item);</span><br><span class="line">        &#125;</span><br><span class="line">        mailMessage.Body = _mailToDo.Message;</span><br><span class="line">        mailMessage.Subject = _mailToDo.Subject;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (attach != <span class="literal">null</span> &amp;&amp; attach?.Length &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Attachment attachment = <span class="keyword">new</span> Attachment(<span class="keyword">new</span> MemoryStream(attach), attachName);</span><br><span class="line">            mailMessage.Attachments.Add(attachment);</span><br><span class="line">        &#125;</span><br><span class="line">        _smtpClient.SendMailAsync(mailMessage);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Dispose</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Info(<span class="string">$&quot;[MySmtpClient Dispose]!!&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>._smtpClient.Dispose();</span><br><span class="line">        <span class="comment">// Suppress finalization.</span></span><br><span class="line">        GC.SuppressFinalize(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上 <code>MySmtpClient</code> 包裝<code>SmtpClient</code>，達到物件導向設計三大特性中的封裝，你不需要知道我怎麼寄信，把<code>寄信資料表對應的資料</code>及<code>SmtpServer</code>相關的資訊給我，我幫你完成寄信，且寄信完成後會再由你自定義的事件觸發讓你知道已完成。</p>
+<p>使用端使用方式也很簡單，第一步宣告事件對應的<code>Action</code>:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">MailSendCompleted</span>(<span class="params">MailToDoItem mailToDoItem, AsyncCompletedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    _logger.Info(<span class="string">$&quot;[Send Completed]: <span class="subst">&#123;JsonConvert.SerializeObject(mailToDoItem)&#125;</span>&quot;</span>);</span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = e.Error != <span class="literal">null</span> ? <span class="string">&quot;F&quot;</span> : <span class="string">&quot;Y&quot;</span>;</span><br><span class="line">        <span class="keyword">var</span> errMsg = e.Error != <span class="literal">null</span> ? e.Error.ToString() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">        _conn.Execute(<span class="string">@&quot;UPDATE MailToDo SET Status = @Status, ErrMessage = @ErrMessage</span></span><br><span class="line"><span class="string">                            , SendUser = @SendUser, SendTime = @SendTime WHERE SeqNo = @SeqNo&quot;</span></span><br><span class="line">                                , <span class="keyword">new</span></span><br><span class="line">                                &#123;</span><br><span class="line">                                    Status = result,</span><br><span class="line">                                    mailToDoItem.SeqNo,</span><br><span class="line">                                    SendUser = <span class="string">&quot;SYS&quot;</span>,</span><br><span class="line">                                    SendTime = DateTime.Now,</span><br><span class="line">                                    ErrMessage = errMsg</span><br><span class="line">                                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="寄信Client端"><a href="#寄信Client端" class="headerlink" title="寄信Client端"></a>寄信Client端</h2><p>再寄信需求程式片段中呼叫:</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mySmtpClient = <span class="keyword">new</span> MySmtpClient(mailToDoItem, emailSetting);</span><br><span class="line">mySmtpClient.SKBSendCompleted += MailSendCompleted;</span><br><span class="line">mySmtpClient.SendMailProcess(<span class="string">&quot;MySystem.Admin&quot;</span>, <span class="literal">null</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以上，筆者在實際掛排程服務跑過，是沒有問題的，確實感受到非同步的好處，以及 <code>event, action</code>的搭配，堪稱是完美。要記住<code>event, action</code>的搭配，筆者會在爾後會常使用到該技巧。</p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>smtp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]Socket程式實作-切割封包</title>
     <url>/2021/08/21/dotnetcore-socket-slicing/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發<code>OnReceive</code>事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出<code>offset</code>及<code>size</code>，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。</p>
@@ -243,6 +360,46 @@
         <tag>dotnetcore</tag>
         <tag>socket</tag>
         <tag>netcoreserver</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[MySQL]範例資料庫設定</title>
+    <url>/2021/08/23/mysql-sample-db/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
+<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以下皆為已進入MySQL cli後進行</p>
+</blockquote>
+<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
+
+<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
+<ol>
+<li><p>資料庫選擇MySql</p>
+<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
+<li><p>設定連線字串並測試連線</p>
+<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
+<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
+<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
+</ol>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
+<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
       </tags>
   </entry>
   <entry>
@@ -311,145 +468,6 @@
 <li><a href="https://docs.fluentvalidation.net/en/latest/collections.html">https://docs.fluentvalidation.net/en/latest/collections.html</a></li>
 </ul>
 ]]></content>
-  </entry>
-  <entry>
-    <title>[MySQL]安裝與設定</title>
-    <url>/2021/08/23/mysql-install/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
-
-<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
-
-<p>使用root登入並更改root密碼</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-
-<p>確認更改密碼是否有效</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
-
-<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
-<blockquote>
-<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
-</blockquote>
-<p>請使用以下指令修復</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
-<p>參考</p>
-<ul>
-<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
-<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[MySQL]範例資料庫設定</title>
-    <url>/2021/08/23/mysql-sample-db/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
-<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>以下皆為已進入MySQL cli後進行</p>
-</blockquote>
-<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
-
-<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
-<ol>
-<li><p>資料庫選擇MySql</p>
-<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
-<li><p>設定連線字串並測試連線</p>
-<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
-<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
-<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
-</ol>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
-<p>參考<br><a href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
-]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>mysql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>[RabbitMQ]安裝及設定</title>
-    <url>/2021/08/21/rabbitmq-install/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p><code>RabbitMQ</code>是實現<code>AMQP(Advanced Message Queuing Protocol)</code>的伺服器，使用<code>Er lang</code>撰寫而成，且提供<code>HA</code>及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。</p>
-<span id="more"></span>
-
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>首先因為<code>RabbitMQ</code>使用<code>ER Lang</code>撰寫而成，需要安裝執行環境，因此需先設定<code>ER Lang</code>的環境:</p>
-<h2 id="ERLang安裝及設定"><a href="#ERLang安裝及設定" class="headerlink" title="ERLang安裝及設定"></a>ERLang安裝及設定</h2><p>ERLang安裝檔案下載連結</p>
-<p><a href="https://www.erlang.org/news/135">Erlang Programming Language</a></p>
-<img src="/2021/08/21/rabbitmq-install/Untitled.png" class="" title="[ErlangInstallOptions]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled1.png" class="" title="[ErlanInstallPercentage]">
-
-<p>設定ERLang環境變數(新增系統變數)</p>
-<blockquote>
-<p>ERLANG_HOME C:\Program Files\erl10.6</p>
-</blockquote>
-<img src="/2021/08/21/rabbitmq-install/Untitled2.png" class="" title="[ErlanEnvironmentPath]">
-
-<h2 id="Rabbit-MQ安裝及設定"><a href="#Rabbit-MQ安裝及設定" class="headerlink" title="Rabbit MQ安裝及設定"></a>Rabbit MQ安裝及設定</h2><h3 id="使用choco安裝"><a href="#使用choco安裝" class="headerlink" title="使用choco安裝"></a>使用choco安裝</h3><p><a href="https://chocolatey.org/packages/rabbitmq">RabbitMQ 3.8.2</a></p>
-<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">choco install rabbitmq</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用安裝檔案安裝"><a href="#使用安裝檔案安裝" class="headerlink" title="使用安裝檔案安裝"></a>使用安裝檔案安裝</h3><p>下載連結</p>
-<p><a href="https://www.rabbitmq.com/install-windows.html">Installing on Windows</a></p>
-<img src="/2021/08/21/rabbitmq-install/Untitled3.png" class="" title="[RabbitMQInstallOptions]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled4.png" class="" title="[RabbitMQInstallAlert]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled5.png" class="" title="[RabbitMQInstallPercentage]">
-
-<img src="/2021/08/21/rabbitmq-install/Untitled6.png" class="" title="[RabbitMQInstallComplete]">
-
-<h2 id="Rabbit-MQ設定及開啟管理介面"><a href="#Rabbit-MQ設定及開啟管理介面" class="headerlink" title="Rabbit MQ設定及開啟管理介面"></a>Rabbit MQ設定及開啟管理介面</h2><p>開啟Command line介面，筆者這邊以 <a href="https://cmder.net/">cmder</a>為例</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 進入Rabbit MQ bat檔案路徑</span><br><span class="line"><span class="built_in">cd</span> C:\Program Files\RabbitMQ Server\rabbitmq_server-3.8.2\sbin</span><br><span class="line"></span><br><span class="line">// 開啟管理介面</span><br><span class="line">rabbitmq-plugins.bat <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"></span><br><span class="line">// 重起服務</span><br><span class="line">net stop rabbitmq &amp;&amp; net start rabbitmq</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/08/21/rabbitmq-install/Untitled7.png" class="" title="[RabbitMQOpenManagement]">
-
-<p>接著打開瀏覽器，輸入 <a href="http://localhost:15672/">http://localhost:15672</a></p>
-<img src="/2021/08/21/rabbitmq-install/Untitled8.png" class="" title="[RabbitMQSuccess]">
-
-<p>出現以上的畫面，就恭喜你，你已經安裝成功了。預設登入者為</p>
-<blockquote>
-<p>帳號： guest</p>
-</blockquote>
-<blockquote>
-<p>密碼： guest</p>
-</blockquote>
-<img src="/2021/08/21/rabbitmq-install/Untitled9.png" class="" title="[RabbitMQPage]">
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>開啟圖形化管理介面後，基本上都可以透過管理網頁新增、編輯、刪除Queue相關的設定。這篇主要介紹到這邊，架一個<code>RabbitMQ</code>的步驟不會說太困難，留下筆記的同時，希望有幫助到有需求安裝<code>RabbitMQ</code>的朋友。</p>
-]]></content>
-      <categories>
-        <category>message queue</category>
-      </categories>
-      <tags>
-        <tag>rabbitmq</tag>
-        <tag>message queue</tag>
-      </tags>
   </entry>
   <entry>
     <title>[DotnetCore]NLog-ILoggerManager設計</title>
@@ -543,9 +561,9 @@
 <ul>
 <li>NLog</li>
 <li>NLog.Config</li>
-<li>NLog.AspNetCore</li>
+<li>NLog.Web.AspNetCore</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package NLog</span><br><span class="line">dotnet add package NLog.Config</span><br><span class="line">dotnet add package NLog.AspNetCore</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package NLog</span><br><span class="line">dotnet add package NLog.Config</span><br><span class="line">dotnet add package NLog.Web.AspNetCore</span><br></pre></td></tr></table></figure>
 
 <h2 id="NLog-Config設置"><a href="#NLog-Config設置" class="headerlink" title="NLog.Config設置"></a>NLog.Config設置</h2><p>安裝完成後編輯nlog.config檔案，記得將其屬性中的Copy To Output Directory選為Copy always選項。主要有兩個區塊要去設定：targets及rules；targets部份則設定輸出形式，可以設定多個；rules部份則設定套用規則。</p>
 <p>筆者這邊簡單舉個例子，假設targets部份有兩個輸出形式：檔案及資料庫，rules套用規則部份，我們可以這樣設定，Info等級以上的輸出於檔案中，Error等級以上才需輸出於資料庫中，意即重要錯誤資訊再塞到資料庫中即可，畢竟資料庫空間比較值錢。</p>
@@ -569,6 +587,105 @@
       <tags>
         <tag>dotnetcore</tag>
         <tag>nlog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[MySQL]安裝與設定</title>
+    <url>/2021/08/23/mysql-install/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="透過brew安裝mysql"><a href="#透過brew安裝mysql" class="headerlink" title="透過brew安裝mysql"></a>透過brew安裝mysql</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="啟動mysql服務"><a href="#啟動mysql服務" class="headerlink" title="啟動mysql服務"></a>啟動mysql服務</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew services start mysql</span><br></pre></td></tr></table></figure>
+
+<p>使用root登入並更改root密碼</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root</span><br><span class="line"><span class="comment"># 以下為mysql環境中執行</span></span><br><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;密碼&#x27;</span>;</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<p>確認更改密碼是否有效</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="comment"># 出現password輸入提示，輸入密碼後可以進入mysql環境表示設定成功</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安裝管理介面"><a href="#安裝管理介面" class="headerlink" title="安裝管理介面"></a>安裝管理介面</h2><p>看到部落格上推薦的<code>sequel pro</code> 來試用看看，免費，不過可以捐錢給作者：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew install --cask sequel-pro</span><br></pre></td></tr></table></figure>
+
+<h2 id="錯誤處理"><a href="#錯誤處理" class="headerlink" title="錯誤處理"></a>錯誤處理</h2><p>若遇到以下錯誤訊息，筆者使用<code>sequel pro</code>這套軟體連線時出現該錯誤訊息的：</p>
+<blockquote>
+<p>Authentication plugin ‘caching_sha2_password’ cannot be loaded</p>
+</blockquote>
+<p>請使用以下指令修復</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="string">&#x27;密碼&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者將安裝過程紀錄於此，以便下次需要用到時參考，當然筆者這個作法對照現在來看，已經落伍，應該要嘗試使用<code>docker image</code>的方式，等筆者把公司做的相關技術文章打完，再來撰寫docker系列文章吧，敬請期待。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/9a645c473676">https://www.jianshu.com/p/9a645c473676</a></li>
+<li><a href="https://www.notion.so/5ada6a254804c33dbebbca4161277836">https://gist.github.com/joeyklee/5ada6a254804c33dbebbca4161277836</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>mysql</category>
+      </categories>
+      <tags>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[RabbitMQ]安裝及設定</title>
+    <url>/2021/08/21/rabbitmq-install/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p><code>RabbitMQ</code>是實現<code>AMQP(Advanced Message Queuing Protocol)</code>的伺服器，使用<code>Er lang</code>撰寫而成，且提供<code>HA</code>及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>首先因為<code>RabbitMQ</code>使用<code>ER Lang</code>撰寫而成，需要安裝執行環境，因此需先設定<code>ER Lang</code>的環境:</p>
+<h2 id="ERLang安裝及設定"><a href="#ERLang安裝及設定" class="headerlink" title="ERLang安裝及設定"></a>ERLang安裝及設定</h2><p>ERLang安裝檔案下載連結</p>
+<p><a href="https://www.erlang.org/news/135">Erlang Programming Language</a></p>
+<img src="/2021/08/21/rabbitmq-install/Untitled.png" class="" title="[ErlangInstallOptions]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled1.png" class="" title="[ErlanInstallPercentage]">
+
+<p>設定ERLang環境變數(新增系統變數)</p>
+<blockquote>
+<p>ERLANG_HOME C:\Program Files\erl10.6</p>
+</blockquote>
+<img src="/2021/08/21/rabbitmq-install/Untitled2.png" class="" title="[ErlanEnvironmentPath]">
+
+<h2 id="Rabbit-MQ安裝及設定"><a href="#Rabbit-MQ安裝及設定" class="headerlink" title="Rabbit MQ安裝及設定"></a>Rabbit MQ安裝及設定</h2><h3 id="使用choco安裝"><a href="#使用choco安裝" class="headerlink" title="使用choco安裝"></a>使用choco安裝</h3><p><a href="https://chocolatey.org/packages/rabbitmq">RabbitMQ 3.8.2</a></p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">choco install rabbitmq</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用安裝檔案安裝"><a href="#使用安裝檔案安裝" class="headerlink" title="使用安裝檔案安裝"></a>使用安裝檔案安裝</h3><p>下載連結</p>
+<p><a href="https://www.rabbitmq.com/install-windows.html">Installing on Windows</a></p>
+<img src="/2021/08/21/rabbitmq-install/Untitled3.png" class="" title="[RabbitMQInstallOptions]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled4.png" class="" title="[RabbitMQInstallAlert]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled5.png" class="" title="[RabbitMQInstallPercentage]">
+
+<img src="/2021/08/21/rabbitmq-install/Untitled6.png" class="" title="[RabbitMQInstallComplete]">
+
+<h2 id="Rabbit-MQ設定及開啟管理介面"><a href="#Rabbit-MQ設定及開啟管理介面" class="headerlink" title="Rabbit MQ設定及開啟管理介面"></a>Rabbit MQ設定及開啟管理介面</h2><p>開啟Command line介面，筆者這邊以 <a href="https://cmder.net/">cmder</a>為例</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">// 進入Rabbit MQ bat檔案路徑</span><br><span class="line"><span class="built_in">cd</span> C:\Program Files\RabbitMQ Server\rabbitmq_server-3.8.2\sbin</span><br><span class="line"></span><br><span class="line">// 開啟管理介面</span><br><span class="line">rabbitmq-plugins.bat <span class="built_in">enable</span> rabbitmq_management</span><br><span class="line"></span><br><span class="line">// 重起服務</span><br><span class="line">net stop rabbitmq &amp;&amp; net start rabbitmq</span><br></pre></td></tr></table></figure>
+
+<img src="/2021/08/21/rabbitmq-install/Untitled7.png" class="" title="[RabbitMQOpenManagement]">
+
+<p>接著打開瀏覽器，輸入 <a href="http://localhost:15672/">http://localhost:15672</a></p>
+<img src="/2021/08/21/rabbitmq-install/Untitled8.png" class="" title="[RabbitMQSuccess]">
+
+<p>出現以上的畫面，就恭喜你，你已經安裝成功了。預設登入者為</p>
+<blockquote>
+<p>帳號： guest</p>
+</blockquote>
+<blockquote>
+<p>密碼： guest</p>
+</blockquote>
+<img src="/2021/08/21/rabbitmq-install/Untitled9.png" class="" title="[RabbitMQPage]">
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>開啟圖形化管理介面後，基本上都可以透過管理網頁新增、編輯、刪除Queue相關的設定。這篇主要介紹到這邊，架一個<code>RabbitMQ</code>的步驟不會說太困難，留下筆記的同時，希望有幫助到有需求安裝<code>RabbitMQ</code>的朋友。</p>
+]]></content>
+      <categories>
+        <category>message queue</category>
+      </categories>
+      <tags>
+        <tag>rabbitmq</tag>
+        <tag>message queue</tag>
       </tags>
   </entry>
   <entry>
