@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-25T03:07:35.401Z</updated>
+  <updated>2021-08-26T01:23:57.014Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[IIS]排程及背景服務站台-保持啟動設定</title>
+    <link href="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/"/>
+    <id>https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/</id>
+    <published>2021-08-26T01:07:25.000Z</published>
+    <updated>2021-08-26T01:23:57.014Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;/2021/08/26/iis-always-run-setting/Untitled.png&quot; class=&quot;&quot; title=&quot;[IHostedServiceArchitecture]&quot;&gt;</summary>
+    
+    
+    
+    <category term="iis" scheme="https://eugenesu0515.github.io/categories/iis/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="iis" scheme="https://eugenesu0515.github.io/tags/iis/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
