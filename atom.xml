@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-26T01:23:57.014Z</updated>
+  <updated>2021-08-27T14:16:50.733Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,53 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:進階篇1</title>
+    <link href="https://eugenesu0515.github.io/2021/08/27/hangfire-advanced1/"/>
+    <id>https://eugenesu0515.github.io/2021/08/27/hangfire-advanced1/</id>
+    <published>2021-08-27T14:13:27.000Z</published>
+    <updated>2021-08-27T14:16:50.733Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;/2021/08/27/hangfire-advanced1/Untitled.png&quot; class=&quot;&quot; title=&quot;[HangfireDashboard]&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="scheduler" scheme="https://eugenesu0515.github.io/categories/dotnetcore/scheduler/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:入門篇</title>
+    <link href="https://eugenesu0515.github.io/2021/08/27/hangfire-entry/"/>
+    <id>https://eugenesu0515.github.io/2021/08/27/hangfire-entry/</id>
+    <published>2021-08-27T14:10:13.000Z</published>
+    <updated>2021-08-27T14:23:14.556Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在上篇已介紹&lt;code&gt;Coravel&lt;/code&gt;短小精幹的排程利器，固定週期排程部份皆使用&lt;code&gt;Coravel&lt;/code&gt;套件完成，然而使用者需求越來越清楚的狀況下，意識到無法滿足所以使用者需求，事情是這樣的，使用者的某些作業需要從畫面操作，並將該項作業排進排程中，且是一次性作業，例如：使用者透過介面去設定日結作業的需求，我們會由介面呼叫API，於API中設定好某個時間點去執行該「日結作業」服務。&lt;/p&gt;
+&lt;p&gt;以上述的需求，在Coravel套件是無法做到的，Coravel是有Queue的機制，不過無法設定特定時間，筆者最近是時不時看&lt;a href=&quot;https://github.com/MoienTajik/AspNetCore-Developer-Roadmap&quot;&gt;Asp.Net Core RoadMap&lt;/a&gt;上所列之相關技術及推薦套件，對於上面推薦的套件，都會想要來試看看，畢竟大神們整理過的，肯定有其厲害之處，剛好於Task Scheduling作業中有推薦三套相關套件，筆者已經使用過Coravel，試試看其他，廢話不多說，趕緊來介紹今天的主角&lt;code&gt;HangFire&lt;/code&gt;吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="scheduler" scheme="https://eugenesu0515.github.io/categories/dotnetcore/scheduler/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
+    
+  </entry>
   
   <entry>
     <title>[IIS]排程及背景服務站台-保持啟動設定</title>

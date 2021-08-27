@@ -14,12 +14,13 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
   <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
   <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="前提情要筆者目前於金融業資訊部門就職，如大家所知，核心系統大都維持使用cobol程式語言開發，我們這種寫C#程式語言的，只能攻外圍系統，但不免俗的需要與各核心相關系統做打交道，不管是取得資料或者是更新資料等，比較舊型的架構都是透過TCP&#x2F;IP交換資料，也就是透過socket程式交換資料。界於此，筆者需要實作socket程式基礎框架適應各種Client程式的開發需求，今天就來寫一支socket co">
@@ -431,20 +432,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分類</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
@@ -473,6 +474,22 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-27T22:13:27+08:00">
+        08/27
+      </time>
+      <a href="/2021/08/27/hangfire-advanced1/" title="[DotnetCore]排程神器-Hangfire:進階篇1">[DotnetCore]排程神器-Hangfire:進階篇1</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-27T22:10:13+08:00">
+        08/27
+      </time>
+      <a href="/2021/08/27/hangfire-entry/" title="[DotnetCore]排程神器-Hangfire:入門篇">[DotnetCore]排程神器-Hangfire:入門篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-26T09:07:25+08:00">
         08/26
       </time>
@@ -493,22 +510,6 @@
         08/25
       </time>
       <a href="/2021/08/25/coravel-scheduler/" title="[DotnetCore]排程利器-Coravel:Scheduler篇">[DotnetCore]排程利器-Coravel:Scheduler篇</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-24T15:50:13+08:00">
-        08/24
-      </time>
-      <a href="/2021/08/24/fluent-validation/" title="[DotnetCore]後端驗證神器:Fluent Validation">[DotnetCore]後端驗證神器:Fluent Validation</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-23T16:50:56+08:00">
-        08/23
-      </time>
-      <a href="/2021/08/23/nlog-loggermanager/" title="[DotnetCore]NLog-ILoggerManager設計">[DotnetCore]NLog-ILoggerManager設計</a>
       <br>
     </li>
     
@@ -543,12 +544,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">75k</span>
+    <span title="總字數">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">2:16</span>
+    <span title="所需總閱讀時間">2:32</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>
@@ -643,6 +644,8 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 
