@@ -23,25 +23,21 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前提情要筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由Windows排程去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。 筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有">
+  <meta name="description" content="前提情要筆者在公司擔任R&amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含CSV檔案，Excel檔案，pdf檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[DotnetCore]排程利器-Coravel:Scheduler篇">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/index.html">
+<meta property="og:title" content="[DotnetCore]Reader系列-CSV檔案">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
-<meta property="og:description" content="前提情要筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由Windows排程去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。 筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有">
+<meta property="og:description" content="前提情要筆者在公司擔任R&amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含CSV檔案，Excel檔案，pdf檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled1.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled2.png">
-<meta property="article:published_time" content="2021-08-25T02:48:46.000Z">
-<meta property="article:modified_time" content="2021-08-25T03:02:15.426Z">
+<meta property="article:published_time" content="2021-08-28T13:18:45.000Z">
+<meta property="article:modified_time" content="2021-08-28T13:20:15.428Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
-<meta property="article:tag" content="coravel">
+<meta property="article:tag" content="csv">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled.png">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/">
 
 
 <script id="page-configurations">
@@ -54,7 +50,7 @@
   };
 </script>
 
-  <title>[DotnetCore]排程利器-Coravel:Scheduler篇 | Eugene's Blog</title>
+  <title>[DotnetCore]Reader系列-CSV檔案 | Eugene's Blog</title>
   
 
 
@@ -204,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -217,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [DotnetCore]排程利器-Coravel:Scheduler篇
+          [DotnetCore]Reader系列-CSV檔案
         </h1>
 
         <div class="post-meta">
@@ -228,7 +224,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-08-25 10:48:46 / 修改時間：11:02:15" itemprop="dateCreated datePublished" datetime="2021-08-25T10:48:46+08:00">2021-08-25</time>
+              <time title="創建時間：2021-08-28 21:18:45 / 修改時間：21:20:15" itemprop="dateCreated datePublished" datetime="2021-08-28T21:18:45+08:00">2021-08-28</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,13 +248,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>3.1k</span>
+              <span>2.6k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>6 分鐘</span>
+              <span>5 分鐘</span>
             </span>
 
         </div>
@@ -270,51 +266,37 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由<code>Windows排程</code>去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。</p>
-<p>筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注<a target="_blank" rel="noopener" href="https://github.com/MoienTajik/AspNetCore-Developer-Roadmap">ASP.NET CORE Developer Roadmap</a>，不時會在上面找好料，<a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧</p>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在公司擔任R&amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含<code>CSV</code>檔案，<code>Excel</code>檔案，<code>pdf</code>檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。</p>
 <span id="more"></span>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>Coravel本身支援諸多應用，免費版的<code>Scheduler</code>及<code>Queue</code>等等功能，至於<code>Dashboard</code>功能付費版才有，筆者這篇以<code>Scheduler</code>為主介紹其應用方式。</p>
-<h2 id="簡單應用"><a href="#簡單應用" class="headerlink" title="簡單應用"></a>簡單應用</h2><p>首先建立WebAPI專案</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new webapi --output Coravel.API</span><br></pre></td></tr></table></figure>
 
-<p>請使用Visual Studio Code開啟專案</p>
-<img src="/2021/08/25/coravel-scheduler/Untitled.png" class="" title="[VSCodeProject]">
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>安裝所需套件，筆者這邊使用<a target="_blank" rel="noopener" href="https://joshclose.github.io/CsvHelper/">CsvHelper</a>這個套件，跟著筆者一步步實作吧。</p>
+<h2 id="Demo專案建置"><a href="#Demo專案建置" class="headerlink" title="Demo專案建置"></a>Demo專案建置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 建立資料夾</span></span><br><span class="line">mkdir reader.demo</span><br><span class="line"><span class="comment"># 進入資料夾</span></span><br><span class="line"><span class="built_in">cd</span> reader.demo</span><br><span class="line"><span class="comment"># 建立console專案</span></span><br><span class="line">dotnet new console -n reader.demo.console</span><br><span class="line"><span class="comment"># 進入console專案</span></span><br><span class="line"><span class="built_in">cd</span> reader.demo.console</span><br></pre></td></tr></table></figure>
 
-<p>安裝Coravel套件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package coravel</span><br></pre></td></tr></table></figure>
+<h2 id="安裝CsvHelper"><a href="#安裝CsvHelper" class="headerlink" title="安裝CsvHelper"></a>安裝CsvHelper</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安裝CsvHelper套件</span></span><br><span class="line">dotnet add package CsvHelper</span><br><span class="line"><span class="comment"># 專案使用vscode打開</span></span><br><span class="line">code .</span><br></pre></td></tr></table></figure>
 
-<p>請於<code>Startup.cs</code>中撰寫程式</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">services.AddScheduler();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> provider = app.ApplicationServices;</span><br><span class="line">provider.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">    scheduler.Schedule(() =&gt; &#123;</span><br><span class="line">        System.Console.WriteLine(<span class="string">$&quot;Hello World! <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>&quot;</span>);</span><br><span class="line">    &#125;).EveryMinute();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="撰寫CsvExtension"><a href="#撰寫CsvExtension" class="headerlink" title="撰寫CsvExtension"></a>撰寫CsvExtension</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">CsvExtension</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title">List</span>&lt;<span class="title">T</span>&gt; <span class="title">ReadData</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">string</span> filePath</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> reader = <span class="keyword">new</span> StreamReader(filePath))</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> csv = <span class="keyword">new</span> CsvReader(reader, CultureInfo.InvariantCulture))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> records = csv.GetRecords&lt;T&gt;();</span><br><span class="line">            <span class="keyword">return</span> records.ToList();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>完整程式碼如下：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 以上省略</span></span><br><span class="line">        services.AddScheduler();</span><br><span class="line">        <span class="comment">// 以下省略</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 以上省略</span></span><br><span class="line">        app.ApplicationServices.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">            scheduler.Schedule(() =&gt; &#123;</span><br><span class="line">                System.Console.WriteLine(<span class="string">$&quot;Hello World! <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>&quot;</span>);</span><br><span class="line">            &#125;).EveryMinute();</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">// 以下省略</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="準備CSV格式檔案"><a href="#準備CSV格式檔案" class="headerlink" title="準備CSV格式檔案"></a>準備CSV格式檔案</h2><p>使用命令列方式建立csv檔案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir Upload</span><br><span class="line"><span class="built_in">cd</span> Upload</span><br><span class="line">touch Customer.csv</span><br></pre></td></tr></table></figure>
 
-<p>執行結果參考</p>
-<img src="/2021/08/25/coravel-scheduler/Untitled1.png" class="" title="[SchedulerResult]">
+<p>輸入內容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">顧客ID,顧客信箱</span><br><span class="line">1,abc@gmail.com</span><br><span class="line">2,bcd@gmail.com</span><br><span class="line">3,cde@gmail.com</span><br></pre></td></tr></table></figure>
 
+<p>筆者這邊將該Customer.csv檔案當作範本讀入，因此需要將該檔案輸出至編譯檔案中，<code>Visual Studio</code>中則使用<code>Properties</code>視窗中的<code>Copy選項</code>「<code>Always</code>」即可搞定，若使用Visual Studio Code的朋友，可能就沒有地方可以用工具選擇的方式選擇，必須編輯<code>csproj</code>檔案才有辦法。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ItemGroup&gt;</span><br><span class="line">  &lt;Content Include=<span class="string">&quot;Upload/*&quot;</span>&gt;</span><br><span class="line">    &lt;CopyToOutputDirectory&gt;Always&lt;/CopyToOutputDirectory&gt;</span><br><span class="line">  &lt;/Content&gt;</span><br><span class="line">&lt;/ItemGroup&gt;</span><br></pre></td></tr></table></figure>
 
-<h2 id="進階應用"><a href="#進階應用" class="headerlink" title="進階應用"></a>進階應用</h2><h3 id="執行一個Service"><a href="#執行一個Service" class="headerlink" title="執行一個Service"></a>執行一個Service</h3><p>首先建立一個Class，筆者命名為「<code>SchedulerService.cs</code>」，需要實作「<code>IInvocable</code>」</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SchedulerService</span> : <span class="title">IInvocable</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">SchedulerService</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span> &#123;</span><br><span class="line">	    _env = env;</span><br><span class="line">	    _config = config;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">	    System.Console.WriteLine(<span class="string">$&quot;[SchedulerService <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">	    <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>這邊是定義<code>Upload</code>資料夾下的所有檔案<code>Copy</code>選項定義為<code>Always</code>，即可搞定。</p>
+<h2 id="定義Model"><a href="#定義Model" class="headerlink" title="定義Model"></a>定義Model</h2><p>接著定義csv檔案對應的class</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Customer</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Name(<span class="meta-string">&quot;顧客ID&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">long</span> CustomerId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    [<span class="meta">Name(<span class="meta-string">&quot;顧客信箱&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CustomerEmail &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>接下來，要來改寫<code>Startup.cs</code>中的程式</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注入Service</span></span><br><span class="line">services.AddTransient&lt;SchedulerService&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Schedule改執行自己撰寫的Service</span></span><br><span class="line"><span class="keyword">var</span> provider = app.ApplicationServices;</span><br><span class="line">provider.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">    scheduler.Schedule&lt;SchedulerService&gt;()</span><br><span class="line">        .EverySecond();<span class="comment">// 改為每秒執行</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>可以看到筆者這邊有定義<code>Name Attribute</code>，CSV官網就有提到他使用<code>property</code>屬性的順序，但通常<code>property</code>屬性的順序是不可靠的，建議使用Index或者Name Attribute做定義，才不會亂了秩序。</p>
+<h2 id="Client端使用"><a href="#Client端使用" class="headerlink" title="Client端使用"></a>Client端使用</h2><p>筆者以簡易的方式示範讀取CSV檔案，因為先前建立的是Console專案，直接於<code>Program.cs</code>的<code>main</code>中撰寫</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 定義執行檔案路徑</span></span><br><span class="line">        <span class="keyword">var</span> _folder = AppDomain.CurrentDomain.BaseDirectory;</span><br><span class="line">				<span class="comment">// 使用Path.Combine將csv檔案路徑串起來</span></span><br><span class="line">        <span class="keyword">var</span> _filePath = Path.Combine(_folder, <span class="string">&quot;Upload&quot;</span>, <span class="string">&quot;Customer.csv&quot;</span>);</span><br><span class="line">				<span class="comment">// 使用CsvExtension中的ReadData讀取csv檔案，路徑則串入上面製作的file path</span></span><br><span class="line">        <span class="keyword">var</span> customers = CsvExtension.ReadData&lt;Customer&gt;(_filePath);</span><br><span class="line">        <span class="comment">// 使用Newtonsoft.Json套件序列化變成字串印出</span></span><br><span class="line">        System.Console.WriteLine(<span class="string">$&quot;[Customers] <span class="subst">&#123;JsonConvert.SerializeObject(customers)&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="comment">// 讓終端機停住，看一下上面印出的結果</span></span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>執行效果如下</p>
-<img src="/2021/08/25/coravel-scheduler/Untitled2.png" class="" title="[SchedulerResult]">
+<p>來吧，簡單的使用<code>dotnet run</code>指令來執行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dotnet run</span><br><span class="line"><span class="comment"># output</span></span><br><span class="line">[Customers] [&#123;<span class="string">&quot;CustomerId&quot;</span>:1,<span class="string">&quot;CustomerEmail&quot;</span>:<span class="string">&quot;abc@gmail.com&quot;</span>&#125;,&#123;<span class="string">&quot;CustomerId&quot;</span>:2,<span class="string">&quot;CustomerEmail&quot;</span>:<span class="string">&quot;bcd@gmail.com&quot;</span>&#125;,&#123;<span class="string">&quot;CustomerId&quot;</span>:3,<span class="string">&quot;CustomerEmail&quot;</span>:<span class="string">&quot;cde@gmail.com&quot;</span>&#125;]</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>由執行結果可以發現，我們使用自己撰寫的Service是支援dotnet core的DI機制運作，亦即.net core可以使用的注入服務皆可使用，換言之，你也可以注DbContext，於Scheduler Service使用Entity Framework Core與資料庫連線並操作的。</p>
-</blockquote>
-<blockquote>
-<p>其中要特別注意，上述有提到Coravel本身有支援dotnet core的DI機制運作，因此本身自己的Service記得也要注入，不然會爆錯。</p>
-</blockquote>
-<h3 id="Worker-Service中應用"><a href="#Worker-Service中應用" class="headerlink" title="Worker Service中應用"></a>Worker Service中應用</h3><p>使用<code>Visual Studio</code>或<code>dotnet command</code>的方式新增 Worker Service專案</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new worker -n &#123;ProjectName&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著找到<code>program.cs</code>中設置<code>Scheduler</code>資訊，完整程式碼</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 原本是CreateHostBuilder(args).Build().Run();</span></span><br><span class="line">        IHost host = CreateHostBuilder(args).Build();</span><br><span class="line">        host.Services.UseScheduler(scheduler =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            scheduler.Schedule&lt;SchedulerService&gt;()</span><br><span class="line">                .EveryFiveMinutes();</span><br><span class="line">        &#125;);</span><br><span class="line">        host.Run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">        Host.CreateDefaultBuilder(args)</span><br><span class="line">            .ConfigureServices((hostContext, services) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                services.AddScheduler();</span><br><span class="line">                services.AddHostedService&lt;Worker&gt;();</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以簡易的排程來說，<code>Coravel</code>本身以足夠應用，算是短小精幹型的套件，其設定方式也是簡單，且也適用<code>dotnet core的DI機制</code>，筆者就覺得很棒了，下篇再來寫它的<code>Queue</code>功能。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>讀完這篇是不是也覺得讀取csv檔案是不是非常簡單，不過老實說要自己寫出這個讀取器也並不難，但是可能需要一段時間校正，若需求本身沒有太多客製化的需求，筆者會選擇不重新造輪子，直接用現成的套件來達成，看專案開發狀況及使用情境了，沒有絕對的好與壞，用得開心，結得了案，基本上都是好事。</p>
 
     </div>
 
@@ -325,7 +307,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
-              <a href="/tags/coravel/" rel="tag"># coravel</a>
+              <a href="/tags/csv/" rel="tag"># csv</a>
           </div>
 
         
@@ -334,13 +316,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/24/fluent-validation/" rel="prev" title="[DotnetCore]後端驗證神器:Fluent Validation">
-      <i class="fa fa-chevron-left"></i> [DotnetCore]後端驗證神器:Fluent Validation
+    <a href="/2021/08/27/hangfire-advanced1/" rel="prev" title="[DotnetCore]排程神器-Hangfire:進階篇1">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]排程神器-Hangfire:進階篇1
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/25/coravel-queue/" rel="next" title="[DotnetCore]排程利器-Coravel:Queue篇">
-      [DotnetCore]排程利器-Coravel:Queue篇 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -400,7 +379,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B0%A1%E5%96%AE%E6%87%89%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">簡單應用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%B2%E9%9A%8E%E6%87%89%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">進階應用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%B7%E8%A1%8C%E4%B8%80%E5%80%8BService"><span class="nav-number">2.2.1.</span> <span class="nav-text">執行一個Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker-Service%E4%B8%AD%E6%87%89%E7%94%A8"><span class="nav-number">2.2.2.</span> <span class="nav-text">Worker Service中應用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Demo%E5%B0%88%E6%A1%88%E5%BB%BA%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">Demo專案建置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9DCsvHelper"><span class="nav-number">2.2.</span> <span class="nav-text">安裝CsvHelper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%92%B0%E5%AF%ABCsvExtension"><span class="nav-number">2.3.</span> <span class="nav-text">撰寫CsvExtension</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%96%E5%82%99CSV%E6%A0%BC%E5%BC%8F%E6%AA%94%E6%A1%88"><span class="nav-number">2.4.</span> <span class="nav-text">準備CSV格式檔案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%BE%A9Model"><span class="nav-number">2.5.</span> <span class="nav-text">定義Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Client%E7%AB%AF%E4%BD%BF%E7%94%A8"><span class="nav-number">2.6.</span> <span class="nav-text">Client端使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -743,7 +722,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'eugenesu0515.github.io',
       owner       : 'eugenesu0515',
       admin       : ['eugenesu0515'],
-      id          : '5cbdd8b3f3019c9759db1c6ed369274f',
+      id          : '5d8b965e0ab2ee13300ebeb43236833c',
         language: 'zh-TW',
       distractionFreeMode: true
     });

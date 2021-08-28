@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-27T14:16:50.733Z</updated>
+  <updated>2021-08-28T13:20:15.428Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-CSV檔案</title>
+    <link href="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/"/>
+    <id>https://eugenesu0515.github.io/2021/08/28/reader-series-csv/</id>
+    <published>2021-08-28T13:18:45.000Z</published>
+    <updated>2021-08-28T13:20:15.428Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在公司擔任R&amp;amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含&lt;code&gt;CSV&lt;/code&gt;檔案，&lt;code&gt;Excel&lt;/code&gt;檔案，&lt;code&gt;pdf&lt;/code&gt;檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="csv" scheme="https://eugenesu0515.github.io/tags/csv/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]排程神器-Hangfire:進階篇1</title>
