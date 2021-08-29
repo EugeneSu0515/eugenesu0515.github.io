@@ -23,25 +23,25 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前提情要筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由Windows排程去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。 筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有">
+  <meta name="description" content="前提情要我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用Nlog來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[DotnetCore]排程利器-Coravel:Scheduler篇">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/index.html">
+<meta property="og:title" content="[DotnetCore]Exception攔截神器-Elmah">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/29/exception-elmah/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
-<meta property="og:description" content="前提情要筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由Windows排程去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。 筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有">
+<meta property="og:description" content="前提情要我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用Nlog來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled1.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled2.png">
-<meta property="article:published_time" content="2021-08-25T02:48:46.000Z">
-<meta property="article:modified_time" content="2021-08-25T03:02:15.426Z">
+<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/29/exception-elmah/Untitled.png">
+<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/29/exception-elmah/Untitled1.png">
+<meta property="article:published_time" content="2021-08-29T14:17:51.000Z">
+<meta property="article:modified_time" content="2021-08-29T14:25:05.462Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
-<meta property="article:tag" content="coravel">
+<meta property="article:tag" content="exception">
+<meta property="article:tag" content="elmah">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/Untitled.png">
+<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/29/exception-elmah/Untitled.png">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/29/exception-elmah/">
 
 
 <script id="page-configurations">
@@ -54,7 +54,7 @@
   };
 </script>
 
-  <title>[DotnetCore]排程利器-Coravel:Scheduler篇 | Eugene's Blog</title>
+  <title>[DotnetCore]Exception攔截神器-Elmah | Eugene's Blog</title>
   
 
 
@@ -204,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/29/exception-elmah/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -217,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [DotnetCore]排程利器-Coravel:Scheduler篇
+          [DotnetCore]Exception攔截神器-Elmah
         </h1>
 
         <div class="post-meta">
@@ -228,7 +228,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-08-25 10:48:46 / 修改時間：11:02:15" itemprop="dateCreated datePublished" datetime="2021-08-25T10:48:46+08:00">2021-08-25</time>
+              <time title="創建時間：2021-08-29 22:17:51 / 修改時間：22:25:05" itemprop="dateCreated datePublished" datetime="2021-08-29T22:17:51+08:00">2021-08-29</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,13 +252,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>3.1k</span>
+              <span>2.1k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>6 分鐘</span>
+              <span>4 分鐘</span>
             </span>
 
         </div>
@@ -270,51 +270,40 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由<code>Windows排程</code>去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。</p>
-<p>筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注<a target="_blank" rel="noopener" href="https://github.com/MoienTajik/AspNetCore-Developer-Roadmap">ASP.NET CORE Developer Roadmap</a>，不時會在上面找好料，<a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧</p>
-<span id="more"></span>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>Coravel本身支援諸多應用，免費版的<code>Scheduler</code>及<code>Queue</code>等等功能，至於<code>Dashboard</code>功能付費版才有，筆者這篇以<code>Scheduler</code>為主介紹其應用方式。</p>
-<h2 id="簡單應用"><a href="#簡單應用" class="headerlink" title="簡單應用"></a>簡單應用</h2><p>首先建立WebAPI專案</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new webapi --output Coravel.API</span><br></pre></td></tr></table></figure>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用<code>Nlog</code>來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：</p>
+<p><a target="_blank" rel="noopener" href="https://elmah.github.io/">ELMAH-Home</a></p>
+<p>官方並沒有升級到<code>dotnet core</code>版本，還好強者貢獻<code>dotnet core</code>版本，參考</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore">ElmahCore/ElmahCore</a></p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="建立demo-API專案"><a href="#建立demo-API專案" class="headerlink" title="建立demo API專案"></a>建立demo API專案</h2><p>筆者就用<code>dotnet</code>指令來建立API專案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir ElmahDemo</span><br><span class="line"><span class="built_in">cd</span> ElmahDemo</span><br><span class="line">dotnet new webapi -n ElmahDemo.API</span><br><span class="line">dotnet new sln -n ElmahDemo</span><br><span class="line">dotnet sln ElmahDemo.sln add ElmahDemo.API\ElmahDemo.API.csproj</span><br></pre></td></tr></table></figure>
 
-<p>請使用Visual Studio Code開啟專案</p>
-<img src="/2021/08/25/coravel-scheduler/Untitled.png" class="" title="[VSCodeProject]">
+<h2 id="安裝Nuget套件"><a href="#安裝Nuget套件" class="headerlink" title="安裝Nuget套件"></a>安裝Nuget套件</h2><p>使用<code>Visual Studio 2019</code>開啟<code>sln</code>檔案，接著安裝<code>nuget</code>套件，筆者這邊會採用<code>SqlServer</code>來當作Persistent選擇，必須安裝兩個套件，如下：</p>
+<ul>
+<li>ElmahCore</li>
+<li>ElmahCore.Sql</li>
+</ul>
+<h2 id="Startup中設定使用Elmah"><a href="#Startup中設定使用Elmah" class="headerlink" title="Startup中設定使用Elmah"></a>Startup中設定使用Elmah</h2><p><code>appsettings.Development.json</code> 中設定資料庫連線字串</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;ConnectionStrings&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;Elmah&quot;</span>: <span class="string">&quot;Data Source=.;Initial Catalog=ElmahDemo;Persist Security Info=True;Integrated Security=True;&quot;</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<p>安裝Coravel套件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package coravel</span><br></pre></td></tr></table></figure>
+<p>建立資料表語法參考</p>
+<p><a target="_blank" rel="noopener" href="https://bitbucket.org/project-elmah/main/downloads/ELMAH-1.2-db-SQLServer.sql"></a></p>
+<p>接著開始在<code>Startup.cs</code>中宣告設定及使用<code>Elmah</code></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConfigureServices</span></span><br><span class="line">services.AddElmah&lt;SqlErrorLog&gt;(opt =&gt;</span><br><span class="line">&#123;</span><br><span class="line">	opt.ConnectionString = Configuration.GetConnectionString(<span class="string">&quot;Elmah&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 需要設定以下步驟，Elmah的版面才正常</span></span><br><span class="line"><span class="comment">// 參考 https://github.com/ElmahCore/ElmahCore/issues/47</span></span><br><span class="line">services.Configure&lt;IISServerOptions&gt;(options =&gt; </span><br><span class="line">&#123; </span><br><span class="line">	options.AllowSynchronousIO = <span class="literal">true</span>; </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Configure</span></span><br><span class="line">app.UseElmah();</span><br></pre></td></tr></table></figure>
 
-<p>請於<code>Startup.cs</code>中撰寫程式</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">services.AddScheduler();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> provider = app.ApplicationServices;</span><br><span class="line">provider.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">    scheduler.Schedule(() =&gt; &#123;</span><br><span class="line">        System.Console.WriteLine(<span class="string">$&quot;Hello World! <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>&quot;</span>);</span><br><span class="line">    &#125;).EveryMinute();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="觀看結果"><a href="#觀看結果" class="headerlink" title="觀看結果"></a>觀看結果</h2><p>首先筆者這邊模擬丟出<code>Exception</code>，撰寫一個<code>DemoController</code>並主動丟一個<code>Exception</code>出來</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">using Microsoft.AspNetCore.Mvc;</span><br><span class="line">using System;</span><br><span class="line"></span><br><span class="line">namespace ElmahDemo.API.Controllers</span><br><span class="line">&#123;</span><br><span class="line">    [Route(<span class="attr">&quot;api/[controller]&quot;</span>)]</span><br><span class="line">    [ApiController]</span><br><span class="line">    public class DemoController : ControllerBase</span><br><span class="line">    &#123;</span><br><span class="line">        [HttpGet(<span class="attr">&quot;elmah&quot;</span>)]</span><br><span class="line">        public IActionResult Elmah()</span><br><span class="line">        &#123;</span><br><span class="line">            throw new Exception();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>完整程式碼如下：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 以上省略</span></span><br><span class="line">        services.AddScheduler();</span><br><span class="line">        <span class="comment">// 以下省略</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IWebHostEnvironment env</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 以上省略</span></span><br><span class="line">        app.ApplicationServices.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">            scheduler.Schedule(() =&gt; &#123;</span><br><span class="line">                System.Console.WriteLine(<span class="string">$&quot;Hello World! <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>&quot;</span>);</span><br><span class="line">            &#125;).EveryMinute();</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="comment">// 以下省略</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因為設計成<code>get</code>，只要在瀏覽器上面 <a target="_blank" rel="noopener" href="https://localhost:44330/api/demo/elmah">https://localhost:44330/api/demo/elmah</a> ，即可產生<code>Exception</code>。接著看結果，連上elmah頁面 <a target="_blank" rel="noopener" href="https://localhost:44330/elmah">https://localhost:44330/elmah</a></p>
+<img src="/2021/08/29/exception-elmah/Untitled.png" class="" title="[ElmahDashboard]">
 
-<p>執行結果參考</p>
-<img src="/2021/08/25/coravel-scheduler/Untitled1.png" class="" title="[SchedulerResult]">
+<img src="/2021/08/29/exception-elmah/Untitled1.png" class="" title="[ElmahDashboardDetail]">
 
-
-<h2 id="進階應用"><a href="#進階應用" class="headerlink" title="進階應用"></a>進階應用</h2><h3 id="執行一個Service"><a href="#執行一個Service" class="headerlink" title="執行一個Service"></a>執行一個Service</h3><p>首先建立一個Class，筆者命名為「<code>SchedulerService.cs</code>」，需要實作「<code>IInvocable</code>」</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SchedulerService</span> : <span class="title">IInvocable</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">readonly</span> IHostEnvironment _env;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">readonly</span> IConfiguration _config;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">SchedulerService</span>(<span class="params">IHostEnvironment env, IConfiguration config</span>)</span> &#123;</span><br><span class="line">	    _env = env;</span><br><span class="line">	    _config = config;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">	    System.Console.WriteLine(<span class="string">$&quot;[SchedulerService <span class="subst">&#123;DateTime.Now.ToString(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>)&#125;</span>]: <span class="subst">&#123;_env.ContentRootPath&#125;</span>&quot;</span>);</span><br><span class="line">	    <span class="keyword">return</span> Task.CompletedTask;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接下來，要來改寫<code>Startup.cs</code>中的程式</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注入Service</span></span><br><span class="line">services.AddTransient&lt;SchedulerService&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Schedule改執行自己撰寫的Service</span></span><br><span class="line"><span class="keyword">var</span> provider = app.ApplicationServices;</span><br><span class="line">provider.UseScheduler(scheduler =&gt; &#123;</span><br><span class="line">    scheduler.Schedule&lt;SchedulerService&gt;()</span><br><span class="line">        .EverySecond();<span class="comment">// 改為每秒執行</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>執行效果如下</p>
-<img src="/2021/08/25/coravel-scheduler/Untitled2.png" class="" title="[SchedulerResult]">
-
-<blockquote>
-<p>由執行結果可以發現，我們使用自己撰寫的Service是支援dotnet core的DI機制運作，亦即.net core可以使用的注入服務皆可使用，換言之，你也可以注DbContext，於Scheduler Service使用Entity Framework Core與資料庫連線並操作的。</p>
-</blockquote>
-<blockquote>
-<p>其中要特別注意，上述有提到Coravel本身有支援dotnet core的DI機制運作，因此本身自己的Service記得也要注入，不然會爆錯。</p>
-</blockquote>
-<h3 id="Worker-Service中應用"><a href="#Worker-Service中應用" class="headerlink" title="Worker Service中應用"></a>Worker Service中應用</h3><p>使用<code>Visual Studio</code>或<code>dotnet command</code>的方式新增 Worker Service專案</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet new worker -n &#123;ProjectName&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著找到<code>program.cs</code>中設置<code>Scheduler</code>資訊，完整程式碼</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 原本是CreateHostBuilder(args).Build().Run();</span></span><br><span class="line">        IHost host = CreateHostBuilder(args).Build();</span><br><span class="line">        host.Services.UseScheduler(scheduler =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            scheduler.Schedule&lt;SchedulerService&gt;()</span><br><span class="line">                .EveryFiveMinutes();</span><br><span class="line">        &#125;);</span><br><span class="line">        host.Run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IHostBuilder <span class="title">CreateHostBuilder</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span> =&gt;</span><br><span class="line">        Host.CreateDefaultBuilder(args)</span><br><span class="line">            .ConfigureServices((hostContext, services) =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                services.AddScheduler();</span><br><span class="line">                services.AddHostedService&lt;Worker&gt;();</span><br><span class="line">            &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>以簡易的排程來說，<code>Coravel</code>本身以足夠應用，算是短小精幹型的套件，其設定方式也是簡單，且也適用<code>dotnet core的DI機制</code>，筆者就覺得很棒了，下篇再來寫它的<code>Queue</code>功能。</p>
+<p>看到清楚的Exception敘述，解bug所向無敵了。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>基本上Log套件有百百種，以圖形化介面瀏覽log，就屬<code>elmah</code>了。當然筆者也要在這裡埋一下伏筆，若有諸多個伺服器上運行著各式各樣的應用程式，Log蒐集是一門學問，若以者種圖形化介面的<code>elmah</code>，需要看各種應用程式的log則必須得切換到不同的域名中觀看，文字Log就更不用說了，需要登入到所屬伺服器及應用程式資料夾中觀看，會發現查Log會是一個多麼麻煩的事，若能有一個集中地方觀看各式各樣應用程式的Log會是一個很好的體驗，筆者會再來寫一篇關於集中log的文章，敬請期待。</p>
+<p>參考</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore">https://github.com/ElmahCore/ElmahCore</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore/issues/47">https://github.com/ElmahCore/ElmahCore/issues/47</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.developer.money/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-asp-net-core-%E8%88%87-log-%E7%B4%80%E9%8C%84%E5%92%8C%E8%BF%BD%E8%B9%A4%E7%9A%84%E6%84%9B%E6%81%A8%E4%BA%A4%E7%B9%94-day-05-elmah-02-42e9b8810419">https://blog.developer.money/it-鐵人賽-asp-net-core-與-log-紀錄和追蹤的愛恨交織-day-05-elmah-02-42e9b8810419</a></p>
 
     </div>
 
@@ -325,7 +314,8 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
-              <a href="/tags/coravel/" rel="tag"># coravel</a>
+              <a href="/tags/exception/" rel="tag"># exception</a>
+              <a href="/tags/elmah/" rel="tag"># elmah</a>
           </div>
 
         
@@ -334,13 +324,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/24/fluent-validation/" rel="prev" title="[DotnetCore]後端驗證神器:Fluent Validation">
-      <i class="fa fa-chevron-left"></i> [DotnetCore]後端驗證神器:Fluent Validation
+    <a href="/2021/08/28/reader-series-csv/" rel="prev" title="[DotnetCore]Reader系列-CSV檔案">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]Reader系列-CSV檔案
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/25/coravel-queue/" rel="next" title="[DotnetCore]排程利器-Coravel:Queue篇">
-      [DotnetCore]排程利器-Coravel:Queue篇 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -400,7 +387,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B0%A1%E5%96%AE%E6%87%89%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">簡單應用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%B2%E9%9A%8E%E6%87%89%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">進階應用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%B7%E8%A1%8C%E4%B8%80%E5%80%8BService"><span class="nav-number">2.2.1.</span> <span class="nav-text">執行一個Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker-Service%E4%B8%AD%E6%87%89%E7%94%A8"><span class="nav-number">2.2.2.</span> <span class="nav-text">Worker Service中應用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8Bdemo-API%E5%B0%88%E6%A1%88"><span class="nav-number">2.1.</span> <span class="nav-text">建立demo API專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9DNuget%E5%A5%97%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">安裝Nuget套件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Startup%E4%B8%AD%E8%A8%AD%E5%AE%9A%E4%BD%BF%E7%94%A8Elmah"><span class="nav-number">2.3.</span> <span class="nav-text">Startup中設定使用Elmah</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%80%E7%9C%8B%E7%B5%90%E6%9E%9C"><span class="nav-number">2.4.</span> <span class="nav-text">觀看結果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -743,7 +730,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'eugenesu0515.github.io',
       owner       : 'eugenesu0515',
       admin       : ['eugenesu0515'],
-      id          : '5cbdd8b3f3019c9759db1c6ed369274f',
+      id          : '8b538ea3bc07f88b90749aad04ae3660',
         language: 'zh-TW',
       distractionFreeMode: true
     });

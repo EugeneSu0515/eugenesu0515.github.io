@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-28T13:20:15.428Z</updated>
+  <updated>2021-08-29T14:25:05.462Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]Exception攔截神器-Elmah</title>
+    <link href="https://eugenesu0515.github.io/2021/08/29/exception-elmah/"/>
+    <id>https://eugenesu0515.github.io/2021/08/29/exception-elmah/</id>
+    <published>2021-08-29T14:17:51.000Z</published>
+    <updated>2021-08-29T14:25:05.462Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="exception" scheme="https://eugenesu0515.github.io/tags/exception/"/>
+    
+    <category term="elmah" scheme="https://eugenesu0515.github.io/tags/elmah/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]Reader系列-CSV檔案</title>

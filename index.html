@@ -193,6 +193,126 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/29/exception-elmah/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/29/exception-elmah/" class="post-title-link" itemprop="url">[DotnetCore]Exception攔截神器-Elmah</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-08-29 22:17:51 / 修改時間：22:25:05" itemprop="dateCreated datePublished" datetime="2021-08-29T22:17:51+08:00">2021-08-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>4 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用<code>Nlog</code>來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：</p>
+<p><a target="_blank" rel="noopener" href="https://elmah.github.io/">ELMAH-Home</a></p>
+<p>官方並沒有升級到<code>dotnet core</code>版本，還好強者貢獻<code>dotnet core</code>版本，參考</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore">ElmahCore/ElmahCore</a></p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="建立demo-API專案"><a href="#建立demo-API專案" class="headerlink" title="建立demo API專案"></a>建立demo API專案</h2><p>筆者就用<code>dotnet</code>指令來建立API專案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir ElmahDemo</span><br><span class="line"><span class="built_in">cd</span> ElmahDemo</span><br><span class="line">dotnet new webapi -n ElmahDemo.API</span><br><span class="line">dotnet new sln -n ElmahDemo</span><br><span class="line">dotnet sln ElmahDemo.sln add ElmahDemo.API\ElmahDemo.API.csproj</span><br></pre></td></tr></table></figure>
+
+<h2 id="安裝Nuget套件"><a href="#安裝Nuget套件" class="headerlink" title="安裝Nuget套件"></a>安裝Nuget套件</h2><p>使用<code>Visual Studio 2019</code>開啟<code>sln</code>檔案，接著安裝<code>nuget</code>套件，筆者這邊會採用<code>SqlServer</code>來當作Persistent選擇，必須安裝兩個套件，如下：</p>
+<ul>
+<li>ElmahCore</li>
+<li>ElmahCore.Sql</li>
+</ul>
+<h2 id="Startup中設定使用Elmah"><a href="#Startup中設定使用Elmah" class="headerlink" title="Startup中設定使用Elmah"></a>Startup中設定使用Elmah</h2><p><code>appsettings.Development.json</code> 中設定資料庫連線字串</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;ConnectionStrings&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;Elmah&quot;</span>: <span class="string">&quot;Data Source=.;Initial Catalog=ElmahDemo;Persist Security Info=True;Integrated Security=True;&quot;</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>建立資料表語法參考</p>
+<p><a target="_blank" rel="noopener" href="https://bitbucket.org/project-elmah/main/downloads/ELMAH-1.2-db-SQLServer.sql"></a></p>
+<p>接著開始在<code>Startup.cs</code>中宣告設定及使用<code>Elmah</code></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConfigureServices</span></span><br><span class="line">services.AddElmah&lt;SqlErrorLog&gt;(opt =&gt;</span><br><span class="line">&#123;</span><br><span class="line">	opt.ConnectionString = Configuration.GetConnectionString(<span class="string">&quot;Elmah&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 需要設定以下步驟，Elmah的版面才正常</span></span><br><span class="line"><span class="comment">// 參考 https://github.com/ElmahCore/ElmahCore/issues/47</span></span><br><span class="line">services.Configure&lt;IISServerOptions&gt;(options =&gt; </span><br><span class="line">&#123; </span><br><span class="line">	options.AllowSynchronousIO = <span class="literal">true</span>; </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Configure</span></span><br><span class="line">app.UseElmah();</span><br></pre></td></tr></table></figure>
+
+<h2 id="觀看結果"><a href="#觀看結果" class="headerlink" title="觀看結果"></a>觀看結果</h2><p>首先筆者這邊模擬丟出<code>Exception</code>，撰寫一個<code>DemoController</code>並主動丟一個<code>Exception</code>出來</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">using Microsoft.AspNetCore.Mvc;</span><br><span class="line">using System;</span><br><span class="line"></span><br><span class="line">namespace ElmahDemo.API.Controllers</span><br><span class="line">&#123;</span><br><span class="line">    [Route(<span class="attr">&quot;api/[controller]&quot;</span>)]</span><br><span class="line">    [ApiController]</span><br><span class="line">    public class DemoController : ControllerBase</span><br><span class="line">    &#123;</span><br><span class="line">        [HttpGet(<span class="attr">&quot;elmah&quot;</span>)]</span><br><span class="line">        public IActionResult Elmah()</span><br><span class="line">        &#123;</span><br><span class="line">            throw new Exception();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因為設計成<code>get</code>，只要在瀏覽器上面 <a target="_blank" rel="noopener" href="https://localhost:44330/api/demo/elmah">https://localhost:44330/api/demo/elmah</a> ，即可產生<code>Exception</code>。接著看結果，連上elmah頁面 <a target="_blank" rel="noopener" href="https://localhost:44330/elmah">https://localhost:44330/elmah</a></p>
+<img src="/2021/08/29/exception-elmah/Untitled.png" class="" title="[ElmahDashboard]">
+
+<img src="/2021/08/29/exception-elmah/Untitled1.png" class="" title="[ElmahDashboardDetail]">
+
+<p>看到清楚的Exception敘述，解bug所向無敵了。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>基本上Log套件有百百種，以圖形化介面瀏覽log，就屬<code>elmah</code>了。當然筆者也要在這裡埋一下伏筆，若有諸多個伺服器上運行著各式各樣的應用程式，Log蒐集是一門學問，若以者種圖形化介面的<code>elmah</code>，需要看各種應用程式的log則必須得切換到不同的域名中觀看，文字Log就更不用說了，需要登入到所屬伺服器及應用程式資料夾中觀看，會發現查Log會是一個多麼麻煩的事，若能有一個集中地方觀看各式各樣應用程式的Log會是一個很好的體驗，筆者會再來寫一篇關於集中log的文章，敬請期待。</p>
+<p>參考</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore">https://github.com/ElmahCore/ElmahCore</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore/issues/47">https://github.com/ElmahCore/ElmahCore/issues/47</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.developer.money/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-asp-net-core-%E8%88%87-log-%E7%B4%80%E9%8C%84%E5%92%8C%E8%BF%BD%E8%B9%A4%E7%9A%84%E6%84%9B%E6%81%A8%E4%BA%A4%E7%B9%94-day-05-elmah-02-42e9b8810419">https://blog.developer.money/it-鐵人賽-asp-net-core-與-log-紀錄和追蹤的愛恨交織-day-05-elmah-02-42e9b8810419</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1044,100 +1164,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/23/mysql-sample-db/" class="post-title-link" itemprop="url">[MySQL]範例資料庫設定</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-08-23 10:06:01 / 修改時間：10:43:26" itemprop="dateCreated datePublished" datetime="2021-08-23T10:06:01+08:00">2021-08-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>531</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/23/mysql-sample-db/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1207,7 +1233,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1220,7 +1246,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
@@ -1247,6 +1273,14 @@
 <ul class="links-of-blogroll-list">
     <!---->
     
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-29T22:17:51+08:00">
+        08/29
+      </time>
+      <a href="/2021/08/29/exception-elmah/" title="[DotnetCore]Exception攔截神器-Elmah">[DotnetCore]Exception攔截神器-Elmah</a>
+      <br>
+    </li>
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-28T21:18:45+08:00">
@@ -1277,14 +1311,6 @@
         08/26
       </time>
       <a href="/2021/08/26/iis-always-run-setting/" title="[IIS]排程及背景服務站台-保持啟動設定">[IIS]排程及背景服務站台-保持啟動設定</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-08-25T10:58:11+08:00">
-        08/25
-      </time>
-      <a href="/2021/08/25/coravel-queue/" title="[DotnetCore]排程利器-Coravel:Queue篇">[DotnetCore]排程利器-Coravel:Queue篇</a>
       <br>
     </li>
     
@@ -1319,12 +1345,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">86k</span>
+    <span title="總字數">88k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">2:37</span>
+    <span title="所需總閱讀時間">2:41</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>
