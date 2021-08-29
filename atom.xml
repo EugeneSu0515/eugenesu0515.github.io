@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-29T14:25:05.462Z</updated>
+  <updated>2021-08-29T14:26:14.671Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -21,16 +21,13 @@
     <link href="https://eugenesu0515.github.io/2021/08/29/exception-elmah/"/>
     <id>https://eugenesu0515.github.io/2021/08/29/exception-elmah/</id>
     <published>2021-08-29T14:17:51.000Z</published>
-    <updated>2021-08-29T14:25:05.462Z</updated>
+    <updated>2021-08-29T14:26:14.671Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot;</summary>
-        
-      
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用&lt;code&gt;Nlog&lt;/code&gt;來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://elmah.github.io/&quot;&gt;ELMAH-Home&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;官方並沒有升級到&lt;code&gt;dotnet core&lt;/code&gt;版本，還好強者貢獻&lt;code&gt;dotnet core&lt;/code&gt;版本，參考&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/ElmahCore/ElmahCore&quot;&gt;ElmahCore/ElmahCore&lt;/a&gt;&lt;/p&gt;</summary>
     
     
     

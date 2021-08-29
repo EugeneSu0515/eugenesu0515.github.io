@@ -218,7 +218,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-08-29 22:17:51 / 修改時間：22:25:05" itemprop="dateCreated datePublished" datetime="2021-08-29T22:17:51+08:00">2021-08-29</time>
+              <time title="創建時間：2021-08-29 22:17:51 / 修改時間：22:26:14" itemprop="dateCreated datePublished" datetime="2021-08-29T22:17:51+08:00">2021-08-29</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,37 +264,14 @@
 <p><a target="_blank" rel="noopener" href="https://elmah.github.io/">ELMAH-Home</a></p>
 <p>官方並沒有升級到<code>dotnet core</code>版本，還好強者貢獻<code>dotnet core</code>版本，參考</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore">ElmahCore/ElmahCore</a></p>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="建立demo-API專案"><a href="#建立demo-API專案" class="headerlink" title="建立demo API專案"></a>建立demo API專案</h2><p>筆者就用<code>dotnet</code>指令來建立API專案</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir ElmahDemo</span><br><span class="line"><span class="built_in">cd</span> ElmahDemo</span><br><span class="line">dotnet new webapi -n ElmahDemo.API</span><br><span class="line">dotnet new sln -n ElmahDemo</span><br><span class="line">dotnet sln ElmahDemo.sln add ElmahDemo.API\ElmahDemo.API.csproj</span><br></pre></td></tr></table></figure>
-
-<h2 id="安裝Nuget套件"><a href="#安裝Nuget套件" class="headerlink" title="安裝Nuget套件"></a>安裝Nuget套件</h2><p>使用<code>Visual Studio 2019</code>開啟<code>sln</code>檔案，接著安裝<code>nuget</code>套件，筆者這邊會採用<code>SqlServer</code>來當作Persistent選擇，必須安裝兩個套件，如下：</p>
-<ul>
-<li>ElmahCore</li>
-<li>ElmahCore.Sql</li>
-</ul>
-<h2 id="Startup中設定使用Elmah"><a href="#Startup中設定使用Elmah" class="headerlink" title="Startup中設定使用Elmah"></a>Startup中設定使用Elmah</h2><p><code>appsettings.Development.json</code> 中設定資料庫連線字串</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;ConnectionStrings&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;Elmah&quot;</span>: <span class="string">&quot;Data Source=.;Initial Catalog=ElmahDemo;Persist Security Info=True;Integrated Security=True;&quot;</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>建立資料表語法參考</p>
-<p><a target="_blank" rel="noopener" href="https://bitbucket.org/project-elmah/main/downloads/ELMAH-1.2-db-SQLServer.sql"></a></p>
-<p>接著開始在<code>Startup.cs</code>中宣告設定及使用<code>Elmah</code></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConfigureServices</span></span><br><span class="line">services.AddElmah&lt;SqlErrorLog&gt;(opt =&gt;</span><br><span class="line">&#123;</span><br><span class="line">	opt.ConnectionString = Configuration.GetConnectionString(<span class="string">&quot;Elmah&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 需要設定以下步驟，Elmah的版面才正常</span></span><br><span class="line"><span class="comment">// 參考 https://github.com/ElmahCore/ElmahCore/issues/47</span></span><br><span class="line">services.Configure&lt;IISServerOptions&gt;(options =&gt; </span><br><span class="line">&#123; </span><br><span class="line">	options.AllowSynchronousIO = <span class="literal">true</span>; </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Configure</span></span><br><span class="line">app.UseElmah();</span><br></pre></td></tr></table></figure>
-
-<h2 id="觀看結果"><a href="#觀看結果" class="headerlink" title="觀看結果"></a>觀看結果</h2><p>首先筆者這邊模擬丟出<code>Exception</code>，撰寫一個<code>DemoController</code>並主動丟一個<code>Exception</code>出來</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">using Microsoft.AspNetCore.Mvc;</span><br><span class="line">using System;</span><br><span class="line"></span><br><span class="line">namespace ElmahDemo.API.Controllers</span><br><span class="line">&#123;</span><br><span class="line">    [Route(<span class="attr">&quot;api/[controller]&quot;</span>)]</span><br><span class="line">    [ApiController]</span><br><span class="line">    public class DemoController : ControllerBase</span><br><span class="line">    &#123;</span><br><span class="line">        [HttpGet(<span class="attr">&quot;elmah&quot;</span>)]</span><br><span class="line">        public IActionResult Elmah()</span><br><span class="line">        &#123;</span><br><span class="line">            throw new Exception();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>因為設計成<code>get</code>，只要在瀏覽器上面 <a target="_blank" rel="noopener" href="https://localhost:44330/api/demo/elmah">https://localhost:44330/api/demo/elmah</a> ，即可產生<code>Exception</code>。接著看結果，連上elmah頁面 <a target="_blank" rel="noopener" href="https://localhost:44330/elmah">https://localhost:44330/elmah</a></p>
-<img src="/2021/08/29/exception-elmah/Untitled.png" class="" title="[ElmahDashboard]">
-
-<img src="/2021/08/29/exception-elmah/Untitled1.png" class="" title="[ElmahDashboardDetail]">
-
-<p>看到清楚的Exception敘述，解bug所向無敵了。</p>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>基本上Log套件有百百種，以圖形化介面瀏覽log，就屬<code>elmah</code>了。當然筆者也要在這裡埋一下伏筆，若有諸多個伺服器上運行著各式各樣的應用程式，Log蒐集是一門學問，若以者種圖形化介面的<code>elmah</code>，需要看各種應用程式的log則必須得切換到不同的域名中觀看，文字Log就更不用說了，需要登入到所屬伺服器及應用程式資料夾中觀看，會發現查Log會是一個多麼麻煩的事，若能有一個集中地方觀看各式各樣應用程式的Log會是一個很好的體驗，筆者會再來寫一篇關於集中log的文章，敬請期待。</p>
-<p>參考</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore">https://github.com/ElmahCore/ElmahCore</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/ElmahCore/ElmahCore/issues/47">https://github.com/ElmahCore/ElmahCore/issues/47</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.developer.money/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-asp-net-core-%E8%88%87-log-%E7%B4%80%E9%8C%84%E5%92%8C%E8%BF%BD%E8%B9%A4%E7%9A%84%E6%84%9B%E6%81%A8%E4%BA%A4%E7%B9%94-day-05-elmah-02-42e9b8810419">https://blog.developer.money/it-鐵人賽-asp-net-core-與-log-紀錄和追蹤的愛恨交織-day-05-elmah-02-42e9b8810419</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/29/exception-elmah/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
