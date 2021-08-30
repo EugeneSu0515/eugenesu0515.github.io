@@ -411,7 +411,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/"/>
     <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/</id>
     <published>2021-08-20T18:19:36.000Z</published>
-    <updated>2021-08-23T13:55:51.039Z</updated>
+    <updated>2021-08-30T09:26:48.943Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。&lt;/p&gt;
