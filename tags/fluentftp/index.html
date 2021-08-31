@@ -23,25 +23,15 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="article">
-<meta property="og:title" content="[IIS]排程及背景服務站台-保持啟動設定">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Eugene&#39;s Blog">
+<meta property="og:url" content="https://eugenesu0515.github.io/tags/fluentftp/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/Untitled.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/Untitled1.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/Untitled2.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/Untitled3.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/Untitled4.png">
-<meta property="article:published_time" content="2021-08-26T01:07:25.000Z">
-<meta property="article:modified_time" content="2021-08-26T01:23:57.014Z">
 <meta property="article:author" content="Eugene Su">
-<meta property="article:tag" content="dotnetcore">
-<meta property="article:tag" content="iis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/Untitled.png">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/">
+<link rel="canonical" href="https://eugenesu0515.github.io/tags/fluentftp/">
 
 
 <script id="page-configurations">
@@ -49,12 +39,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : true,
+    isPost : false,
     lang   : 'zh-TW'
   };
 </script>
 
-  <title>[IIS]排程及背景服務站台-保持啟動設定 | Eugene's Blog</title>
+  <title>標籤: fluentftp | Eugene's Blog</title>
   
 
 
@@ -197,162 +187,57 @@
         <div class="content-wrap">
           
 
-          <div class="content post posts-expand">
+          <div class="content tag">
             
 
-    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          [IIS]排程及背景服務站台-保持啟動設定
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-08-26 09:07:25 / 修改時間：09:23:57" itemprop="dateCreated datePublished" datetime="2021-08-26T09:07:25+08:00">2021-08-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iis/" itemprop="url" rel="index"><span itemprop="name">iis</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <h2 class="collection-header">fluentftp
+          <small>標籤</small>
+        </h2>
+      </div>
 
       
-        <img src="/2021/08/26/iis-always-run-setting/Untitled.png" class="" title="[IHostedServiceArchitecture]">
-
-<span id="more"></span>
-
-<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者最近因工作上需要使用到排程及背景服務，類似像定期傳送Email或者定時做某一項作業，當然筆者最近在工作上使用皆以全部換成<code>.net core</code>的技術，因此選擇上以<code>.net core</code>技術可達成的方式來完成，會有幾種選擇:</p>
-<ul>
-<li><p>寫一個<code>Console Application</code>，搭配使用Windows排程設定讓該<code>exe</code>檔於特定時間執行</p>
-</li>
-<li><p>.net core一直以來都有一個藉由實作<code>IHostedService</code>來達成背景服務，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/dotnet/architecture/microservices/multi-container-microservice-net-applications/background-tasks-with-ihostedservice">參考</a></p>
-</li>
-<li><p>.net core 3.0後更是有<code>Worker Service</code>專案範本可以使用，可以藉由此類專案來實作背景服務，比起.net core 2.*，更是方便使用</p>
-</li>
-</ul>
-<p>以上幾種選擇，因不同專案及使用情境，選擇不一樣的選項來達成，針對這篇文章解決的問題，使用情境則是一個<code>Web API</code>小專案，因考量上版及管理方便，直接於既有<code>Web API</code>專案上使用排程套件 <a target="_blank" rel="noopener" href="https://docs.coravel.net/"><code>Coravel</code></a> 或<a target="_blank" rel="noopener" href="https://www.hangfire.io/"><code>Hangfire</code></a>來完成排程作業，或者使用<a target="_blank" rel="noopener" href="https://github.com/dotnetcore/CAP"><code>CAP</code></a>。</p>
-<p>套件使用方式參考筆者其他專門介紹套件的文章，在此不贅述，程式開發完後發佈於<code>IIS</code>上，觀察log一段時間後會發現，<code>IIS</code>上應用程式集區預設設定之閒置時間20分鐘一到後，若沒有任何活動則會被<code>IIS Application Pool</code>強制回收執行緒，此時背景服務是被中斷的，止到使用者連線使用服務，背景服務才會被再次啟動。</p>
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="IIS設定調整"><a href="#IIS設定調整" class="headerlink" title="IIS設定調整"></a>IIS設定調整</h2><p>上段描述對於背景服務要定期執行某項作業的健全性是危害的，假設這<code>Web API</code>服務為內部系統，因此週休二日時上線使用者人數幾呼為零，在此狀況下，原本設定好週末時運行一段排程作業，會因<code>IIS Application Pool</code>強制回收執行緒而中斷。要解這問題就要從<code>IIS</code>設定上面著手，需要調整<code>IIS</code>的應用程式集區中的進皆設定，主要修改的設定為</p>
-<ul>
-<li><code>Start Mode(啟動模式)</code>設定為 <code>Always Running</code>，預設為<code>On Demand</code></li>
-<li><code>Idle Time-out(minutes)限制時間(分)</code>設定為<code>0</code>，預設為<code>20</code></li>
-</ul>
-<img src="/2021/08/26/iis-always-run-setting/Untitled1.png" class="" title="[IISApplicationPoolAdvancedSetting1]">
-
-<img src="/2021/08/26/iis-always-run-setting/Untitled2.png" class="" title="[IISApplicationPoolAdvancedSetting2]">
-
-
-<p>接著也要針對站台的進階設定中調整</p>
-<ul>
-<li><code>Preloaded Enabled(預先載入已啟用)</code>設定為<code>True</code>，預設為<code>False</code></li>
-</ul>
-<img src="/2021/08/26/iis-always-run-setting/Untitled3.png" class="" title="[IISSiteAdvancedSetting1]">
-
-
-<p>當然，上述這些方法可以解決運行中的IIS服務不會被中斷，但必須得保證IIS服務已被第一個Request而啟動，因此更新過程式版本，若使用停止IIS後重新起動這種更新模式則，切記需手動打開(觸發)那個站台的某一個頁面或服務，使得確保背景服務被啟動，這樣的解決方式才會完美無缺了。</p>
-<h2 id="安裝應用程式初始化"><a href="#安裝應用程式初始化" class="headerlink" title="安裝應用程式初始化"></a>安裝應用程式初始化</h2><p>非常重要的一個步驟，判斷為回收停止後，應用程式可自行啟動並初始化，會看到Shut Down後又Started紀錄。</p>
-<img src="/2021/08/26/iis-always-run-setting/Untitled4.png" class="" title="[InstallApplicationStart]">
-
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>最後，若使用IIS架排程站台，需要設定上述的步驟，才不會被雷到，也由此可知，IIS設定也是一門學問，僅此紀錄其設定，若有碰到其他相關設定技巧，筆者會在寫文章說明。</p>
-<p>參考</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.darkthread.net/blog/hangfire-recurringjob-notes/">https://blog.darkthread.net/blog/hangfire-recurringjob-notes/</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dotnetcore/CAP/issues/406">https://github.com/dotnetcore/CAP/issues/406</a></li>
-<li><a target="_blank" rel="noopener" href="https://rules.ssw.com.au/do-you-ensure-your-application-pool-is-always-running">https://rules.ssw.com.au/do-you-ensure-your-application-pool-is-always-running</a></li>
-<li><a target="_blank" rel="noopener" href="https://dotblogs.com.tw/rainmaker/2015/08/27/153232">https://dotblogs.com.tw/rainmaker/2015/08/27/153232</a></li>
-</ul>
-
+    <div class="collection-year">
+      <span class="collection-header">2021</span>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
-              <a href="/tags/iis/" rel="tag"># iis</a>
-          </div>
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-08-31T18:33:52+08:00"
+              content="2021-08-31">
+          08-31
+        </time>
+      </div>
 
-        
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/08/31/ftp-download/" itemprop="url">
+            <span itemprop="name">[DotnetCore]FTP-下載上傳</span>
+          </a>
+      </div>
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2021/08/25/coravel-queue/" rel="prev" title="[DotnetCore]排程利器-Coravel:Queue篇">
-      <i class="fa fa-chevron-left"></i> [DotnetCore]排程利器-Coravel:Queue篇
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/27/hangfire-entry/" rel="next" title="[DotnetCore]排程神器-Hangfire:入門篇">
-      [DotnetCore]排程神器-Hangfire:入門篇 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+    </header>
   </article>
+
+    </div>
+  </div>
   
   
+  
+
   
 
 
 
           </div>
           
-    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -399,7 +284,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#IIS%E8%A8%AD%E5%AE%9A%E8%AA%BF%E6%95%B4"><span class="nav-number">2.1.</span> <span class="nav-text">IIS設定調整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">安裝應用程式初始化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -731,25 +615,6 @@ window.addEventListener('pjax:success', () => {
 
   
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-<script>
-NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
-    var gitalk = new Gitalk({
-      clientID    : '9a13d983ea4e508377ac',
-      clientSecret: 'f1ffbf947bbc56c5b76e27bc899ffabefb2fed88',
-      repo        : 'eugenesu0515.github.io',
-      owner       : 'eugenesu0515',
-      admin       : ['eugenesu0515'],
-      id          : '66c79dc76a2c350938c5491b8ccb4698',
-        language: 'zh-TW',
-      distractionFreeMode: true
-    });
-    gitalk.render('gitalk-container');
-  }, window.Gitalk);
-});
-</script>
 
     </div>
 </body>

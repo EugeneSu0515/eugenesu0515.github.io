@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-30T10:01:08.973Z</updated>
+  <updated>2021-08-31T10:56:55.307Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]FTP-下載上傳</title>
+    <link href="https://eugenesu0515.github.io/2021/08/31/ftp-download/"/>
+    <id>https://eugenesu0515.github.io/2021/08/31/ftp-download/</id>
+    <published>2021-08-31T10:33:52.000Z</published>
+    <updated>2021-08-31T10:56:55.307Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者所處環境為金融業，所在的科別屬寫週邊的應用系統，開發的每個系統多多少少都需要與別的系統串接，常見的有&lt;code&gt;核心&lt;/code&gt;、&lt;code&gt;外匯&lt;/code&gt;、&lt;code&gt;通路科&lt;/code&gt;等等。如&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;那篇所提，因為通常&lt;code&gt;核心系統&lt;/code&gt;環境比較特殊，相對應的串接方式，偏Socket或者交換檔案這類的傳統型居多。這篇主要以&lt;code&gt;FTP&lt;/code&gt;交換檔案為主介紹其作法，筆者會再寫兩篇相關的文章，請拭目以待。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="fluentftp" scheme="https://eugenesu0515.github.io/tags/fluentftp/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]Reader系列-Excel檔案</title>
@@ -424,28 +445,6 @@
     <category term="cap" scheme="https://eugenesu0515.github.io/tags/cap/"/>
     
     <category term="rabbitmq" scheme="https://eugenesu0515.github.io/tags/rabbitmq/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]SMTP寄信服務設計</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/</id>
-    <published>2021-08-20T18:19:36.000Z</published>
-    <updated>2021-08-30T09:26:48.943Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。&lt;/p&gt;
-&lt;p&gt;我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="smtp" scheme="https://eugenesu0515.github.io/tags/smtp/"/>
     
   </entry>
   
