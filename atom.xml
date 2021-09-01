@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-08-31T10:56:55.307Z</updated>
+  <updated>2021-09-01T10:26:08.627Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,61 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]SFTP-下載上傳</title>
+    <link href="https://eugenesu0515.github.io/2021/09/01/sftp-download/"/>
+    <id>https://eugenesu0515.github.io/2021/09/01/sftp-download/</id>
+    <published>2021-09-01T05:29:43.000Z</published>
+    <updated>2021-09-01T10:26:08.627Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;code&gt;FTP&lt;/code&gt;下載上傳後，另一個挑戰來了，有些系統指定使用&lt;code&gt;SFTP&lt;/code&gt;協定來做交換(上傳、下載)，剛好&lt;code&gt;FluentFTP&lt;/code&gt;尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為&lt;a href=&quot;http://ssh.net/&quot;&gt;SSH.NET&lt;/a&gt;，這篇以主要介紹透過該套件實作&lt;code&gt;SFTP&lt;/code&gt;協定的下載及上傳作業。&lt;code&gt;IFtpService&lt;/code&gt;則延續使用上篇的定義，這邊多了一組&lt;code&gt;SFtpService&lt;/code&gt;的實作來完成任務。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="sftp" scheme="https://eugenesu0515.github.io/tags/sftp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>DotnetCore系列文章目錄</title>
+    <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
+    <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
+    <published>2021-09-01T00:57:17.000Z</published>
+    <updated>2021-09-01T10:34:26.461Z</updated>
+    
+    
+    <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-socket-analyze/&quot; title=&quot;[DotnetCore]Socket程式實作-解析封包&quot;&gt;[DotnetCore]Socket程式實作-解析封包&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-socket-slicing/&quot; title=&quot;[DotnetCore]Socket程式實作-切割封包&quot;&gt;[DotnetCore]Socket程式實作-切割封包&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-smtp/&quot; title=&quot;[DotnetCore]SMTP寄信服務設計&quot;&gt;[DotnetCore]SMTP寄信服務設計&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-batch/&quot; title=&quot;[DotnetCore]Batch檔案執行及追縱&quot;&gt;[DotnetCore]Batch檔案執行及追縱&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-cap/&quot; title=&quot;[DotnetCore]EventBus套件CAP:以RabbitMQ為例&quot;&gt;[DotnetCore]EventBus套件CAP:以RabbitMQ為例&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/20/dotnetcore-actionfilter/&quot; title=&quot;[DotnetCore]ActionFilter實作&quot;&gt;[DotnetCore]ActionFilter實作&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/24/fluent-validation/&quot; title=&quot;[DotnetCore]後端驗證神器:Fluent Validation&quot;&gt;[DotnetCore]後端驗證神器:Fluent Validation&lt;/a&gt;
+&lt;br&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]FTP-下載上傳</title>
@@ -398,53 +453,6 @@
     <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
     
     <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Socket程式實作</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket/</id>
-    <published>2021-08-20T18:38:24.000Z</published>
-    <updated>2021-08-20T18:46:20.538Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者目前於金融業資訊部門就職，如大家所知，核心系統大都維持使用&lt;code&gt;cobol&lt;/code&gt;程式語言開發，我們這種寫&lt;code&gt;C#&lt;/code&gt;程式語言的，只能攻外圍系統，但不免俗的需要與各核心相關系統做打交道，不管是取得資料或者是更新資料等，比較舊型的架構都是透過&lt;code&gt;TCP/IP&lt;/code&gt;交換資料，也就是透過&lt;code&gt;socket&lt;/code&gt;程式交換資料。界於此，筆者需要實作socket程式基礎框架適應各種Client程式的開發需求，今天就來寫一支&lt;code&gt;socket core&lt;/code&gt;程式吧。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
-    
-    <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]EventBus套件CAP:以RabbitMQ為例</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-cap/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-cap/</id>
-    <published>2021-08-20T18:26:03.000Z</published>
-    <updated>2021-08-20T18:29:13.505Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則&lt;code&gt;Database Pooling&lt;/code&gt;的方式進行監聽，若有撈出一筆&lt;code&gt;Status = N&lt;/code&gt;的資料則進行邏輯處裡，進行完成後壓回&lt;code&gt;Status = Y 或 N&lt;/code&gt;的註記方式來完成該次的串接需求，當然途中也會壓&lt;code&gt;Status = P&lt;/code&gt;作為下次&lt;code&gt;Pooling&lt;/code&gt;會撈到的防呆，大概就是這麼簡單的技術完成串接的需求。&lt;/p&gt;
-&lt;p&gt;筆者因前一份公司有接觸過Message Queue，主要是&lt;a href=&quot;https://www.rabbitmq.com/&quot;&gt;Rabbit MQ&lt;/a&gt;，覺得使用Message Queue當作中間交換資訊平台，確實有其發展性，不論是之後需求變大時可以做分散式的處理，系統間也間接解偶了。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="cap" scheme="https://eugenesu0515.github.io/tags/cap/"/>
-    
-    <category term="rabbitmq" scheme="https://eugenesu0515.github.io/tags/rabbitmq/"/>
     
   </entry>
   

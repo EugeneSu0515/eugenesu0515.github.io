@@ -23,25 +23,21 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前提情要筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用MySQL Tutorial所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。">
+  <meta name="description" content="前提情要筆者上篇介紹完FTP下載上傳後，另一個挑戰來了，有些系統指定使用SFTP協定來做交換(上傳、下載)，剛好FluentFTP尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為SSH.NET，這篇以主要介紹透過該套件實作SFTP協定的下載及上傳作業。IFtpService則延續使用上篇的定義，這邊多了一組SFtpService的實作來完成任務。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[MySQL]範例資料庫設定">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/index.html">
+<meta property="og:title" content="[DotnetCore]SFTP-下載上傳">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/09/01/sftp-download/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
-<meta property="og:description" content="前提情要筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用MySQL Tutorial所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。">
+<meta property="og:description" content="前提情要筆者上篇介紹完FTP下載上傳後，另一個挑戰來了，有些系統指定使用SFTP協定來做交換(上傳、下載)，剛好FluentFTP尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為SSH.NET，這篇以主要介紹透過該套件實作SFTP協定的下載及上傳作業。IFtpService則延續使用上篇的定義，這邊多了一組SFtpService的實作來完成任務。">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/ShowDatabases.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/ChooseMySQL.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/SettingConnection.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/classicmodels-table.png">
-<meta property="article:published_time" content="2021-08-23T02:06:01.000Z">
-<meta property="article:modified_time" content="2021-08-23T02:43:26.176Z">
+<meta property="article:published_time" content="2021-09-01T05:29:43.000Z">
+<meta property="article:modified_time" content="2021-09-01T10:26:08.627Z">
 <meta property="article:author" content="Eugene Su">
-<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="dotnetcore">
+<meta property="article:tag" content="sftp">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/ShowDatabases.png">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/09/01/sftp-download/">
 
 
 <script id="page-configurations">
@@ -54,7 +50,7 @@
   };
 </script>
 
-  <title>[MySQL]範例資料庫設定 | Eugene's Blog</title>
+  <title>[DotnetCore]SFTP-下載上傳 | Eugene's Blog</title>
   
 
 
@@ -204,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/01/sftp-download/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -217,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [MySQL]範例資料庫設定
+          [DotnetCore]SFTP-下載上傳
         </h1>
 
         <div class="post-meta">
@@ -230,7 +226,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-08-23 10:06:01 / 修改時間：10:43:26" itemprop="dateCreated datePublished" datetime="2021-08-23T10:06:01+08:00">2021-08-23</time>
+              <time title="創建時間：2021-09-01 13:29:43 / 修改時間：18:26:08" itemprop="dateCreated datePublished" datetime="2021-09-01T13:29:43+08:00">2021-09-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -238,7 +234,7 @@
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
                 </span>
             </span>
 
@@ -254,13 +250,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>531</span>
+              <span>3.5k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>1 分鐘</span>
+              <span>6 分鐘</span>
             </span>
 
         </div>
@@ -272,35 +268,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用<a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/">MySQL Tutorial</a>所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。</p>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完<code>FTP</code>下載上傳後，另一個挑戰來了，有些系統指定使用<code>SFTP</code>協定來做交換(上傳、下載)，剛好<code>FluentFTP</code>尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為<a target="_blank" rel="noopener" href="http://ssh.net/">SSH.NET</a>，這篇以主要介紹透過該套件實作<code>SFTP</code>協定的下載及上傳作業。<code>IFtpService</code>則延續使用上篇的定義，這邊多了一組<code>SFtpService</code>的實作來完成任務。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="下載範例資料庫產生語法"><a href="#下載範例資料庫產生語法" class="headerlink" title="下載範例資料庫產生語法"></a>下載範例資料庫產生語法</h2><p>至<a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip">MySQL Sample Data</a>，下載後解壓縮備著。</p>
-<h2 id="執行建立範例資料庫語法"><a href="#執行建立範例資料庫語法" class="headerlink" title="執行建立範例資料庫語法"></a>執行建立範例資料庫語法</h2><p>首先使用<code>command line</code>進入<code>mysql cli</code>介面</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="安裝套件"><a href="#安裝套件" class="headerlink" title="安裝套件"></a>安裝套件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package SSH.NET</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>以下皆為已進入MySQL cli後進行</p>
-</blockquote>
-<p>使用<code>source</code>指令載入剛剛下載的建立範例資料庫語法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 路徑改為解壓縮檔案路徑</span></span><br><span class="line"><span class="built_in">source</span> ~/Downloads/mysqlsampledatabase.sql</span><br></pre></td></tr></table></figure>
+<h2 id="撰寫Service"><a href="#撰寫Service" class="headerlink" title="撰寫Service"></a>撰寫Service</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Renci.SshNet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SFtpService</span> : <span class="title">IFtpService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IFilePathService _filePathService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SFtpService</span>(<span class="params">IFilePathService filePathService</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _filePathService = filePathService;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DownloadData</span>(<span class="params">FTPConfigBaseModel downloadFtpInfo, List&lt;<span class="built_in">string</span>&gt; fileList</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> localDir = _filePathService.GetDirectoryPath(downloadFtpInfo.LocalPath);</span><br><span class="line">        <span class="keyword">var</span> remoteDir = downloadFtpInfo.RemotePath;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> password = Encoding.UTF8.GetString(Convert.FromBase64String(downloadFtpInfo.Password));</span><br><span class="line">        <span class="keyword">var</span> securePwd = PasswordExtension.SecureStringToString(</span><br><span class="line">            PasswordExtension.GetPasswordSecurity(password));</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> client = <span class="keyword">new</span> SftpClient(downloadFtpInfo.Server, downloadFtpInfo.Account, securePwd))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                client.Connect();</span><br><span class="line">                <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> fileList)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> localPath = Path.Combine(localDir, item);</span><br><span class="line">                    <span class="keyword">var</span> remotePath = Path.Combine(remoteDir, item);</span><br><span class="line">                    <span class="keyword">using</span>(<span class="keyword">var</span> s = File.Create(localPath))</span><br><span class="line">                        client.DownloadFile(remotePath, s);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            catch (Exception exception)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">throw</span> exception;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">finally</span></span><br><span class="line">            &#123;</span><br><span class="line">                client.Disconnect();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">UploadData</span>(<span class="params">FTPConfigBaseModel uploadFtpInfo, List&lt;FileUploadResponseModel&gt; fileUploadResponseModels</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Step0: Data Initial</span></span><br><span class="line">        <span class="keyword">var</span> localDir = _filePathService.GetDirectoryPath(uploadFtpInfo.LocalPath);</span><br><span class="line">        <span class="keyword">var</span> remoteDir = uploadFtpInfo.RemotePath;</span><br><span class="line">        <span class="comment">// Step1: Data Arrangement</span></span><br><span class="line">        <span class="keyword">var</span> fileGroupList = fileUploadResponseModels.GroupBy(x =&gt; x.FileName).ToList();</span><br><span class="line">        <span class="keyword">var</span> fileList = <span class="keyword">new</span> List&lt;<span class="built_in">string</span>&gt;();</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> fileGroupList)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> fileContent = item.Select(x =&gt; x.DataStr)</span><br><span class="line">                .Aggregate((x, y) =&gt; <span class="string">$&quot;<span class="subst">&#123;x&#125;</span>\r\n<span class="subst">&#123;y&#125;</span>&quot;</span>);</span><br><span class="line">            File.WriteAllText(Path.Combine(localDir, item.Key)</span><br><span class="line">                , fileContent, Encoding.GetEncoding(item.FirstOrDefault()?.Encoding));</span><br><span class="line">            fileList.Add(item.Key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Step2: Upload Data</span></span><br><span class="line">        <span class="keyword">var</span> password = Encoding.UTF8.GetString(Convert.FromBase64String(uploadFtpInfo.Password));</span><br><span class="line">        <span class="keyword">var</span> securePwd = PasswordExtension.SecureStringToString(</span><br><span class="line">            PasswordExtension.GetPasswordSecurity(password));</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> client = <span class="keyword">new</span> SftpClient(uploadFtpInfo.Server, uploadFtpInfo.Account, securePwd))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                client.Connect();</span><br><span class="line">                <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> fileList)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> localPath = Path.Combine(localDir, item);</span><br><span class="line">                    <span class="keyword">var</span> remotePath = Path.Combine(remoteDir, item);</span><br><span class="line">                    <span class="keyword">using</span>(<span class="keyword">var</span> stream = <span class="keyword">new</span> FileStream(localPath, FileMode.Open))</span><br><span class="line">                        client.UploadFile(stream, remotePath, <span class="literal">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            catch (Exception exception)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">throw</span> exception;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">finally</span></span><br><span class="line">            &#123;</span><br><span class="line">                client.Disconnect();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">IsExist</span>(<span class="params">FTPConfigBaseModel uploadFtpInfo, <span class="built_in">string</span> filename</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> password = Encoding.UTF8.GetString(Convert.FromBase64String(uploadFtpInfo.Password));</span><br><span class="line">        <span class="keyword">var</span> securePwd = PasswordExtension.SecureStringToString(</span><br><span class="line">            PasswordExtension.GetPasswordSecurity(password));</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> client = <span class="keyword">new</span> SftpClient(uploadFtpInfo.Server, uploadFtpInfo.Account, securePwd))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                client.Connect();</span><br><span class="line">                <span class="keyword">var</span> remotePath = Path.Combine(uploadFtpInfo.RemotePath, filename);</span><br><span class="line">                <span class="keyword">return</span> client.Exists(remotePath);</span><br><span class="line">            &#125;</span><br><span class="line">            catch (Exception exception)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">throw</span> exception;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">finally</span></span><br><span class="line">            &#123;</span><br><span class="line">                client.Disconnect();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>使用<code>show databases;</code>指令觀看是否載入成功</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br></pre></td></tr></table></figure>
-
-<img src="/2021/08/23/mysql-sample-db/ShowDatabases.png" class="" title="[ShowDatabases]">
-
-<h2 id="使用GUI軟體觀看資料庫"><a href="#使用GUI軟體觀看資料庫" class="headerlink" title="使用GUI軟體觀看資料庫"></a>使用GUI軟體觀看資料庫</h2><p>筆者這邊使用<a target="_blank" rel="noopener" href="https://dbeaver.io/download/">DBeaver Community</a>，安裝方式就不在這邊贅述了。</p>
-<ol>
-<li><p>資料庫選擇MySql</p>
-<img src="/2021/08/23/mysql-sample-db/ChooseMySQL.png" class="" title="[ChooseMySQL]"></li>
-<li><p>設定連線字串並測試連線</p>
-<img src="/2021/08/23/mysql-sample-db/SettingConnection.png" class="" title="[SettingConnection]"></li>
-<li><p>完成後看到<code>classicmodels</code>資料庫了</p>
-<img src="/2021/08/23/mysql-sample-db/classicmodels-table.png" class="" title="[classictable]"></li>
-</ol>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>終於完成範例資料庫的建立了，筆者可以好好的撰寫資料庫相關的技術文章了，太棒了。</p>
-<p>參考<br><a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/how-to-load-sample-database-into-mysql-database-server.aspx">Load Sample Database to MySQL Server</a><br><a target="_blank" rel="noopener" href="https://www.mysqltutorial.org/mysql-sample-database.aspx">MySQL Sample Database</a></p>
+<p>Client端使用與Ftp那篇差不多，參考<a href="/2021/08/31/ftp-download/" title="[DotnetCore]FTP-下載上傳">[DotnetCore]FTP-下載上傳</a>即可。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>透過此篇介紹，簡單實現SFTP協定的存取，留個伏筆，因為FtpService與SFtpService皆實作<code>IFtpService</code>，若同一個專案皆有兩種需求則不能只是單注入<code>IFtpService</code>，這樣無法知道存取到的是哪個實作，因此需要做一些特別處理以辨別要使用哪個實作服務，下篇就來揭曉吧。</p>
 
     </div>
 
@@ -310,7 +286,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/mysql/" rel="tag"># mysql</a>
+              <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
+              <a href="/tags/sftp/" rel="tag"># sftp</a>
           </div>
 
         
@@ -319,13 +296,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/23/mysql-install/" rel="prev" title="[MySQL]安裝與設定">
-      <i class="fa fa-chevron-left"></i> [MySQL]安裝與設定
+    <a href="/2021/09/01/dotnetcore-series/" rel="prev" title="DotnetCore系列文章目錄">
+      <i class="fa fa-chevron-left"></i> DotnetCore系列文章目錄
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/23/nlog/" rel="next" title="[DotnetCore]NLog使用">
-      [DotnetCore]NLog使用 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -385,7 +359,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BC%89%E7%AF%84%E4%BE%8B%E8%B3%87%E6%96%99%E5%BA%AB%E7%94%A2%E7%94%9F%E8%AA%9E%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">下載範例資料庫產生語法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%B7%E8%A1%8C%E5%BB%BA%E7%AB%8B%E7%AF%84%E4%BE%8B%E8%B3%87%E6%96%99%E5%BA%AB%E8%AA%9E%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">執行建立範例資料庫語法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8GUI%E8%BB%9F%E9%AB%94%E8%A7%80%E7%9C%8B%E8%B3%87%E6%96%99%E5%BA%AB"><span class="nav-number">2.3.</span> <span class="nav-text">使用GUI軟體觀看資料庫</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E5%A5%97%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">安裝套件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%92%B0%E5%AF%ABService"><span class="nav-number">2.2.</span> <span class="nav-text">撰寫Service</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -728,7 +702,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'eugenesu0515.github.io',
       owner       : 'eugenesu0515',
       admin       : ['eugenesu0515'],
-      id          : '617ea51c8d3adad0ef065d762899c947',
+      id          : 'd39d02ad0fbaec6d76b7e8e28bc5ce97',
         language: 'zh-TW',
       distractionFreeMode: true
     });
