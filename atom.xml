@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-01T10:26:08.627Z</updated>
+  <updated>2021-09-02T00:00:39.139Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore](S)FTP-ServiceResolver</title>
+    <link href="https://eugenesu0515.github.io/2021/09/02/ftp-sftp-resolver/"/>
+    <id>https://eugenesu0515.github.io/2021/09/02/ftp-sftp-resolver/</id>
+    <published>2021-09-01T23:49:32.000Z</published>
+    <updated>2021-09-02T00:00:39.139Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;由前兩篇的議題延續下去，參考&lt;a href=&quot;/2021/08/31/ftp-download/&quot; title=&quot;[DotnetCore]FTP-下載上傳&quot;&gt;[DotnetCore]FTP-下載上傳&lt;/a&gt;、&lt;a href=&quot;/2021/09/01/sftp-download/&quot; title=&quot;[DotnetCore]SFTP-下載上傳&quot;&gt;[DotnetCore]SFTP-下載上傳&lt;/a&gt;，因為同樣都是實作&lt;code&gt;IFtpService&lt;/code&gt;，同一個專案皆有使用到Ftp及SFtp則會面臨到此篇要解決的問題，該如何分辨要採用哪種實作的下載、上傳，有哪些方法可以解決，由筆者我來細說吧，主要參考 &lt;a href=&quot;https://devkimchi.com/2020/07/01/5-ways-injecting-multiple-instances-of-same-interface-on-aspnet-core/&quot;&gt;國外文章&lt;/a&gt; :佛心的整理了五種不同的解決方式。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="ftp" scheme="https://eugenesu0515.github.io/tags/ftp/"/>
+    
+    <category term="sftp" scheme="https://eugenesu0515.github.io/tags/sftp/"/>
+    
+    <category term="resolver" scheme="https://eugenesu0515.github.io/tags/resolver/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]SFTP-下載上傳</title>
@@ -419,29 +444,6 @@
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發&lt;code&gt;OnReceive&lt;/code&gt;事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出&lt;code&gt;offset&lt;/code&gt;及&lt;code&gt;size&lt;/code&gt;，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
-    
-    <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Socket程式實作-解析封包</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/</id>
-    <published>2021-08-20T18:49:20.000Z</published>
-    <updated>2021-08-20T18:50:48.311Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在上篇把該有的&lt;code&gt;Socket&lt;/code&gt;底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。&lt;/p&gt;</summary>
     
     
     
