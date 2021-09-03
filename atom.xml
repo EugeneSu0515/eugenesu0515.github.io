@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-02T00:00:39.139Z</updated>
+  <updated>2021-09-03T07:09:13.021Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-Pdf檔案</title>
+    <link href="https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/"/>
+    <id>https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/</id>
+    <published>2021-09-03T07:02:42.000Z</published>
+    <updated>2021-09-03T07:09:13.021Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;Reader系列來到pdf格式檔案了，筆者這邊使用&lt;a href=&quot;https://pdfbox.apache.org/&quot;&gt;Pdfbox&lt;/a&gt;移植的C# Library:&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;，讀取部份，看github的readme的教學基本上就滿簡單的，只有讀取一個pdf檔案會很無趣，想了一下應用點，筆者公司銀行有規定新人要考過一些金融業基礎的證照考試取得證照，例: &lt;a href=&quot;https://examweb.sfi.org.tw/regexam/exam.aspx?EXAMCERT=%E9%87%91%E8%9E%8D&amp;EXAMMID=2&quot;&gt;金融市場常識與職業道德&lt;/a&gt;，想到一個有趣的應用，基本上都有考古題下載下來做練習，可以利用&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;套件讀取pdf檔案後解析題目與選項及答案，一旦取得這些資料，利用擅長的前端架構做一個頁面，後端則利用這些資料做一個隨機出題的API，就可以完成考古題測驗Application了，筆者這篇主要做到讀取及解析的作業及取得有結構化的資料。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="pdf" scheme="https://eugenesu0515.github.io/tags/pdf/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore](S)FTP-ServiceResolver</title>
@@ -432,29 +453,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="bat" scheme="https://eugenesu0515.github.io/tags/bat/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Socket程式實作-切割封包</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-slicing/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-slicing/</id>
-    <published>2021-08-20T18:53:57.000Z</published>
-    <updated>2021-08-20T18:55:26.545Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發&lt;code&gt;OnReceive&lt;/code&gt;事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出&lt;code&gt;offset&lt;/code&gt;及&lt;code&gt;size&lt;/code&gt;，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="socket" scheme="https://eugenesu0515.github.io/tags/socket/"/>
-    
-    <category term="netcoreserver" scheme="https://eugenesu0515.github.io/tags/netcoreserver/"/>
     
   </entry>
   
