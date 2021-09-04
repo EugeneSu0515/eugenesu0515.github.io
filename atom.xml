@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-03T07:09:13.021Z</updated>
+  <updated>2021-09-04T14:11:43.870Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>[DotnetCore]ORM系列-Chloe:入門篇</title>
+    <link href="https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/"/>
+    <id>https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/</id>
+    <published>2021-09-04T14:00:33.000Z</published>
+    <updated>2021-09-04T14:11:43.870Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者被朋友推薦使用&lt;a href=&quot;https://github.com/shuxinqin/Chloe/wiki&quot;&gt;Chloe&lt;/a&gt;，查了一下也看到&lt;a href=&quot;https://blog.csdn.net/qq_40600379/article/details/101680870&quot;&gt;ORM框架效能&lt;/a&gt;比較文章，效能是真的很棒，使用上也是透過linq實現所有事情，這篇主要介紹&lt;code&gt;Chloe ORM&lt;/code&gt;套件的使用，搭配筆者之前建立的MySQL範例資料庫，做一些簡單的Select查詢示範，之後會再慢慢介紹整個應用。前置作業參考&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/2021/08/23/mysql-install/&quot; title=&quot;[MySQL]安裝與設定&quot;&gt;[MySQL]安裝與設定&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/2021/08/23/mysql-sample-db/&quot; title=&quot;[MySQL]範例資料庫設定&quot;&gt;[MySQL]範例資料庫設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="orm" scheme="https://eugenesu0515.github.io/categories/dotnetcore/orm/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
+    
+  </entry>
+  
+  <entry>
     <title>[DotnetCore]Reader系列-Pdf檔案</title>
     <link href="https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/"/>
     <id>https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/</id>
     <published>2021-09-03T07:02:42.000Z</published>
-    <updated>2021-09-03T07:09:13.021Z</updated>
+    <updated>2021-09-04T14:16:49.451Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;Reader系列來到pdf格式檔案了，筆者這邊使用&lt;a href=&quot;https://pdfbox.apache.org/&quot;&gt;Pdfbox&lt;/a&gt;移植的C# Library:&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;，讀取部份，看github的readme的教學基本上就滿簡單的，只有讀取一個pdf檔案會很無趣，想了一下應用點，筆者公司銀行有規定新人要考過一些金融業基礎的證照考試取得證照，例: &lt;a href=&quot;https://examweb.sfi.org.tw/regexam/exam.aspx?EXAMCERT=%E9%87%91%E8%9E%8D&amp;EXAMMID=2&quot;&gt;金融市場常識與職業道德&lt;/a&gt;，想到一個有趣的應用，基本上都有考古題下載下來做練習，可以利用&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;套件讀取pdf檔案後解析題目與選項及答案，一旦取得這些資料，利用擅長的前端架構做一個頁面，後端則利用這些資料做一個隨機出題的API，就可以完成考古題測驗Application了，筆者這篇主要做到讀取及解析的作業及取得有結構化的資料。&lt;/p&gt;</summary>
@@ -88,7 +115,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-09-03T09:32:00.774Z</updated>
+    <updated>2021-09-04T14:13:57.573Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
@@ -432,27 +459,6 @@
     <category term="rabbitmq" scheme="https://eugenesu0515.github.io/tags/rabbitmq/"/>
     
     <category term="message queue" scheme="https://eugenesu0515.github.io/tags/message-queue/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Batch檔案執行及追縱</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-batch/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/dotnetcore-batch/</id>
-    <published>2021-08-21T04:59:16.000Z</published>
-    <updated>2021-08-21T05:02:31.198Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放&lt;code&gt;batch file&lt;/code&gt;，讓我們方便去執行。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="bat" scheme="https://eugenesu0515.github.io/tags/bat/"/>
     
   </entry>
   
