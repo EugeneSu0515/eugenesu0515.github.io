@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-04T14:11:43.870Z</updated>
+  <updated>2021-09-05T15:56:10.443Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</title>
+    <link href="https://eugenesu0515.github.io/2021/09/05/orm-series-efcore-override-savechanges/"/>
+    <id>https://eugenesu0515.github.io/2021/09/05/orm-series-efcore-override-savechanges/</id>
+    <published>2021-09-05T15:53:05.000Z</published>
+    <updated>2021-09-05T15:56:10.443Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者工作環境中開發&lt;code&gt;ASP.NET CORE Web API&lt;/code&gt;，資料庫存取部份，會交叉使用&lt;code&gt;EF Core&lt;/code&gt;以及&lt;code&gt;Dapper&lt;/code&gt;，筆者單位共同認知的切分方式為若單個資料表的CRUD操作，就使用&lt;code&gt;EF Core&lt;/code&gt;，若複雜的查詢，或者呼叫Store Procedure等會使用Dapper完成操作。單個資料表的&lt;code&gt;CRUD&lt;/code&gt;，基本上透過&lt;code&gt;EF Core&lt;/code&gt;可以說是輕而易舉，會遇到一個問題是資料表共同欄位，類似於&lt;code&gt;CreatedDate, CreatedBy, UpdatedDate, UpdatedBy&lt;/code&gt;這種紀錄變更者及變更時間部份，若寫在每一個&lt;code&gt;Service&lt;/code&gt;中會顯得有點多餘，且沒有效率，擴充性也不好，假設現在要改變&lt;code&gt;CreatedDate, UpdatedDate&lt;/code&gt;的時間原本由&lt;code&gt;Local Time&lt;/code&gt;改為&lt;code&gt;UTC  Time&lt;/code&gt;，其不就是要在每個Service中做修正。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="efcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/efcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="efcore" scheme="https://eugenesu0515.github.io/tags/efcore/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-Chloe:入門篇</title>
@@ -438,27 +461,6 @@
     
     
     <category term="mysql" scheme="https://eugenesu0515.github.io/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[RabbitMQ]安裝及設定</title>
-    <link href="https://eugenesu0515.github.io/2021/08/21/rabbitmq-install/"/>
-    <id>https://eugenesu0515.github.io/2021/08/21/rabbitmq-install/</id>
-    <published>2021-08-21T05:12:02.000Z</published>
-    <updated>2021-08-21T12:53:28.605Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;RabbitMQ&lt;/code&gt;是實現&lt;code&gt;AMQP(Advanced Message Queuing Protocol)&lt;/code&gt;的伺服器，使用&lt;code&gt;Er lang&lt;/code&gt;撰寫而成，且提供&lt;code&gt;HA&lt;/code&gt;及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="message queue" scheme="https://eugenesu0515.github.io/categories/message-queue/"/>
-    
-    
-    <category term="rabbitmq" scheme="https://eugenesu0515.github.io/tags/rabbitmq/"/>
-    
-    <category term="message queue" scheme="https://eugenesu0515.github.io/tags/message-queue/"/>
     
   </entry>
   
