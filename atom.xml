@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-05T15:56:10.443Z</updated>
+  <updated>2021-09-07T05:50:34.387Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:Interceptor篇</title>
+    <link href="https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-interceptor/"/>
+    <id>https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-interceptor/</id>
+    <published>2021-09-07T05:35:18.000Z</published>
+    <updated>2021-09-07T05:50:34.387Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者前篇介紹Select相關的method&lt;a href=&quot;/2021/09/07/orm-series-chloe-select/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:Select篇&quot;&gt;[DotnetCore]ORM系列-Chloe:Select篇&lt;/a&gt;，這次要來寫interceptor，觀察看看那些select method對應的sql語法，才會知道Chloe都幫我們轉成什麼語法，才不會誤用造成錯誤，筆者覺得是值得投資的。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu0515.github.io/categories/dotnetcore/chloe/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:Select篇</title>
+    <link href="https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-select/"/>
+    <id>https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-select/</id>
+    <published>2021-09-07T05:29:18.000Z</published>
+    <updated>2021-09-07T05:54:46.708Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;上篇&lt;a href=&quot;/2021/09/04/orm-series-chloe-entry/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:入門篇&quot;&gt;[DotnetCore]ORM系列-Chloe:入門篇&lt;/a&gt;介紹&lt;code&gt;Chloe&lt;/code&gt;的使用方式，這篇主要繼續探討，&lt;code&gt;Chloe&lt;/code&gt;提供哪些Select相關的Method，跟著筆者一起看下去。跟著Chloe github的wiki針對筆者之前建立的範例資料庫做一個應用吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu0515.github.io/categories/dotnetcore/chloe/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</title>
@@ -423,44 +469,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="nlog" scheme="https://eugenesu0515.github.io/tags/nlog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[MySQL]範例資料庫設定</title>
-    <link href="https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/"/>
-    <id>https://eugenesu0515.github.io/2021/08/23/mysql-sample-db/</id>
-    <published>2021-08-23T02:06:01.000Z</published>
-    <updated>2021-08-23T02:43:26.176Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用&lt;a href=&quot;https://www.mysqltutorial.org/&quot;&gt;MySQL Tutorial&lt;/a&gt;所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="mysql" scheme="https://eugenesu0515.github.io/categories/mysql/"/>
-    
-    
-    <category term="mysql" scheme="https://eugenesu0515.github.io/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[MySQL]安裝與設定</title>
-    <link href="https://eugenesu0515.github.io/2021/08/23/mysql-install/"/>
-    <id>https://eugenesu0515.github.io/2021/08/23/mysql-install/</id>
-    <published>2021-08-23T01:17:17.000Z</published>
-    <updated>2021-08-23T01:39:08.234Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="mysql" scheme="https://eugenesu0515.github.io/categories/mysql/"/>
-    
-    
-    <category term="mysql" scheme="https://eugenesu0515.github.io/tags/mysql/"/>
     
   </entry>
   
