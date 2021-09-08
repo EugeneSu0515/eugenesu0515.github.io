@@ -119,7 +119,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/"/>
     <id>https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/</id>
     <published>2021-09-04T14:00:33.000Z</published>
-    <updated>2021-09-04T14:11:43.870Z</updated>
+    <updated>2021-09-08T13:06:51.914Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者被朋友推薦使用&lt;a href=&quot;https://github.com/shuxinqin/Chloe/wiki&quot;&gt;Chloe&lt;/a&gt;，查了一下也看到&lt;a href=&quot;https://blog.csdn.net/qq_40600379/article/details/101680870&quot;&gt;ORM框架效能&lt;/a&gt;比較文章，效能是真的很棒，使用上也是透過linq實現所有事情，這篇主要介紹&lt;code&gt;Chloe ORM&lt;/code&gt;套件的使用，搭配筆者之前建立的MySQL範例資料庫，做一些簡單的Select查詢示範，之後會再慢慢介紹整個應用。前置作業參考&lt;/p&gt;
@@ -132,7 +132,7 @@
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
     
-    <category term="orm" scheme="https://eugenesu0515.github.io/categories/dotnetcore/orm/"/>
+    <category term="chloe" scheme="https://eugenesu0515.github.io/categories/dotnetcore/chloe/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -146,7 +146,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/"/>
     <id>https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/</id>
     <published>2021-09-03T07:02:42.000Z</published>
-    <updated>2021-09-04T14:16:49.451Z</updated>
+    <updated>2021-09-08T13:09:14.979Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;Reader系列來到pdf格式檔案了，筆者這邊使用&lt;a href=&quot;https://pdfbox.apache.org/&quot;&gt;Pdfbox&lt;/a&gt;移植的C# Library:&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;，讀取部份，看github的readme的教學基本上就滿簡單的，只有讀取一個pdf檔案會很無趣，想了一下應用點，筆者公司銀行有規定新人要考過一些金融業基礎的證照考試取得證照，例: &lt;a href=&quot;https://examweb.sfi.org.tw/regexam/exam.aspx?EXAMCERT=%E9%87%91%E8%9E%8D&amp;EXAMMID=2&quot;&gt;金融市場常識與職業道德&lt;/a&gt;，想到一個有趣的應用，基本上都有考古題下載下來做練習，可以利用&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;套件讀取pdf檔案後解析題目與選項及答案，一旦取得這些資料，利用擅長的前端架構做一個頁面，後端則利用這些資料做一個隨機出題的API，就可以完成考古題測驗Application了，筆者這篇主要做到讀取及解析的作業及取得有結構化的資料。&lt;/p&gt;</summary>
@@ -154,6 +154,8 @@
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu0515.github.io/categories/dotnetcore/reader/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -213,7 +215,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-09-07T06:00:39.275Z</updated>
+    <updated>2021-09-08T13:11:24.828Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
@@ -268,7 +270,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/30/excel-reader/"/>
     <id>https://eugenesu0515.github.io/2021/08/30/excel-reader/</id>
     <published>2021-08-30T09:49:07.000Z</published>
-    <updated>2021-08-30T10:01:08.973Z</updated>
+    <updated>2021-09-08T13:09:25.119Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇就延續Reader系列，這次介紹Excel檔案讀取的實作，Excel讀寫套件百百種，有名的就那幾個，&lt;a href=&quot;https://github.com/hughbe/excel-mapper&quot;&gt;ExcelDataReader&lt;/a&gt;、&lt;a href=&quot;https://github.com/nissl-lab/npoi&quot;&gt;NPOI&lt;/a&gt;、&lt;a href=&quot;https://github.com/ClosedXML/ClosedXML&quot;&gt;CloseXML&lt;/a&gt;等等。筆者這篇主要使用ExcelDataReader上面再包一層的&lt;a href=&quot;https://github.com/hughbe/excel-mapper&quot;&gt;ExcelMapper&lt;/a&gt;，主要是簡單易用，有強型別的Binding，一般讀取來說已足夠。&lt;/p&gt;</summary>
@@ -276,6 +278,8 @@
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu0515.github.io/categories/dotnetcore/reader/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -315,7 +319,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/"/>
     <id>https://eugenesu0515.github.io/2021/08/28/reader-series-csv/</id>
     <published>2021-08-28T13:18:45.000Z</published>
-    <updated>2021-08-28T13:20:15.428Z</updated>
+    <updated>2021-09-08T13:09:05.602Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在公司擔任R&amp;amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含&lt;code&gt;CSV&lt;/code&gt;檔案，&lt;code&gt;Excel&lt;/code&gt;檔案，&lt;code&gt;pdf&lt;/code&gt;檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。&lt;/p&gt;</summary>
@@ -323,6 +327,8 @@
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu0515.github.io/categories/dotnetcore/reader/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -336,7 +342,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/27/hangfire-advanced1/"/>
     <id>https://eugenesu0515.github.io/2021/08/27/hangfire-advanced1/</id>
     <published>2021-08-27T14:13:27.000Z</published>
-    <updated>2021-08-27T14:16:50.733Z</updated>
+    <updated>2021-09-08T13:08:28.079Z</updated>
     
     
     <summary type="html">&lt;img src=&quot;/2021/08/27/hangfire-advanced1/Untitled.png&quot; class=&quot;&quot; title=&quot;[HangfireDashboard]&quot;&gt;</summary>
@@ -345,7 +351,7 @@
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
     
-    <category term="scheduler" scheme="https://eugenesu0515.github.io/categories/dotnetcore/scheduler/"/>
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -359,7 +365,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/27/hangfire-entry/"/>
     <id>https://eugenesu0515.github.io/2021/08/27/hangfire-entry/</id>
     <published>2021-08-27T14:10:13.000Z</published>
-    <updated>2021-08-27T14:23:14.556Z</updated>
+    <updated>2021-09-08T13:08:34.499Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在上篇已介紹&lt;code&gt;Coravel&lt;/code&gt;短小精幹的排程利器，固定週期排程部份皆使用&lt;code&gt;Coravel&lt;/code&gt;套件完成，然而使用者需求越來越清楚的狀況下，意識到無法滿足所以使用者需求，事情是這樣的，使用者的某些作業需要從畫面操作，並將該項作業排進排程中，且是一次性作業，例如：使用者透過介面去設定日結作業的需求，我們會由介面呼叫API，於API中設定好某個時間點去執行該「日結作業」服務。&lt;/p&gt;
@@ -369,7 +375,7 @@
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
     
-    <category term="scheduler" scheme="https://eugenesu0515.github.io/categories/dotnetcore/scheduler/"/>
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -404,7 +410,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/25/coravel-queue/"/>
     <id>https://eugenesu0515.github.io/2021/08/25/coravel-queue/</id>
     <published>2021-08-25T02:58:11.000Z</published>
-    <updated>2021-08-25T03:07:35.401Z</updated>
+    <updated>2021-09-08T13:09:58.191Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;a href=&quot;https://docs.coravel.net/&quot;&gt;Coravel&lt;/a&gt;的&lt;code&gt;Scheduler&lt;/code&gt;功能後，這篇要來實作&lt;code&gt;Queue&lt;/code&gt;的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作&lt;code&gt;Data Migration&lt;/code&gt;，為方便，不防做一個前端頁面，才可以有介面去點擊執行&lt;code&gt;Data Migration&lt;/code&gt;作業，想當然爾，作業時間一定無法在一個&lt;code&gt;Request&lt;/code&gt;時間內完成，一定會噴&lt;code&gt;Timeout Error&lt;/code&gt;。&lt;/p&gt;
@@ -413,6 +419,8 @@
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu0515.github.io/categories/dotnetcore/coravel/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
@@ -426,7 +434,7 @@
     <link href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/"/>
     <id>https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/</id>
     <published>2021-08-25T02:48:46.000Z</published>
-    <updated>2021-08-25T03:02:15.426Z</updated>
+    <updated>2021-09-08T13:10:04.318Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由&lt;code&gt;Windows排程&lt;/code&gt;去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。&lt;/p&gt;
@@ -435,6 +443,8 @@
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu0515.github.io/categories/dotnetcore/coravel/"/>
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
