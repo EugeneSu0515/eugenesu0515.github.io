@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前提情要排程神器-Hangfire兩篇文章後，這篇來到重頭戲了，筆者主要參考TimerJob這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維護考量，一切以資料庫設定為準，爾後有臨時變更，需要調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點  臨時調動執行時間 若排定時間執行時有出錯，是否可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[DotnetCore]排程神器-Hangfire:動態排程篇1">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前提情要排程神器-Hangfire兩篇文章後，這篇來到重頭戲了，筆者主要參考TimerJob這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維護考量，一切以資料庫設定為準，爾後有臨時變更，需要調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點  臨時調動執行時間 若排定時間執行時有出錯，是否可">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-09-08T07:44:18.000Z">
+<meta property="article:modified_time" content="2021-09-08T07:56:02.490Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="dotnetcore">
+<meta property="article:tag" content="hangfire">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[DotnetCore]排程神器-Hangfire:動態排程篇1 | Eugene's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [DotnetCore]排程神器-Hangfire:動態排程篇1
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-09-08 15:44:18 / 修改時間：15:56:02" itemprop="dateCreated datePublished" datetime="2021-09-08T15:44:18+08:00">2021-09-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/hangfire/" itemprop="url" rel="index"><span itemprop="name">hangfire</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>23 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>排程神器-<code>Hangfire</code>兩篇文章後，這篇來到重頭戲了，筆者主要參考<a target="_blank" rel="noopener" href="https://www.notion.so/c720bc3f47579fe0036dc2eb735fe159">TimerJob</a>這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維護考量，一切以資料庫設定為準，爾後有臨時變更，需要調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點</p>
+<ul>
+<li>臨時調動執行時間</li>
+<li>若排定時間執行時有出錯，是否可以手動立即執行</li>
+<li>可能以某一個排程為基底，長出一個新的排程</li>
+</ul>
+<p>等等，是個一大挑戰阿。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者以前提情要提到的幾點去做一個設計過程的解說，以第一點「臨時調動執行時間」來說，應該要有一支API，執行後達到<code>Job Initial</code>效果，因為需要臨時調動，須將排程設定放置於資料表中，經由<code>Job Initial</code>這個作業，透過<code>Hangfire</code>的<code>AddOrUpdate</code>，因為<code>JobId</code>是一樣會Update掉，筆者這邊暫時不考慮刪除，刪除只能從<code>Hangfire Dashboard</code>做刪除動作。</p>
+<p>第二點來說，<code>Hangfire</code>已經具備了，可以透過<code>Hangfire Dashboard</code>做到立即執行的效果。</p>
+<p>第三點跟第一點也是有相關的，筆者情境是這樣，若全部的Job都是寫成一個個<code>Job Class</code>則，要長出新的<code>Job</code>則必須得改動程式，必須得編譯並上版，試想能不能夠把系統中的排程行為做一個整理，歸納出三到四種的Job類型，對應的就是固定的<code>Job Class</code>，一來大大降低重複開發，二來因為有歸納整理過，因此現在要長出一個類似的排程，透過設定加以調整，可以不用動到程式就能長出新的排程。</p>
+<h2 id="資料結構規劃"><a href="#資料結構規劃" class="headerlink" title="資料結構規劃"></a>資料結構規劃</h2><p>筆者這邊是沿用既有的Code Table，這純粹是已經有一個可以達到目的的資料表，就不另外設計了，這個資料結構完全沒有限制，只要能符合各位各自的排程需求即可。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> [dbo].[CommCode](</span><br><span class="line">	[CodeType] [<span class="type">varchar</span>](<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeTypeName] [nvarchar](<span class="number">200</span>) <span class="keyword">NULL</span>,</span><br><span class="line">	[Code] [<span class="type">varchar</span>](<span class="number">50</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeName] [nvarchar](<span class="number">200</span>) <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeVal1] [nvarchar](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeVal2] [nvarchar](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeVal3] [nvarchar](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeVal4] [nvarchar](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeVal5] [nvarchar](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[CodeVal6] [nvarchar](max) <span class="keyword">NULL</span>,</span><br><span class="line">	[SeqNo] [<span class="type">int</span>] <span class="keyword">NULL</span>,</span><br><span class="line">	[AuditUser] [<span class="type">varchar</span>](<span class="number">10</span>) <span class="keyword">NULL</span>,</span><br><span class="line">	[AuditTime] [datetime] <span class="keyword">NULL</span>,</span><br><span class="line"> <span class="keyword">CONSTRAINT</span> [PK_CommCode] <span class="keyword">PRIMARY</span> KEY CLUSTERED </span><br><span class="line">(</span><br><span class="line">	[CodeType] <span class="keyword">ASC</span>,</span><br><span class="line">	[Code] <span class="keyword">ASC</span></span><br><span class="line">)<span class="keyword">WITH</span> (PAD_INDEX <span class="operator">=</span> OFF, STATISTICS_NORECOMPUTE <span class="operator">=</span> OFF, IGNORE_DUP_KEY <span class="operator">=</span> OFF, ALLOW_ROW_LOCKS <span class="operator">=</span> <span class="keyword">ON</span>, ALLOW_PAGE_LOCKS <span class="operator">=</span> <span class="keyword">ON</span>, FILLFACTOR <span class="operator">=</span> <span class="number">80</span>) <span class="keyword">ON</span> [<span class="keyword">PRIMARY</span>]</span><br><span class="line">) <span class="keyword">ON</span> [<span class="keyword">PRIMARY</span>] TEXTIMAGE_ON [<span class="keyword">PRIMARY</span>]</span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;共用類別代碼&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeType&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;共用類別代碼名稱&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeTypeName&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;共用代碼ID&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;Code&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;共用代碼名稱&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeName&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;值1&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeVal1&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;值2&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeVal2&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;值3&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeVal3&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;值4&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeVal4&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;值5&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeVal5&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;值6&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;CodeVal6&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;排序&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;SeqNo&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;最後修改人員&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;AuditUser&#x27;</span></span><br><span class="line">GO</span><br><span class="line"></span><br><span class="line"><span class="keyword">EXEC</span> sys.sp_addextendedproperty <span class="variable">@name</span><span class="operator">=</span>N<span class="string">&#x27;MS_Description&#x27;</span>, <span class="variable">@value</span><span class="operator">=</span>N<span class="string">&#x27;最後修改時間&#x27;</span> , <span class="variable">@level0type</span><span class="operator">=</span>N<span class="string">&#x27;SCHEMA&#x27;</span>,<span class="variable">@level0name</span><span class="operator">=</span>N<span class="string">&#x27;dbo&#x27;</span>, <span class="variable">@level1type</span><span class="operator">=</span>N<span class="string">&#x27;TABLE&#x27;</span>,<span class="variable">@level1name</span><span class="operator">=</span>N<span class="string">&#x27;CommCode&#x27;</span>, <span class="variable">@level2type</span><span class="operator">=</span>N<span class="string">&#x27;COLUMN&#x27;</span>,<span class="variable">@level2name</span><span class="operator">=</span>N<span class="string">&#x27;AuditTime&#x27;</span></span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+
+<p>筆者會在Job種類規劃時會再說明，如何使用該資料結構，目前就先參考吧，這張資料表在筆者環境中是屬於開放式的欄位，可以將設定值使用不同的CodeType存放，也有一些是下拉式選單的選項等等，已經是開放式的設計了，不妨就拿來當作動態排程的Config設定吧。</p>
+<h2 id="Base-Job規劃"><a href="#Base-Job規劃" class="headerlink" title="Base Job規劃"></a>Base Job規劃</h2><p>這邊主要是仿照參考文章中的ITimerJob，調整為筆者環境適用的樣子</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ITimerJob</span>&lt;<span class="title">T</span>&gt; <span class="keyword">where</span> <span class="title">T</span> : <span class="title">CommCode</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 定義JobId</span></span><br><span class="line">    <span class="built_in">string</span> JobId &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="comment">// 排程執行</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">IJobCancellationToken cancellationToken, PerformContext context, List&lt;T&gt; parameters</span>)</span>;</span><br><span class="line">    <span class="comment">// 進行排程</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Schedule</span>(<span class="params"><span class="built_in">string</span> cronExpression, List&lt;T&gt; parameters</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>來宣告一個<code>Base Timer Job</code>吧</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">TimerJob</span>&lt;<span class="title">T</span>, <span class="title">T2</span>&gt; : <span class="title">ITimerJob</span>&lt;<span class="title">T2</span>&gt;</span><br><span class="line">        <span class="keyword">where</span> <span class="title">T</span> : <span class="title">ITimerJob</span>&lt;<span class="title">T2</span>&gt;</span><br><span class="line">        <span class="keyword">where</span> <span class="title">T2</span> : <span class="title">CommCode</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">object</span> schedulerLogListLock = <span class="keyword">new</span> <span class="built_in">object</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILoggerManager _logger;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="built_in">string</span> JobId &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="keyword">protected</span> IJobCancellationToken _cancellationToken;</span><br><span class="line">    <span class="keyword">protected</span> PerformContext _context;</span><br><span class="line">    <span class="keyword">private</span> List&lt;SchedulerLog&gt; _logModels;</span><br><span class="line">    <span class="keyword">private</span> SchedulerLog _logModel;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">PerformJobTasks</span>(<span class="params">List&lt;T2&gt; parameters</span>)</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">string</span> _connStr;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TimerJob</span>(<span class="params">IConfiguration config</span></span></span><br><span class="line"><span class="params"><span class="function">        , List&lt;SchedulerLog&gt; logModels</span></span></span><br><span class="line"><span class="params"><span class="function">        , SchedulerLog schedulerLog, ILoggerManager logger</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _connStr = Encoding.UTF8.GetString(Convert.FromBase64String(config.GetConnectionString(<span class="string">&quot;FMTR&quot;</span>)));</span><br><span class="line">        _logModels = logModels;</span><br><span class="line">        _logModel = schedulerLog;</span><br><span class="line">        <span class="keyword">this</span>._logModel.AuditUser = <span class="string">&quot;SYS&quot;</span>;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//[DisableConcurrentExecution(0)]</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">IJobCancellationToken cancellationToken</span></span></span><br><span class="line"><span class="params"><span class="function">        , PerformContext context</span></span></span><br><span class="line"><span class="params"><span class="function">        , List&lt;T2&gt; parameters</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _cancellationToken = cancellationToken;</span><br><span class="line">        _context = context;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> jobSetting = parameters.FirstOrDefault();</span><br><span class="line">            <span class="keyword">this</span>._logModel.JobId = jobSetting.CodeName.Split(<span class="string">&#x27;;&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">            _logger.LogInfo(<span class="string">$&quot;<span class="subst">&#123;<span class="keyword">this</span>._logModel.JobId&#125;</span> Start!&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(jobSetting.CodeVal5) == <span class="literal">false</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> preCheckResult = _conn.Query&lt;PreCheckResponseModel&gt;(jobSetting.CodeVal5).FirstOrDefault();</span><br><span class="line">                    _logger.LogInfo(<span class="string">$&quot;[<span class="subst">&#123;<span class="keyword">this</span>._logModel.JobId&#125;</span> PreCheck] <span class="subst">&#123;preCheckResult.CanRun&#125;</span>&quot;</span>);</span><br><span class="line">                    <span class="keyword">if</span> (preCheckResult.CanRun == <span class="string">&quot;Y&quot;</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">lock</span>(schedulerLogListLock)</span><br><span class="line">                        &#123;</span><br><span class="line">                            PerformJobTasks(parameters);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">lock</span>(schedulerLogListLock)</span><br><span class="line">                &#123;</span><br><span class="line">                    PerformJobTasks(parameters);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            _logger.LogInfo(<span class="string">$&quot;<span class="subst">&#123;<span class="keyword">this</span>._logModel.JobId&#125;</span> End!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            _logger.LogError(<span class="string">$&quot;[<span class="subst">&#123;<span class="keyword">this</span>._logModel.JobId&#125;</span> Error] <span class="subst">&#123;ex&#125;</span>&quot;</span>);</span><br><span class="line">            <span class="keyword">this</span>._logModel.ErrMessage = <span class="string">$&quot;<span class="subst">&#123;ex&#125;</span>&quot;</span>;</span><br><span class="line">            <span class="keyword">this</span>._logModels.AddSchedulerLog(<span class="keyword">this</span>._logModel);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// <span class="doctag">TODO:</span> Add SchedulerLogs to table</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>._logModels.Count &gt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">lock</span> (schedulerLogListLock)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">                    &#123;</span><br><span class="line">                        _conn.Execute(<span class="string">@&quot;INSERT INTO [dbo].[SchedulerLog]</span></span><br><span class="line"><span class="string">                            ([JobID], [StepDesc], [Result], [ErrMessage], [AuditUser], [AuditTime])</span></span><br><span class="line"><span class="string">                            VALUES(@JobID, @StepDesc, @Result, @ErrMessage, @AuditUser, @AuditTime)&quot;</span></span><br><span class="line">                            , <span class="keyword">this</span>._logModels);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Schedule</span>(<span class="params"><span class="built_in">string</span> cronExpression, List&lt;T2&gt; parameters</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> jobSetting = parameters.FirstOrDefault();</span><br><span class="line">        <span class="keyword">var</span> jobInfos = jobSetting.CodeName.Split(<span class="string">&quot;;&quot;</span>);</span><br><span class="line">        (<span class="built_in">string</span> jobId, <span class="built_in">string</span> jobClassName) jobInfo = ValueTuple.Create(jobInfos[<span class="number">0</span>], jobInfos[<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">//jobSetting.CodeTypeName == &quot;Normal&quot; ? JobId : jobSetting.CodeName;</span></span><br><span class="line">        <span class="keyword">var</span> jobName = jobInfo.jobId;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrWhiteSpace(cronExpression))</span><br><span class="line">        &#123;</span><br><span class="line">            RecurringJob.RemoveIfExists(jobName);</span><br><span class="line">        &#125;</span><br><span class="line">        RecurringJob.AddOrUpdate&lt;T&gt;(jobName, x =&gt; x.Execute(JobCancellationToken.Null, <span class="literal">null</span>, parameters)</span><br><span class="line">        , cronExpression, TimeZoneInfo.Local);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PreCheckResponseModel</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CanRun &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>筆者參考的文章中的設計，加上筆者情境所需融合過，會比較複雜一點，讓筆者娓娓道來。其中 </p>
+<ul>
+<li><code>PerformJobTasks</code>: 宣告成abstract，用意就是真正的上層Job會實作的Method</li>
+<li><code>List&lt;SchedulerLog&gt;</code>:主要開放上層Job在執行上若想記錄執行過程則新增到該變數中，由<code>Base Timer Job</code>於Finally時統一Insert到資料庫去</li>
+<li><code>schedulerLogListLock</code> :因為會有一些非同步作業，使得<code>Insert</code>時有可能被變動，因此使用<code>lock參數</code>做<code>lock</code>作業</li>
+<li><code>Schedule Method</code>:拆解設定欄位，最後使用AddOrUpdate做新增、更新排程作業</li>
+<li><code>PreCheckResponseModel</code>:筆者這邊環境的情境，很多都是依照<code>BusinessDate</code>做事情，無法使用排程於星期一到五才執行這種設定方式，因為台灣環境比較特殊，有補班、臨休、颱風假等，由一個欄位去定義其PreCheck的需求，筆者這邊就制定回傳結構為<code>PreCheckResponseModel</code>，利用屬性<code>CanRun</code>來判斷是否要執行其排程主要邏輯。因此排程設定上面會單純一點，排程設定為每一天都會跑，經由<code>PreCheck</code>的<code>SP</code>做一個要不要跑排程的控制點。</li>
+</ul>
+<h2 id="Job種類規劃"><a href="#Job種類規劃" class="headerlink" title="Job種類規劃"></a>Job種類規劃</h2><p>筆者這邊事前統計過各式各樣的排程執行邏輯，可以整理為以下類別</p>
+<ul>
+<li><code>SP執行類</code>: 可以進階設定是否要將SP執行結果打包成檔案上傳至指定路徑</li>
+<li><code>Bat檔案執行類</code>: 主要是因為與其他系統串接，主要的前台部分，需要由執行期bat檔案做驅動</li>
+<li><code>下載類</code>: 主要與其他系統交換檔案，由檔案內容塞到固定的資料表中，透過一支SP做後置處理</li>
+<li><code>Normal類</code>: 有一些排程無法歸納為上述三種，即便前面執行其中一項，但後續有額外的處理，筆者這邊就不另外規劃做處理，保留其彈性</li>
+</ul>
+<p>當然要看各位的排程執行情境去做一個歸納，上述只是依照筆者這邊遇到的情境做一個統整規劃設計，筆者這邊就點到這邊為止，寫下一篇來做一個進一步介紹其運作內容，不然這篇要爆了。</p>
+<h2 id="Job-Initial流程設計"><a href="#Job-Initial流程設計" class="headerlink" title="Job Initial流程設計"></a>Job Initial流程設計</h2><p>這篇的主要關鍵在這個部份，分為兩個部份，筆者習慣拆為API端及Service端</p>
+<h3 id="API端設計"><a href="#API端設計" class="headerlink" title="API端設計"></a>API端設計</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">JobInitialController</span> : <span class="title">SchedulerBaseController</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IJobInitialService _jobInitialService;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JobInitialController</span>(<span class="params">IJobInitialService jobInitialService</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _jobInitialService = jobInitialService;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 批次初始化</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    [<span class="meta">ProducesResponseType(typeof(Result), StatusCodes.Status200OK)</span>]</span><br><span class="line">    [<span class="meta">HttpGet(<span class="meta-string">&quot;&quot;</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> IActionResult <span class="title">Get</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _jobInitialService.InitialProcess();</span><br><span class="line">        <span class="keyword">return</span> SKBResponse(<span class="keyword">new</span> Result().Success());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Service端設計"><a href="#Service端設計" class="headerlink" title="Service端設計"></a>Service端設計</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">JobInitialService</span> : <span class="title">IJobInitialService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILoggerManager _logger;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">readonly</span> <span class="built_in">string</span> _assemblyName = <span class="string">&quot;&#123;Assembly Namespace&#125;&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="built_in">string</span> _connStr;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IServiceProvider _serviceProvider;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">JobInitialService</span>(<span class="params">IConfiguration config</span></span></span><br><span class="line"><span class="params"><span class="function">        , IServiceProvider serviceProvider, ILoggerManager logger</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _connStr = Encoding.UTF8.GetString(Convert.FromBase64String(config.GetConnectionString(<span class="string">&quot;FMTR&quot;</span>)));</span><br><span class="line">        _serviceProvider = serviceProvider;</span><br><span class="line">        _logger = logger;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">InitialProcess</span>(<span class="params"></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> batchJobs = <span class="keyword">new</span> List&lt;CommCode&gt;();</span><br><span class="line">        <span class="comment">// 先撈出設定檔案，筆者這邊CodeType定義為Schdeuler</span></span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> _conn = <span class="keyword">new</span> SqlConnection(_connStr))</span><br><span class="line">        &#123;</span><br><span class="line">            batchJobs = _conn.Query&lt;CommCode&gt;(<span class="string">@&quot;SELECT * FROM CommCode WHERE CodeType = @CodeType AND ISNULL(CodeVal1, &#x27;&#x27;) &lt;&gt; &#x27;&#x27;&quot;</span> </span><br><span class="line">                , <span class="keyword">new</span> &#123; CodeType = <span class="string">&quot;Scheduler&quot;</span> &#125;).ToList();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="keyword">var</span> job <span class="keyword">in</span> batchJobs)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> className = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="keyword">var</span> jobType = <span class="literal">default</span>(Type);</span><br><span class="line">            <span class="keyword">var</span> jobInfos = job.CodeName.Split(<span class="string">&quot;;&quot;</span>);</span><br><span class="line">            (<span class="built_in">string</span> jobId, <span class="built_in">string</span> jobClassName) jobInfo = ValueTuple.Create(jobInfos[<span class="number">0</span>], jobInfos[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">switch</span> (job.CodeTypeName)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;Normal&quot;</span>:                    </span><br><span class="line">                    className = <span class="string">$&quot;<span class="subst">&#123;_assemblyName&#125;</span>.<span class="subst">&#123;jobInfo.jobClassName&#125;</span>&quot;</span>;</span><br><span class="line">                    jobType = Type.GetType(className);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;NXBat&quot;</span>:</span><br><span class="line">                    className = <span class="string">$&quot;<span class="subst">&#123;_assemblyName&#125;</span>.NXBatJob&quot;</span>;</span><br><span class="line">                    jobType = Type.GetType(className);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;SP&quot;</span>:</span><br><span class="line">                    className = <span class="string">$&quot;<span class="subst">&#123;_assemblyName&#125;</span>.SPExecuteJob&quot;</span>;</span><br><span class="line">                    jobType = Type.GetType(className);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;Download&quot;</span>:</span><br><span class="line">                    className = <span class="string">$&quot;<span class="subst">&#123;_assemblyName&#125;</span>.DownloadJob&quot;</span>;</span><br><span class="line">                    jobType = Type.GetType(className);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="literal">default</span>:</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            _logger.LogInfo(<span class="string">$&quot;[Current Job] <span class="subst">&#123;JsonConvert.SerializeObject(job)&#125;</span>&quot;</span>);</span><br><span class="line">            <span class="keyword">var</span> jobInstance = _serviceProvider.GetService(jobType) <span class="keyword">as</span> ITimerJob&lt;CommCode&gt;;</span><br><span class="line">            jobInstance.Schedule(job.CodeVal1, <span class="keyword">new</span> List&lt;CommCode&gt;() &#123; job &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最主要為最後兩行，透過ServiceProvider取得的實體做一個轉型為ITimerJob，藉此可以點出Schdeule Method，就會執行Hangfire RecurringJob的AddOrUpdate，就會排進Hangfire的排程宣告中。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>這篇就以動態排程設計概念為主做一個闡述，下篇會著重在筆者設計的Job種類得實作及註冊宣告使用方式，敬請期待。</p>
+<p>參考</p>
+<p><a target="_blank" rel="noopener" href="https://www.notion.so/c720bc3f47579fe0036dc2eb735fe159">https://gist.github.com/ragnarstolsmark/c720bc3f47579fe0036dc2eb735fe159</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
+              <a href="/tags/hangfire/" rel="tag"># hangfire</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/07/orm-series-chloe-interceptor/" rel="prev" title="[DotnetCore]ORM系列-Chloe:Interceptor篇">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]ORM系列-Chloe:Interceptor篇
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B%E8%A6%8F%E5%8A%83"><span class="nav-number">2.1.</span> <span class="nav-text">資料結構規劃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Base-Job%E8%A6%8F%E5%8A%83"><span class="nav-number">2.2.</span> <span class="nav-text">Base Job規劃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Job%E7%A8%AE%E9%A1%9E%E8%A6%8F%E5%8A%83"><span class="nav-number">2.3.</span> <span class="nav-text">Job種類規劃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Job-Initial%E6%B5%81%E7%A8%8B%E8%A8%AD%E8%A8%88"><span class="nav-number">2.4.</span> <span class="nav-text">Job Initial流程設計</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#API%E7%AB%AF%E8%A8%AD%E8%A8%88"><span class="nav-number">2.4.1.</span> <span class="nav-text">API端設計</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service%E7%AB%AF%E8%A8%AD%E8%A8%88"><span class="nav-number">2.4.2.</span> <span class="nav-text">Service端設計</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-09-08T15:44:18+08:00">
+        09/08
+      </time>
+      <a href="/2021/09/08/hangfire-dynamic1/" title="[DotnetCore]排程神器-Hangfire:動態排程篇1">[DotnetCore]排程神器-Hangfire:動態排程篇1</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-09-07T13:35:18+08:00">
+        09/07
+      </time>
+      <a href="/2021/09/07/orm-series-chloe-interceptor/" title="[DotnetCore]ORM系列-Chloe:Interceptor篇">[DotnetCore]ORM系列-Chloe:Interceptor篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-09-07T13:29:18+08:00">
+        09/07
+      </time>
+      <a href="/2021/09/07/orm-series-chloe-select/" title="[DotnetCore]ORM系列-Chloe:Select篇">[DotnetCore]ORM系列-Chloe:Select篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-09-05T23:53:05+08:00">
+        09/05
+      </time>
+      <a href="/2021/09/05/orm-series-efcore-override-savechanges/" title="[DotnetCore]ORM系列-EFCore:資料表共同欄位設定">[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-09-04T22:00:33+08:00">
+        09/04
+      </time>
+      <a href="/2021/09/04/orm-series-chloe-entry/" title="[DotnetCore]ORM系列-Chloe:入門篇">[DotnetCore]ORM系列-Chloe:入門篇</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">147k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">4:28</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '9a13d983ea4e508377ac',
+      clientSecret: 'f1ffbf947bbc56c5b76e27bc899ffabefb2fed88',
+      repo        : 'eugenesu0515.github.io',
+      owner       : 'eugenesu0515',
+      admin       : ['eugenesu0515'],
+      id          : '08868fe1ce4d16d71a21656e17c227bf',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-07T05:50:34.387Z</updated>
+  <updated>2021-09-08T07:56:02.490Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動態排程篇1</title>
+    <link href="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/"/>
+    <id>https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/</id>
+    <published>2021-09-08T07:44:18.000Z</published>
+    <updated>2021-09-08T07:56:02.490Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;排程神器-&lt;code&gt;Hangfire&lt;/code&gt;兩篇文章後，這篇來到重頭戲了，筆者主要參考&lt;a href=&quot;https://www.notion.so/c720bc3f47579fe0036dc2eb735fe159&quot;&gt;TimerJob&lt;/a&gt;這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維護考量，一切以資料庫設定為準，爾後有臨時變更，需要調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;臨時調動執行時間&lt;/li&gt;
+&lt;li&gt;若排定時間執行時有出錯，是否可以手動立即執行&lt;/li&gt;
+&lt;li&gt;可能以某一個排程為基底，長出一個新的排程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;等等，是個一大挑戰阿。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-Chloe:Interceptor篇</title>
@@ -439,27 +468,6 @@
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者有幸參與到科內負責的大系統，不能單靠一個API站台就解決所有的需求，必須搭配&lt;code&gt;Scheduler&lt;/code&gt;、&lt;code&gt;WindowsService&lt;/code&gt;等服務，介接技術上，可能會用&lt;code&gt;Socket&lt;/code&gt;或是&lt;code&gt;HttpClient&lt;/code&gt;介接，再加上自己系統本身，分散多個專案，中間使用&lt;code&gt;Message Queue&lt;/code&gt;技術串聯起來，算是一個滿有挑戰性的系統了，挑戰主要是在串連服務的難度上，而非高流量。因此追蹤問題上，需要靠Loggin機制，由於各式各樣的服務，不能單靠底層Logging套件:NLog預設的紀錄欄位，針對不同種類的服務，做一個客製化屬性欄位的擴充才行。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="nlog" scheme="https://eugenesu0515.github.io/tags/nlog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]NLog使用</title>
-    <link href="https://eugenesu0515.github.io/2021/08/23/nlog/"/>
-    <id>https://eugenesu0515.github.io/2021/08/23/nlog/</id>
-    <published>2021-08-23T08:49:43.000Z</published>
-    <updated>2021-08-25T01:20:12.991Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含&lt;code&gt;sql log&lt;/code&gt;、&lt;code&gt;ap log&lt;/code&gt;以及&lt;code&gt;error log&lt;/code&gt;，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的&lt;code&gt;logging框架&lt;/code&gt;，&lt;code&gt;dotnet core&lt;/code&gt;中也不乏候選套件:&lt;code&gt;NLog&lt;/code&gt;、&lt;code&gt;SeriLog&lt;/code&gt;、&lt;code&gt;Log4net&lt;/code&gt;等等，筆者選擇NLog當作主要Logging機制的底層框架。&lt;/p&gt;</summary>
     
     
     
