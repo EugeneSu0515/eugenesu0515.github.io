@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-08T07:56:02.490Z</updated>
+  <updated>2021-09-08T13:04:52.042Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -21,10 +21,10 @@
     <link href="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/"/>
     <id>https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/</id>
     <published>2021-09-08T07:44:18.000Z</published>
-    <updated>2021-09-08T07:56:02.490Z</updated>
+    <updated>2021-09-08T13:04:52.042Z</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;排程神器-&lt;code&gt;Hangfire&lt;/code&gt;兩篇文章後，這篇來到重頭戲了，筆者主要參考&lt;a href=&quot;https://www.notion.so/c720bc3f47579fe0036dc2eb735fe159&quot;&gt;TimerJob&lt;/a&gt;這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維護考量，一切以資料庫設定為準，爾後有臨時變更，需要調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點&lt;/p&gt;
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;排程神器-&lt;code&gt;Hangfire&lt;/code&gt;兩篇文章後，這篇來到重頭戲了，筆者主要參考&lt;a href=&quot;https://gist.github.com/ragnarstolsmark/c720bc3f47579fe0036dc2eb735fe159&quot;&gt;TimerJob&lt;/a&gt;這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維運考量，一切以資料庫設定為準，爾後有臨時變更需要時，調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;臨時調動執行時間&lt;/li&gt;
 &lt;li&gt;若排定時間執行時有出錯，是否可以手動立即執行&lt;/li&gt;

@@ -341,7 +341,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-09-08 15:44:18 / 修改時間：15:56:02" itemprop="dateCreated datePublished" datetime="2021-09-08T15:44:18+08:00">2021-09-08</time>
+              <time title="創建時間：2021-09-08 15:44:18 / 修改時間：21:04:52" itemprop="dateCreated datePublished" datetime="2021-09-08T15:44:18+08:00">2021-09-08</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -387,7 +387,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>排程神器-<code>Hangfire</code>兩篇文章後，這篇來到重頭戲了，筆者主要參考<a target="_blank" rel="noopener" href="https://www.notion.so/c720bc3f47579fe0036dc2eb735fe159">TimerJob</a>這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維護考量，一切以資料庫設定為準，爾後有臨時變更，需要調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點</p>
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>排程神器-<code>Hangfire</code>兩篇文章後，這篇來到重頭戲了，筆者主要參考<a target="_blank" rel="noopener" href="https://gist.github.com/ragnarstolsmark/c720bc3f47579fe0036dc2eb735fe159">TimerJob</a>這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維運考量，一切以資料庫設定為準，爾後有臨時變更需要時，調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點</p>
 <ul>
 <li>臨時調動執行時間</li>
 <li>若排定時間執行時有出錯，是否可以手動立即執行</li>
