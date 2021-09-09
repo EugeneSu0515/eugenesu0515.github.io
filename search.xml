@@ -64,6 +64,30 @@
       </tags>
   </entry>
   <entry>
+    <title>[DotnetCore]GlobalErrorHandler</title>
+    <url>/2021/09/09/dotnetcore-global-error-handler/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放<code>try catch</code>，希望在一個地方統一<code>try catch</code>就好，這樣若要改變<code>Exception</code>處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到<code>Exception</code>，要將某一些處理狀態要壓成<code>F</code>等等，無論如何，筆者都會先設計一個<code>GlobalErrorHandler</code>做統一抓取<code>Exception</code>並處理。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>以<code>dotnet core</code>的設計架構，有很多種形式撰寫並達到<code>Global Error Handler</code>的效果，筆者選擇最直覺的方式：<code>Global Error Handling Middleware</code>。</p>
+<h2 id="撰寫GlobalErrorHandlingMiddleware"><a href="#撰寫GlobalErrorHandlingMiddleware" class="headerlink" title="撰寫GlobalErrorHandlingMiddleware"></a>撰寫GlobalErrorHandlingMiddleware</h2><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GlobalErrorHandlingMiddleware</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GlobalErrorHandlingMiddleware</span>(<span class="params">RequestDelegate next</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext context</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">await</span> _next.Invoke(context);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Step1: 處理Exception(記Log或其他)</span></span><br><span class="line">            <span class="comment">// Step2: 回傳統一結構Result</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就這麼簡單，把<code>_next.Invoke(context)</code>用<code>try catch</code>包起來即可。</p>
+<h2 id="註冊GlobalErrorHandlingMiddleware"><a href="#註冊GlobalErrorHandlingMiddleware" class="headerlink" title="註冊GlobalErrorHandlingMiddleware"></a>註冊GlobalErrorHandlingMiddleware</h2><figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        app.UseMiddleware&lt;GlobalErrorHandlingMiddlware&gt;();</span><br><span class="line">        <span class="comment">// Other Middleware...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p><code>Global Error Handler</code>是滿重要的，透過簡單的<code>Middlware</code>機制，可以抓取各式各樣的<code>Exception</code>，也可以在該地方辨別不同的<code>Exception</code>類型，並針對每一種類型處理不一樣的效果。</p>
+<p>參考</p>
+<p><a href="https://blog.johnwu.cc/article/ironman-day17-asp-net-core-exception-handler.html">https://blog.johnwu.cc/article/ironman-day17-asp-net-core-exception-handler.html</a></p>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>global-error-handler</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]排程神器-Hangfire:動態排程篇1</title>
     <url>/2021/09/08/hangfire-dynamic1/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>排程神器-<code>Hangfire</code>兩篇文章後，這篇來到重頭戲了，筆者主要參考<a href="https://gist.github.com/ragnarstolsmark/c720bc3f47579fe0036dc2eb735fe159">TimerJob</a>這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維運考量，一切以資料庫設定為準，爾後有臨時變更需要時，調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點</p>

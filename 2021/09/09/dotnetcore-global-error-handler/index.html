@@ -23,22 +23,21 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前提情要筆者在上篇把該有的Socket底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。">
+  <meta name="description" content="前提情要筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放try catch，希望在一個地方統一try catch就好，這樣若要改變Exception處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到Exception，要將某一些處理狀態要壓成F等等，無論如何，筆者都會先設計一個GlobalErrorHandler做統一抓取Exception並處理。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[DotnetCore]Socket程式實作-解析封包">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/index.html">
+<meta property="og:title" content="[DotnetCore]GlobalErrorHandler">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
-<meta property="og:description" content="前提情要筆者在上篇把該有的Socket底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。">
+<meta property="og:description" content="前提情要筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放try catch，希望在一個地方統一try catch就好，這樣若要改變Exception處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到Exception，要將某一些處理狀態要壓成F等等，無論如何，筆者都會先設計一個GlobalErrorHandler做統一抓取Exception並處理。">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2021-08-20T18:49:20.000Z">
-<meta property="article:modified_time" content="2021-09-08T13:09:33.608Z">
+<meta property="article:published_time" content="2021-09-09T15:37:29.000Z">
+<meta property="article:modified_time" content="2021-09-09T15:45:38.807Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
-<meta property="article:tag" content="socket">
-<meta property="article:tag" content="netcoreserver">
+<meta property="article:tag" content="global-error-handler">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/">
 
 
 <script id="page-configurations">
@@ -51,7 +50,7 @@
   };
 </script>
 <meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
-  <title>[DotnetCore]Socket程式實作-解析封包 | Eugene's Blog</title>
+  <title>[DotnetCore]GlobalErrorHandler | Eugene's Blog</title>
   
 
 
@@ -201,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -214,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [DotnetCore]Socket程式實作-解析封包
+          [DotnetCore]GlobalErrorHandler
         </h1>
 
         <div class="post-meta">
@@ -225,16 +224,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
+              
 
-              <time title="創建時間：2021-08-21 02:49:20" itemprop="dateCreated datePublished" datetime="2021-08-21T02:49:20+08:00">2021-08-21</time>
+              <time title="創建時間：2021-09-09 23:37:29 / 修改時間：23:45:38" itemprop="dateCreated datePublished" datetime="2021-09-09T23:37:29+08:00">2021-09-09</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2021-09-08 21:09:33" itemprop="dateModified" datetime="2021-09-08T21:09:33+08:00">2021-09-08</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -242,10 +235,6 @@
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/socket/" itemprop="url" rel="index"><span itemprop="name">socket</span></a>
                 </span>
             </span>
 
@@ -261,13 +250,13 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>2.5k</span>
+              <span>1.1k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>5 分鐘</span>
+              <span>2 分鐘</span>
             </span>
 
         </div>
@@ -279,35 +268,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇把該有的<code>Socket</code>底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。</p>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放<code>try catch</code>，希望在一個地方統一<code>try catch</code>就好，這樣若要改變<code>Exception</code>處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到<code>Exception</code>，要將某一些處理狀態要壓成<code>F</code>等等，無論如何，筆者都會先設計一個<code>GlobalErrorHandler</code>做統一抓取<code>Exception</code>並處理。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者用過幾個Event設計的原件，基本上可以從<code>dotnet</code>預設的套件就可以看出諸多此類的設計，筆者自己也加工過幾個，例:<code>SMTP Send Mail</code>，使用<code>ProcessInfo</code>執行<code>bat file</code>皆使用上此類技巧。</p>
-<p>以筆者使用的<a target="_blank" rel="noopener" href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>來說，他所設計的方式是繼承他原有的物件，將幾個<code>socket</code>發生的事件處裡邏輯封裝成<code>virtual</code>的形式，你可以<code>override</code>成自己想要的樣子，以套件github頁面上提供的範例來說，由幾個處裡事件方法是可以複寫的，如下:</p>
-<ul>
-<li>Server/Session/Client<ul>
-<li>OnConnected</li>
-<li>OnDisconnected</li>
-<li>OnReceived</li>
-<li>OnError</li>
-</ul>
-</li>
-</ul>
-<p>筆者將擴大成將常用的事件定義成契約<code>interface</code>，才會出現<code>IServer</code>及<code>IClient</code></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IServer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 回傳特定Client封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Client連線事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnAccept</span>(<span class="params">Guid clientId</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;sent&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;pending&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client封包接受事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;buffer&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] buffer</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client關閉</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clietId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnClose</span>(<span class="params">Guid clietId</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>以<code>dotnet core</code>的設計架構，有很多種形式撰寫並達到<code>Global Error Handler</code>的效果，筆者選擇最直覺的方式：<code>Global Error Handling Middleware</code>。</p>
+<h2 id="撰寫GlobalErrorHandlingMiddleware"><a href="#撰寫GlobalErrorHandlingMiddleware" class="headerlink" title="撰寫GlobalErrorHandlingMiddleware"></a>撰寫GlobalErrorHandlingMiddleware</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GlobalErrorHandlingMiddleware</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GlobalErrorHandlingMiddleware</span>(<span class="params">RequestDelegate next</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext context</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">await</span> _next.Invoke(context);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Step1: 處理Exception(記Log或其他)</span></span><br><span class="line">            <span class="comment">// Step2: 回傳統一結構Result</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IClient</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnClose</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnConnect</span>(<span class="params"><span class="built_in">bool</span> obj</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data, <span class="built_in">int</span> offset, <span class="built_in">int</span> length</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就這麼簡單，把<code>_next.Invoke(context)</code>用<code>try catch</code>包起來即可。</p>
+<h2 id="註冊GlobalErrorHandlingMiddleware"><a href="#註冊GlobalErrorHandlingMiddleware" class="headerlink" title="註冊GlobalErrorHandlingMiddleware"></a>註冊GlobalErrorHandlingMiddleware</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        app.UseMiddleware&lt;GlobalErrorHandlingMiddlware&gt;();</span><br><span class="line">        <span class="comment">// Other Middleware...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>筆者在中間有換過一次底層套件，<a target="_blank" rel="noopener" href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>還是第二次套用的底層元件，為這個套件調整過一次上述Interface，不過因為上層相依的部份只有<code>OnReceive</code>，筆者當初的想法是對於最上層Client使用端來說只有解析封包這件事是客製化的，其他行為是不會改變的，因此才有了<code>IAnalyzeService</code>﹔</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IAnalyzeService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ClientAnalyze</span>(<span class="params"><span class="built_in">byte</span>[] receiveBytes</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ServerAnalyze</span>(<span class="params">Guid arg1, <span class="built_in">byte</span>[] arg2</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看出筆者只定義了Server收到封包後的解析邏輯以及Client收到封包後的解析邏輯，筆者於各自的BaseServer及BaseClient的OnReceive中呼叫IAnalyzeService中對應的Method﹔</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseServer</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ServerAnalyze(clientId, data);</span><br><span class="line">		<span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseClient</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ClientAnalyze(data);</span><br><span class="line">    <span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>意即最上層Client使用端只要注入對應的實作<code>IAnalyzeService</code>，只要<code>OnReceive</code>事件觸發，底層元件會呼叫其對應的解析封包方法。</p>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>藉由這邊來解釋一下底層元件與最上層Client使用端是如何連結的。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p><code>Global Error Handler</code>是滿重要的，透過簡單的<code>Middlware</code>機制，可以抓取各式各樣的<code>Exception</code>，也可以在該地方辨別不同的<code>Exception</code>類型，並針對每一種類型處理不一樣的效果。</p>
+<p>參考</p>
+<p><a target="_blank" rel="noopener" href="https://blog.johnwu.cc/article/ironman-day17-asp-net-core-exception-handler.html">https://blog.johnwu.cc/article/ironman-day17-asp-net-core-exception-handler.html</a></p>
 
     </div>
 
@@ -318,8 +290,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
-              <a href="/tags/socket/" rel="tag"># socket</a>
-              <a href="/tags/netcoreserver/" rel="tag"># netcoreserver</a>
+              <a href="/tags/global-error-handler/" rel="tag"># global-error-handler</a>
           </div>
 
         
@@ -328,13 +299,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/21/dotnetcore-socket/" rel="prev" title="[DotnetCore]Socket程式實作">
-      <i class="fa fa-chevron-left"></i> [DotnetCore]Socket程式實作
+    <a href="/2021/09/08/hangfire-dynamic1/" rel="prev" title="[DotnetCore]排程神器-Hangfire:動態排程篇1">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]排程神器-Hangfire:動態排程篇1
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/21/dotnetcore-socket-slicing/" rel="next" title="[DotnetCore]Socket程式實作-切割封包">
-      [DotnetCore]Socket程式實作-切割封包 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -394,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%92%B0%E5%AF%ABGlobalErrorHandlingMiddleware"><span class="nav-number">2.1.</span> <span class="nav-text">撰寫GlobalErrorHandlingMiddleware</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A8%BB%E5%86%8AGlobalErrorHandlingMiddleware"><span class="nav-number">2.2.</span> <span class="nav-text">註冊GlobalErrorHandlingMiddleware</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -737,7 +705,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'eugenesu0515.github.io',
       owner       : 'eugenesu0515',
       admin       : ['eugenesu0515'],
-      id          : 'e06df45676b159f2e5d804b061006e74',
+      id          : '31ed113bd5764a51d3f00a31554a4b78',
         language: 'zh-TW',
       distractionFreeMode: true
     });

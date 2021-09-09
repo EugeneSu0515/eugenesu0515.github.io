@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-08T13:04:52.042Z</updated>
+  <updated>2021-09-09T15:45:38.807Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]GlobalErrorHandler</title>
+    <link href="https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/"/>
+    <id>https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/</id>
+    <published>2021-09-09T15:37:29.000Z</published>
+    <updated>2021-09-09T15:45:38.807Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放&lt;code&gt;try catch&lt;/code&gt;，希望在一個地方統一&lt;code&gt;try catch&lt;/code&gt;就好，這樣若要改變&lt;code&gt;Exception&lt;/code&gt;處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到&lt;code&gt;Exception&lt;/code&gt;，要將某一些處理狀態要壓成&lt;code&gt;F&lt;/code&gt;等等，無論如何，筆者都會先設計一個&lt;code&gt;GlobalErrorHandler&lt;/code&gt;做統一抓取&lt;code&gt;Exception&lt;/code&gt;並處理。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="global-error-handler" scheme="https://eugenesu0515.github.io/tags/global-error-handler/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]排程神器-Hangfire:動態排程篇1</title>
@@ -466,27 +487,6 @@
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]NLog-ILoggerManager設計</title>
-    <link href="https://eugenesu0515.github.io/2021/08/23/nlog-loggermanager/"/>
-    <id>https://eugenesu0515.github.io/2021/08/23/nlog-loggermanager/</id>
-    <published>2021-08-23T08:50:56.000Z</published>
-    <updated>2021-08-23T10:18:32.322Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者有幸參與到科內負責的大系統，不能單靠一個API站台就解決所有的需求，必須搭配&lt;code&gt;Scheduler&lt;/code&gt;、&lt;code&gt;WindowsService&lt;/code&gt;等服務，介接技術上，可能會用&lt;code&gt;Socket&lt;/code&gt;或是&lt;code&gt;HttpClient&lt;/code&gt;介接，再加上自己系統本身，分散多個專案，中間使用&lt;code&gt;Message Queue&lt;/code&gt;技術串聯起來，算是一個滿有挑戰性的系統了，挑戰主要是在串連服務的難度上，而非高流量。因此追蹤問題上，需要靠Loggin機制，由於各式各樣的服務，不能單靠底層Logging套件:NLog預設的紀錄欄位，針對不同種類的服務，做一個客製化屬性欄位的擴充才行。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="nlog" scheme="https://eugenesu0515.github.io/tags/nlog/"/>
     
   </entry>
   
