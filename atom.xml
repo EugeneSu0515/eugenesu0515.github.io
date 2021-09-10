@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-09T15:45:38.807Z</updated>
+  <updated>2021-09-10T12:44:10.282Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動態排程篇2</title>
+    <link href="https://eugenesu0515.github.io/2021/09/10/hangfire-dynamic2/"/>
+    <id>https://eugenesu0515.github.io/2021/09/10/hangfire-dynamic2/</id>
+    <published>2021-09-10T12:20:13.000Z</published>
+    <updated>2021-09-10T12:44:10.282Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/recurring-jobs.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]GlobalErrorHandler</title>
@@ -236,7 +259,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-09-08T13:11:24.828Z</updated>
+    <updated>2021-09-10T12:46:45.551Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
@@ -471,22 +494,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="coravel" scheme="https://eugenesu0515.github.io/tags/coravel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]後端驗證神器:Fluent Validation</title>
-    <link href="https://eugenesu0515.github.io/2021/08/24/fluent-validation/"/>
-    <id>https://eugenesu0515.github.io/2021/08/24/fluent-validation/</id>
-    <published>2021-08-24T07:50:13.000Z</published>
-    <updated>2021-08-24T07:57:06.988Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;現在開發網頁幾乎都切換成前後端分離的開發方式，前端採用 &lt;code&gt;Angular&lt;/code&gt;, &lt;code&gt;Vue&lt;/code&gt;, &lt;code&gt;React&lt;/code&gt;三大框架之一，後端則只要撰寫API服務即可，一來職責分離，前端適合處理畫面的互動效果，後端搭配資料庫處理商業邏輯的運算，使用&lt;code&gt;json&lt;/code&gt;格式傳送結果至前端，多完美的協作阿。&lt;/p&gt;
-&lt;p&gt;通常簡單驗證邏輯會放在前端做處理，畢竟不用花費傳送成本，例如必填、長度等簡單邏輯驗證，直接在前端實作即可，但畢竟後端需要將資料儲存至資料庫，若沒有再做進一步驗證則資料儲存失敗的風險，以及日後資料運算使用時的困難。又或者系統本身需要透過&lt;code&gt;http&lt;/code&gt;與其他系統介接，其他系統直接打我方API，這種情境就不需多說，需要在後端做驗證，連必填、長度等簡單邏輯驗證也必須做在後端。&lt;/p&gt;</summary>
-    
-    
-    
     
   </entry>
   
