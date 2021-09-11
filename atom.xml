@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-09-10T12:44:10.282Z</updated>
+  <updated>2021-09-11T14:05:54.432Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -17,11 +17,57 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動台排程篇4</title>
+    <link href="https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic4/"/>
+    <id>https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic4/</id>
+    <published>2021-09-11T13:48:02.000Z</published>
+    <updated>2021-09-11T14:05:54.432Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/dashboard.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動台排程篇3</title>
+    <link href="https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic3/"/>
+    <id>https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic3/</id>
+    <published>2021-09-11T13:47:56.000Z</published>
+    <updated>2021-09-11T14:06:24.346Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/retries.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
     <title>[DotnetCore]排程神器-Hangfire:動態排程篇2</title>
     <link href="https://eugenesu0515.github.io/2021/09/10/hangfire-dynamic2/"/>
     <id>https://eugenesu0515.github.io/2021/09/10/hangfire-dynamic2/</id>
     <published>2021-09-10T12:20:13.000Z</published>
-    <updated>2021-09-10T12:44:10.282Z</updated>
+    <updated>2021-09-11T14:04:04.875Z</updated>
     
     
     <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/recurring-jobs.png&quot;&gt;</summary>
@@ -65,16 +111,10 @@
     <link href="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/"/>
     <id>https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/</id>
     <published>2021-09-08T07:44:18.000Z</published>
-    <updated>2021-09-08T13:04:52.042Z</updated>
+    <updated>2021-09-11T14:18:51.258Z</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;排程神器-&lt;code&gt;Hangfire&lt;/code&gt;兩篇文章後，這篇來到重頭戲了，筆者主要參考&lt;a href=&quot;https://gist.github.com/ragnarstolsmark/c720bc3f47579fe0036dc2eb735fe159&quot;&gt;TimerJob&lt;/a&gt;這幾篇gist文件，加以整理改造成符合筆者工作環境中的情境。原始需求是這樣，筆者所在環境，主管們因維運考量，一切以資料庫設定為準，爾後有臨時變更需要時，調動一下資料庫設定即可，一切設計以這個原則為最大考量達成目的，當然排程這件事也不例外了，主要考量有以下幾點&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;臨時調動執行時間&lt;/li&gt;
-&lt;li&gt;若排定時間執行時有出錯，是否可以手動立即執行&lt;/li&gt;
-&lt;li&gt;可能以某一個排程為基底，長出一個新的排程&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;等等，是個一大挑戰阿。&lt;/p&gt;</summary>
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/queues.png&quot;&gt;</summary>
     
     
     
@@ -259,7 +299,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-09-10T12:46:45.551Z</updated>
+    <updated>2021-09-11T13:53:59.672Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
@@ -446,54 +486,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="iis" scheme="https://eugenesu0515.github.io/tags/iis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
-    <link href="https://eugenesu0515.github.io/2021/08/25/coravel-queue/"/>
-    <id>https://eugenesu0515.github.io/2021/08/25/coravel-queue/</id>
-    <published>2021-08-25T02:58:11.000Z</published>
-    <updated>2021-09-08T13:09:58.191Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;a href=&quot;https://docs.coravel.net/&quot;&gt;Coravel&lt;/a&gt;的&lt;code&gt;Scheduler&lt;/code&gt;功能後，這篇要來實作&lt;code&gt;Queue&lt;/code&gt;的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作&lt;code&gt;Data Migration&lt;/code&gt;，為方便，不防做一個前端頁面，才可以有介面去點擊執行&lt;code&gt;Data Migration&lt;/code&gt;作業，想當然爾，作業時間一定無法在一個&lt;code&gt;Request&lt;/code&gt;時間內完成，一定會噴&lt;code&gt;Timeout Error&lt;/code&gt;。&lt;/p&gt;
-&lt;p&gt;再則為這點小功能，不想透過&lt;a href=&quot;https://www.hangfire.io/&quot;&gt;Hangfire&lt;/a&gt;的&lt;code&gt;BackgroundJob.Enqueue&lt;/code&gt;來實作，這時想到&lt;code&gt;Coravel&lt;/code&gt;也有提供&lt;code&gt;Queue&lt;/code&gt;功能，API站台的action收到Data Migration的request後，塞入一則&lt;code&gt;Coravel&lt;/code&gt;的&lt;code&gt;Queue&lt;/code&gt;，由&lt;code&gt;Queue&lt;/code&gt;對應的Service去往下執行對應的作業，是個完美的方案吧。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="coravel" scheme="https://eugenesu0515.github.io/categories/dotnetcore/coravel/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="coravel" scheme="https://eugenesu0515.github.io/tags/coravel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程利器-Coravel:Scheduler篇</title>
-    <link href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/"/>
-    <id>https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/</id>
-    <published>2021-08-25T02:48:46.000Z</published>
-    <updated>2021-09-08T13:10:04.318Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由&lt;code&gt;Windows排程&lt;/code&gt;去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。&lt;/p&gt;
-&lt;p&gt;筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注&lt;a href=&quot;https://github.com/MoienTajik/AspNetCore-Developer-Roadmap&quot;&gt;ASP.NET CORE Developer Roadmap&lt;/a&gt;，不時會在上面找好料，&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="coravel" scheme="https://eugenesu0515.github.io/categories/dotnetcore/coravel/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="coravel" scheme="https://eugenesu0515.github.io/tags/coravel/"/>
     
   </entry>
   
