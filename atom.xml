@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-03T10:23:24.354Z</updated>
+  <updated>2021-11-04T14:32:27.742Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,21 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:共同欄位新增、編輯技巧</title>
+    <link href="https://eugenesu0515.github.io/2021/11/04/orm-series-chloe-audit-columns/"/>
+    <id>https://eugenesu0515.github.io/2021/11/04/orm-series-chloe-audit-columns/</id>
+    <published>2021-11-04T12:14:16.000Z</published>
+    <updated>2021-11-04T14:32:27.742Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;有在觀看筆者的ORM系列文就知道，其中&lt;code&gt;EFCore&lt;/code&gt;就這麼一篇出現過，即使用&lt;code&gt;override&lt;/code&gt; &lt;code&gt;SaveChanges&lt;/code&gt;方法來達到針對共同欄位的新增、編輯功能，什麼叫&lt;code&gt;共同欄位&lt;/code&gt;，筆者常設計的就是&lt;code&gt;CreatedAt&lt;/code&gt;、&lt;code&gt;CreatedBy&lt;/code&gt;、&lt;code&gt;UpdatedAt&lt;/code&gt;、&lt;code&gt;UpdatedBy&lt;/code&gt;等，這因開發環境不同，習慣的命名方式可能不一樣，但一樣的是，要紀錄該筆資料列的新增、編輯的時間及使用者，原因就這麼單純。&lt;br&gt;若以&lt;code&gt;Dapper&lt;/code&gt;或&lt;code&gt;ADO.Net&lt;/code&gt;以純SQL的方式製作，會在&lt;code&gt;Insert&lt;/code&gt;、&lt;code&gt;Update&lt;/code&gt;語法上多組這些相關欄位上去，也不是不行，但以一個大型系統來說，若偏後台管理平台來說，這些欄位都是極重要，且每張資料表皆必須要有，這時每段Service都要填上，也是會累死人，&lt;a href=&quot;/2021/09/05/orm-series-efcore-override-savechanges/&quot; title=&quot;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&quot;&gt;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&lt;/a&gt;就是於&lt;code&gt;EFCore&lt;/code&gt;世界中的解決方式，筆者今天想要來聊聊&lt;code&gt;Chloe&lt;/code&gt;的解決方式。&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:查詢篇1</title>
@@ -464,29 +479,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="csv" scheme="https://eugenesu0515.github.io/tags/csv/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程神器-Hangfire:進階篇1</title>
-    <link href="https://eugenesu0515.github.io/2021/08/27/hangfire-advanced1/"/>
-    <id>https://eugenesu0515.github.io/2021/08/27/hangfire-advanced1/</id>
-    <published>2021-08-27T14:13:27.000Z</published>
-    <updated>2021-09-08T13:08:28.079Z</updated>
-    
-    
-    <summary type="html">&lt;img src=&quot;/2021/08/27/hangfire-advanced1/Untitled.png&quot; class=&quot;&quot; title=&quot;[HangfireDashboard]&quot;&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
     
   </entry>
   
