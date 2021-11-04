@@ -31,7 +31,7 @@
 <meta property="og:description" content="前提情要有在觀看筆者的ORM系列文就知道，其中EFCore就這麼一篇出現過，即使用override SaveChanges方法來達到針對共同欄位的新增、編輯功能，什麼叫共同欄位，筆者常設計的就是CreatedAt、CreatedBy、UpdatedAt、UpdatedBy等，這因開發環境不同，習慣的命名方式可能不一樣，但一樣的是，要紀錄該筆資料列的新增、編輯的時間及使用者，原因就這麼單純。若以Da">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2021-11-04T12:14:16.000Z">
-<meta property="article:modified_time" content="2021-11-04T14:32:27.742Z">
+<meta property="article:modified_time" content="2021-11-04T14:35:52.034Z">
 <meta property="article:author" content="Eugene Su">
 <meta name="twitter:card" content="summary">
 
@@ -224,7 +224,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2021-11-04 20:14:16 / 修改時間：22:32:27" itemprop="dateCreated datePublished" datetime="2021-11-04T20:14:16+08:00">2021-11-04</time>
+              <time title="創建時間：2021-11-04 20:14:16 / 修改時間：22:35:52" itemprop="dateCreated datePublished" datetime="2021-11-04T20:14:16+08:00">2021-11-04</time>
             </span>
 
           
@@ -260,7 +260,7 @@
         <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>有在觀看筆者的ORM系列文就知道，其中<code>EFCore</code>就這麼一篇出現過，即使用<code>override</code> <code>SaveChanges</code>方法來達到針對共同欄位的新增、編輯功能，什麼叫<code>共同欄位</code>，筆者常設計的就是<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>等，這因開發環境不同，習慣的命名方式可能不一樣，但一樣的是，要紀錄該筆資料列的新增、編輯的時間及使用者，原因就這麼單純。<br>若以<code>Dapper</code>或<code>ADO.Net</code>以純SQL的方式製作，會在<code>Insert</code>、<code>Update</code>語法上多組這些相關欄位上去，也不是不行，但以一個大型系統來說，若偏後台管理平台來說，這些欄位都是極重要，且每張資料表皆必須要有，這時每段Service都要填上，也是會累死人，<a href="/2021/09/05/orm-series-efcore-override-savechanges/" title="[DotnetCore]ORM系列-EFCore:資料表共同欄位設定">[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</a>就是於<code>EFCore</code>世界中的解決方式，筆者今天想要來聊聊<code>Chloe</code>的解決方式。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="回憶Interceptor"><a href="#回憶Interceptor" class="headerlink" title="回憶Interceptor"></a>回憶Interceptor</h2><p>這章節，筆者就很快帶過，<code>Chloe</code>套件本身提供攔截器，你要存取資料庫的IO作業，可以透過攔截器做一些事情，例如紀錄Log等等，可以透過它提供的事件器做攔截，主要大分類分為<code>Executing</code>及<code>Executed</code>兩大類，對於<code>ADO.Net</code>提供的方法</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="回憶Interceptor"><a href="#回憶Interceptor" class="headerlink" title="回憶Interceptor"></a>回憶Interceptor</h2><p>這章節，筆者就很快帶過，<code>Chloe</code>套件本身提供攔截器，你要存取資料庫的IO作業途中，可以透過攔截器做一些事情，例如紀錄Log等等，可以透過它提供的事件器做攔截，主要大分類分為<code>Executing</code>及<code>Executed</code>兩大類，對於<code>ADO.Net</code>提供的方法</p>
 <ul>
 <li>ExecuteNonQuery</li>
 <li>ExecuteReader</li>
