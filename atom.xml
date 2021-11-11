@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-04T14:35:52.034Z</updated>
+  <updated>2021-11-11T03:59:31.242Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:實體產生器</title>
+    <link href="https://eugenesu0515.github.io/2021/11/11/orm-series-sqlsugar-model-generator/"/>
+    <id>https://eugenesu0515.github.io/2021/11/11/orm-series-sqlsugar-model-generator/</id>
+    <published>2021-11-10T18:28:53.000Z</published>
+    <updated>2021-11-11T03:59:31.242Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊已經寫了幾篇&lt;code&gt;SqlSugar&lt;/code&gt;的介紹文章，筆者一開始就形容&lt;code&gt;SqlSugar&lt;/code&gt;是&lt;code&gt;EFCore&lt;/code&gt;跟&lt;code&gt;Dapper&lt;/code&gt;的完美融合兩個套件有的優點，就像這篇的主題，&lt;code&gt;SqlSugar&lt;/code&gt;有提供產生實體的相關API，筆者目標是加以包裝變成是一個&lt;code&gt;dotnet tool&lt;/code&gt;，可以透過下指令的方式完成產生實體作業。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-Chloe:共同欄位新增、編輯技巧</title>
@@ -456,29 +479,6 @@
     <category term="exception" scheme="https://eugenesu0515.github.io/tags/exception/"/>
     
     <category term="elmah" scheme="https://eugenesu0515.github.io/tags/elmah/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Reader系列-CSV檔案</title>
-    <link href="https://eugenesu0515.github.io/2021/08/28/reader-series-csv/"/>
-    <id>https://eugenesu0515.github.io/2021/08/28/reader-series-csv/</id>
-    <published>2021-08-28T13:18:45.000Z</published>
-    <updated>2021-09-08T13:09:05.602Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在公司擔任R&amp;amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含&lt;code&gt;CSV&lt;/code&gt;檔案，&lt;code&gt;Excel&lt;/code&gt;檔案，&lt;code&gt;pdf&lt;/code&gt;檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="reader" scheme="https://eugenesu0515.github.io/categories/dotnetcore/reader/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="csv" scheme="https://eugenesu0515.github.io/tags/csv/"/>
     
   </entry>
   
