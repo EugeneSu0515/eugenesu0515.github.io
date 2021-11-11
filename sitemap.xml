@@ -410,6 +410,13 @@
   </url>
   
   <url>
+    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
+    <lastmod>2021-11-11</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/tags/cap/</loc>
     <lastmod>2021-11-11</lastmod>
     <changefreq>daily</changefreq>
@@ -418,13 +425,6 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/rabbitmq/</loc>
-    <lastmod>2021-11-11</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
     <lastmod>2021-11-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

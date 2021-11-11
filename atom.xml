@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-11T06:54:28.270Z</updated>
+  <updated>2021-11-11T09:08:17.296Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://eugenesu0515.github.io/2021/11/11/orm-series-sqlsugar-model-generator/"/>
     <id>https://eugenesu0515.github.io/2021/11/11/orm-series-sqlsugar-model-generator/</id>
     <published>2021-11-10T18:28:53.000Z</published>
-    <updated>2021-11-11T06:54:28.270Z</updated>
+    <updated>2021-11-11T09:08:17.296Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊已經寫了幾篇&lt;code&gt;SqlSugar&lt;/code&gt;的介紹文章，筆者一開始就形容&lt;code&gt;SqlSugar&lt;/code&gt;是&lt;code&gt;EFCore&lt;/code&gt;跟&lt;code&gt;Dapper&lt;/code&gt;的完美融合體，結合兩個套件有的優點並極大化其效用，就像這篇的主題，&lt;code&gt;SqlSugar&lt;/code&gt;有提供產生實體的相關API，筆者目標是加以包裝變成是一個&lt;code&gt;dotnet tool&lt;/code&gt;，可以透過下指令的方式完成產生實體作業。&lt;/p&gt;</summary>
