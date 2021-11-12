@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-11T09:08:17.296Z</updated>
+  <updated>2021-11-12T03:04:37.971Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:AOP篇</title>
+    <link href="https://eugenesu0515.github.io/2021/11/12/orm-series-sqlsugar-interceptor/"/>
+    <id>https://eugenesu0515.github.io/2021/11/12/orm-series-sqlsugar-interceptor/</id>
+    <published>2021-11-12T02:54:51.000Z</published>
+    <updated>2021-11-12T03:04:37.971Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;前幾篇介紹完&lt;code&gt;SqlSugar&lt;/code&gt;的應用後，這篇筆者要來實作&lt;code&gt;SqlSugar&lt;/code&gt;的&lt;code&gt;AOP&lt;/code&gt;機制了，基本上就是Sql執行前後，或者發生Error後的事件，應有盡有，剛好符合筆者公司的要求，每個執行的作業出錯時要記錄下來，尤其是出錯時，最好能記錄到完整的SQL指令，釐清問題上更加有幫助，筆者介紹的幾個ORM框架通常都有類似的解決方案，表示這是大家都需要的功能&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[EFCore Interceptor]待補&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/2021/09/07/orm-series-chloe-interceptor/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:Interceptor篇&quot;&gt;[DotnetCore]ORM系列-Chloe:Interceptor篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:實體產生器</title>
@@ -383,7 +410,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-11-01T15:24:59.953Z</updated>
+    <updated>2021-11-12T03:03:48.924Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
@@ -453,32 +480,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="excel" scheme="https://eugenesu0515.github.io/tags/excel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Exception攔截神器-Elmah</title>
-    <link href="https://eugenesu0515.github.io/2021/08/29/exception-elmah/"/>
-    <id>https://eugenesu0515.github.io/2021/08/29/exception-elmah/</id>
-    <published>2021-08-29T14:17:51.000Z</published>
-    <updated>2021-08-29T14:26:14.671Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用&lt;code&gt;Nlog&lt;/code&gt;來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://elmah.github.io/&quot;&gt;ELMAH-Home&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;官方並沒有升級到&lt;code&gt;dotnet core&lt;/code&gt;版本，還好強者貢獻&lt;code&gt;dotnet core&lt;/code&gt;版本，參考&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/ElmahCore/ElmahCore&quot;&gt;ElmahCore/ElmahCore&lt;/a&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="exception" scheme="https://eugenesu0515.github.io/tags/exception/"/>
-    
-    <category term="elmah" scheme="https://eugenesu0515.github.io/tags/elmah/"/>
     
   </entry>
   
