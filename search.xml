@@ -70,6 +70,8 @@
 <br>
 <a href="/2021/11/12/orm-series-sqlsugar-interceptor/" title="[DotnetCore]ORM系列-SqlSugar:AOP篇">[DotnetCore]ORM系列-SqlSugar:AOP篇</a>
 <br>
+<a href="/2021/11/15/orm-series-sqlsugar-audit-columns/" title="[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧">[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</a>
+<br>
 
 ]]></content>
       <categories>
@@ -77,6 +79,160 @@
       </categories>
       <tags>
         <tag>dotnetcore</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</title>
+    <url>/2021/11/15/orm-series-sqlsugar-audit-columns/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者的慣例，使用<code>ORM</code>框架時，會先找一下可以擴充的點，畢竟<code>Select</code>、<code>Insert</code>、<code>Update</code>這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個<code>ORM</code>框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，因為比較效能的時間單位都是ns級的，基本上不要差太多，是沒什麼感覺的。這篇主要是講解<code>SqlSugar</code>套件，在操作共同欄位，像<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>這種，找到對應的擴充點，做統一處理。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p><code>SqlSugar</code>本身有提供<code>AOP</code>機制，透過相關事件，很方便地紀錄執行過程的Log，筆者在<a href="/2021/11/12/orm-series-sqlsugar-interceptor/" title="[DotnetCore]ORM系列-SqlSugar:AOP篇">[DotnetCore]ORM系列-SqlSugar:AOP篇</a>有詳細說明，<code>SqlSugar</code>另有提供<code>DataExecuting</code>事件，讓我們可以很方便地去修改其對應的Model值，以筆者實作過<code>SqlSugar</code>的<code>AOP</code>機制，覺得也可以使用<code>OnExecutingChangeSql</code>事件中變更其<code>parameter</code>的值，但就沒這麼方便，<code>SqlSugar</code>於<code>5.0.3.5</code>版本開始提供其<code>DataExecuting</code>事件，更方便地撰寫統一處裡的欄位值</p>
+<h2 id="資料過濾器"><a href="#資料過濾器" class="headerlink" title="資料過濾器"></a>資料過濾器</h2><p>跟著筆者實際動手寫吧，先看一下結構語法</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">db.Aop.DataExecuting = (oldValue, entityInfo) =&gt;</span><br><span class="line"> &#123;</span><br><span class="line">    <span class="comment">// 寫操作邏輯   </span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>撰寫程式前，需釐清一下其邏輯，以筆者的情境來說<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>這四個欄位，依照操作Type為<code>Insert</code>或<code>Update</code>而設定欄位不一樣</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">db.Aop.DataExecuting = (oldValue, entityInfo) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 寫操作邏輯   </span></span><br><span class="line">    <span class="keyword">switch</span> (entityInfo.OperationType)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> DataFilterType.InsertByObject:</span><br><span class="line">            <span class="keyword">switch</span> (entityInfo.PropertyName)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;CreatedAt&quot;</span>:</span><br><span class="line">                    entityInfo.SetValue(DateTime.Now);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;CreatedBy&quot;</span>:</span><br><span class="line">                    <span class="comment">// 取得登入使用者</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedAt&quot;</span>:</span><br><span class="line">                    entityInfo.SetValue(DateTime.Now);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedBy&quot;</span>:</span><br><span class="line">                    <span class="comment">// 取得登入使用者</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> DataFilterType.UpdateByObject:</span><br><span class="line">            <span class="keyword">switch</span> (entityInfo.PropertyName)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedAt&quot;</span>:</span><br><span class="line">                    entityInfo.SetValue(DateTime.Now);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedBy&quot;</span>:</span><br><span class="line">                    <span class="comment">// 取得登入使用者</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="實際執行"><a href="#實際執行" class="headerlink" title="實際執行"></a>實際執行</h2><h3 id="建立資料表"><a href="#建立資料表" class="headerlink" title="建立資料表"></a>建立資料表</h3><p>為實作，必須將筆者使用的MySql範例資料庫：classicmodels，加一個含有這些共同欄位的資料表，就索性命名為demo資料表吧，結構如下：</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span><span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span><span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">[<span class="meta">SugarTable(<span class="meta-string">&quot;demo&quot;</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">demo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">demo</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:False</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    [<span class="meta">SugarColumn(IsPrimaryKey=true,IsIdentity=true)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">long</span> Id &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:False</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:False</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> DateTime CreatedAt &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:True</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CreatedBy &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:True</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> DateTime? UpdatedAt &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:True</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> UpdatedBy &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="安裝測試套件"><a href="#安裝測試套件" class="headerlink" title="安裝測試套件"></a>安裝測試套件</h3><p>筆者這邊為方便，安裝一套可以隨機產生名字的套件，以利demo</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet add package RandomNameGeneratorLibrary</span><br></pre></td></tr></table></figure>
+
+<p>語法就照套件github上的教學照刻即可</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> _personGenerator = <span class="keyword">new</span> PersonNameGenerator();</span><br><span class="line"><span class="keyword">var</span> name = _personGenerator.GenerateRandomFirstAndLastName();</span><br></pre></td></tr></table></figure>
+
+<h3 id="實作新增作業"><a href="#實作新增作業" class="headerlink" title="實作新增作業"></a>實作新增作業</h3><ul>
+<li>撰寫Action</li>
+</ul>
+<p>筆者為示範成功更新Created、Updated相關欄位，使用<code>Insert</code>語法，筆者會另外寫一篇介紹<code>SqlSugar</code>的<code>Insert</code>、<code>Update</code>語法，目前就先將就看一下</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 新增一筆demo資料</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">ProducesResponseType(typeof(string), StatusCodes.Status200OK)</span>]</span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;insert&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InsertDemo</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> _personGenerator = <span class="keyword">new</span> PersonNameGenerator();</span><br><span class="line">    <span class="keyword">var</span> name = _personGenerator.GenerateRandomFirstAndLastName();</span><br><span class="line">    _db.Insertable&lt;Sugar.demo&gt;(<span class="keyword">new</span> Sugar.demo()</span><br><span class="line">    &#123;</span><br><span class="line">        Name = name</span><br><span class="line">    &#125;).ExecuteCommand();</span><br><span class="line">    <span class="keyword">return</span> Ok(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>程式碼前兩行就是用套件產生隨機取得的名字，將取得的名字當作<code>demo.Name</code>的值塞進<code>demo</code>資料表，以<code>SqlSugar</code>來說要執行Insert語法時，呼叫<code>ExecuteCommand</code>，其實另外還有不同的<code>Execute</code>方法，留給另一篇說明，最後回傳隨機產生的名字。</p>
+<ul>
+<li>Postman測試</li>
+</ul>
+<p>寫完Action相關語法後，跟著筆者使用Postman做一下測試吧</p>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/insert-postman.png" class="" title="[Postman-新增作業]">
+
+<ul>
+<li>資料庫結果</li>
+</ul>
+<p>看一下資料庫中的結果</p>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/insert-dbeaver.png" class="" title="[Dbeaver-新增資料]">
+
+<p>筆者這邊使用<code>DBeaver</code>的介面當作結果呈現一部份，可以看到Insert語法中筆者只塞了一個Name屬性值，<code>CreatedAt</code>和<code>UpdatedAt</code>的值由AOP中的資料過濾器做掉了，有寫入成功。</p>
+<h3 id="實作更新作業"><a href="#實作更新作業" class="headerlink" title="實作更新作業"></a>實作更新作業</h3><ul>
+<li>撰寫Action</li>
+</ul>
+<p>筆者為示範Updated相關欄位更新，實作一組Update作業</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 更新客戶名稱</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;id&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">ProducesResponseType(typeof(string), StatusCodes.Status200OK)</span>]</span><br><span class="line">[<span class="meta">HttpPost(<span class="meta-string">&quot;update/&#123;id&#125;&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">UpdateDemo</span>(<span class="params"><span class="built_in">long</span> id</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> _personGenerator = <span class="keyword">new</span> PersonNameGenerator();</span><br><span class="line">    <span class="keyword">var</span> name = _personGenerator.GenerateRandomFirstAndLastName();</span><br><span class="line">    <span class="keyword">var</span> demoModel = _db.Queryable&lt;Sugar.demo&gt;().First(x =&gt; x.Id == id);</span><br><span class="line">    demoModel.Name = name;</span><br><span class="line">    _db.Updateable(demoModel).ExecuteCommand();</span><br><span class="line">    <span class="keyword">return</span> Ok(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大概邏輯就是先依照Id值找到對應的資料，將<code>Name</code>屬性值使用新的隨機產生名字取代，使用<code>SqlSugar</code>的<code>Update</code>語法做更新，觀察一下<code>UpdatedAt</code>欄位是否被更新。首先再確認一下新增成功後的欄位值</p>
+<blockquote>
+<p>Insert成功欄位值</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>欄位名稱</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Id</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Nga Prager</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>2021-11-15 10:05:43</td>
+</tr>
+<tr>
+<td>UpdatedAt</td>
+<td>2021-11-15 10:05:43</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Postman測試</li>
+</ul>
+<p>上述新增成功的資料Id值為3，使用的Url為<a href="http://localhost:5000/api/Customer/update/3">http://localhost:5000/api/Customer/update/3</a></p>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/update-postman.png" class="" title="[Postman-更新作業]">
+
+<ul>
+<li>資料庫結果</li>
+</ul>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/update-dbeaver.png" class="" title="[Dbeaver-更新資料]">
+
+<p>檢視一下新增，更新欄位值對照表</p>
+<blockquote>
+<p>Insert、Update成功欄位值</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>欄位名稱</th>
+<th>新增值</th>
+<th>更新值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Id</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Nga Prager</td>
+<td>TonyYazdani</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>2021-11-15 10:05:43</td>
+<td>2021-11-15 10:05:43</td>
+</tr>
+<tr>
+<td>UpdatedAt</td>
+<td>2021-11-15 10:05:43</td>
+<td>2021-11-15 10:16:39</td>
+</tr>
+</tbody></table>
+<p>有成功更新其<code>UpdatedAt</code>欄位值，表示筆者宣告的<code>AOP</code>資料過濾器是有效的。</p>
+<h3 id="SqlSugar的AOP-生命週期檢視"><a href="#SqlSugar的AOP-生命週期檢視" class="headerlink" title="SqlSugar的AOP 生命週期檢視"></a>SqlSugar的AOP 生命週期檢視</h3><p>筆者這邊想要花點時間實驗一下，以<a href="/2021/11/12/orm-series-sqlsugar-interceptor/" title="[DotnetCore]ORM系列-SqlSugar:AOP篇">[DotnetCore]ORM系列-SqlSugar:AOP篇</a>的那些事件以及此主題中使用到的資料過濾器的執行先後順序，所謂知己知彼，百戰百勝，花點時間理解一下期執行順序，才不會撰寫的與執行的結果不符而造成錯誤的結果，筆者在<code>DataExecuting</code>事件的最上面加以下這行</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">_logger.Info(<span class="string">$@&quot;[DataExecuting:OperateType]:<span class="subst">&#123;entityInfo.OperationType.ToString()&#125;</span>;</span></span><br><span class="line"><span class="string">                            [DataExecuting:PropertyName]:<span class="subst">&#123;entityInfo.PropertyName&#125;</span>&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>筆者這邊使用Update作業當作觀察的依據，使用Postman重複打update url，觀看一下執行順序吧</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Select作業</span><br><span class="line">2021-11-15 10:31:01.5895 INFO [OnExecutingChangeSql]SELECT `Id`,`Name`,`CreatedAt`,`CreatedBy`,`UpdatedAt`,`UpdatedBy` FROM `demo`   WHERE ( `Id` = @Id0 )  ORDER BY NOW()  LIMIT 0,1</span><br><span class="line">2021-11-15 10:31:01.5936 INFO [OnExecutingChangeSql]@Id0:3</span><br><span class="line">2021-11-15 10:31:01.5936 INFO [OnLogExecuting]Executing SQL: SELECT `Id`,`Name`,`CreatedAt`,`CreatedBy`,`UpdatedAt`,`UpdatedBy` FROM `demo`   WHERE ( `Id` = @Id0 )  ORDER BY NOW()  LIMIT 0,1</span><br><span class="line">2021-11-15 10:31:01.6522 INFO [OnLogExecuted]Executed Time:00:00:00.0581930</span><br><span class="line">// Update作業</span><br><span class="line">2021-11-15 10:31:01.6553 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:Id</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:Name</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:CreatedAt</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:CreatedBy</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:UpdatedAt</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:UpdatedBy</span><br><span class="line">2021-11-15 10:31:01.6588 INFO [OnExecutingChangeSql]UPDATE `demo`  SET</span><br><span class="line">           `Name`=@Name,`CreatedAt`=@CreatedAt,`CreatedBy`=@CreatedBy,`UpdatedAt`=@UpdatedAt,`UpdatedBy`=@UpdatedBy  WHERE `Id`=@Id</span><br><span class="line">2021-11-15 10:31:01.6588 INFO [OnExecutingChangeSql]@Id:3</span><br><span class="line">2021-11-15 10:31:01.6588 INFO [OnExecutingChangeSql]@Name:Sachiko Ellery</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@CreatedAt:11/15/2021 10:05:43</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@CreatedBy:</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@UpdatedAt:11/15/2021 10:31:01</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@UpdatedBy:</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnLogExecuting]Executing SQL: UPDATE `demo`  SET</span><br><span class="line">           `Name`=@Name,`CreatedAt`=@CreatedAt,`CreatedBy`=@CreatedBy,`UpdatedAt`=@UpdatedAt,`UpdatedBy`=@UpdatedBy  WHERE `Id`=@Id</span><br><span class="line">2021-11-15 10:31:01.6631 INFO [OnLogExecuted]Executed Time:00:00:00.0033790</span><br></pre></td></tr></table></figure>
+
+<p>由<code>Select</code>及<code>Update</code>作業綜合來看，可以整理出以下重點</p>
+<ul>
+<li><code>Select</code>作業時不會經過<code>DataExecuting</code>事件</li>
+<li><code>Update</code>作業的事件順序為<ul>
+<li><code>DataExecuting</code></li>
+<li><code>OnExecutingChangeSql</code></li>
+<li><code>OnLogExecuting</code></li>
+<li><code>OnLogExecuted</code></li>
+</ul>
+</li>
+</ul>
+<p>以結果來看，算滿符合預期的結果，這樣大概就知道若要做什麼事情，找到對的事件做實作邏輯的宣告，才不會亂了套。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者經由實驗，以編輯共同欄位時，透過<code>DataExecuting</code>事件是綽綽有餘的，除了筆者此主題中實驗的<code>Created</code>、<code>Updated</code>相關欄位之外，或許可能有其他應用，筆者若有新的應用也會再放上來。另，SqlSugar教學文件中提供<code>Repository Pattern</code>的教學，筆者再找時間利用<code>Repository Pattern</code>重做一次此篇主題，看看其差異。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://www.donet5.com/Home/Doc?typeId=1204">https://www.donet5.com/Home/Doc?typeId=1204</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+        <category>sqlsugar</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+        <tag>sqlsugar</tag>
       </tags>
   </entry>
   <entry>

@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-12T03:04:37.971Z</updated>
+  <updated>2021-11-15T05:23:35.547Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</title>
+    <link href="https://eugenesu0515.github.io/2021/11/15/orm-series-sqlsugar-audit-columns/"/>
+    <id>https://eugenesu0515.github.io/2021/11/15/orm-series-sqlsugar-audit-columns/</id>
+    <published>2021-11-15T05:03:43.000Z</published>
+    <updated>2021-11-15T05:23:35.547Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者的慣例，使用&lt;code&gt;ORM&lt;/code&gt;框架時，會先找一下可以擴充的點，畢竟&lt;code&gt;Select&lt;/code&gt;、&lt;code&gt;Insert&lt;/code&gt;、&lt;code&gt;Update&lt;/code&gt;這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個&lt;code&gt;ORM&lt;/code&gt;框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，因為比較效能的時間單位都是ns級的，基本上不要差太多，是沒什麼感覺的。這篇主要是講解&lt;code&gt;SqlSugar&lt;/code&gt;套件，在操作共同欄位，像&lt;code&gt;CreatedAt&lt;/code&gt;、&lt;code&gt;CreatedBy&lt;/code&gt;、&lt;code&gt;UpdatedAt&lt;/code&gt;、&lt;code&gt;UpdatedBy&lt;/code&gt;這種，找到對應的擴充點，做統一處理。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:AOP篇</title>
@@ -410,7 +433,7 @@
     <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-11-12T03:07:37.571Z</updated>
+    <updated>2021-11-15T05:21:31.857Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
@@ -457,29 +480,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="fluentftp" scheme="https://eugenesu0515.github.io/tags/fluentftp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Reader系列-Excel檔案</title>
-    <link href="https://eugenesu0515.github.io/2021/08/30/excel-reader/"/>
-    <id>https://eugenesu0515.github.io/2021/08/30/excel-reader/</id>
-    <published>2021-08-30T09:49:07.000Z</published>
-    <updated>2021-09-08T13:09:25.119Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇就延續Reader系列，這次介紹Excel檔案讀取的實作，Excel讀寫套件百百種，有名的就那幾個，&lt;a href=&quot;https://github.com/hughbe/excel-mapper&quot;&gt;ExcelDataReader&lt;/a&gt;、&lt;a href=&quot;https://github.com/nissl-lab/npoi&quot;&gt;NPOI&lt;/a&gt;、&lt;a href=&quot;https://github.com/ClosedXML/ClosedXML&quot;&gt;CloseXML&lt;/a&gt;等等。筆者這篇主要使用ExcelDataReader上面再包一層的&lt;a href=&quot;https://github.com/hughbe/excel-mapper&quot;&gt;ExcelMapper&lt;/a&gt;，主要是簡單易用，有強型別的Binding，一般讀取來說已足夠。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="reader" scheme="https://eugenesu0515.github.io/categories/dotnetcore/reader/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="excel" scheme="https://eugenesu0515.github.io/tags/excel/"/>
     
   </entry>
   
