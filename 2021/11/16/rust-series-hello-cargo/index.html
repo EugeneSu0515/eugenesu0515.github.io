@@ -23,22 +23,20 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前提情要筆者在上篇把該有的Socket底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。">
+  <meta name="description" content="前提情要上篇介紹到Rust的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：Cargo，如同npm對於nodejs，nuget對於.net等等，上篇安裝開發環境:rustup時已經安裝好Cargo了，只要使用它即可，上篇介紹Hello World部份是手動的方式建立檔案，透過Cargo可以建立專案，管理相依性套件，跟著筆者實作了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[DotnetCore]Socket程式實作-解析封包">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/index.html">
+<meta property="og:title" content="[Rust]教學系列-Hello Cargo">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
-<meta property="og:description" content="前提情要筆者在上篇把該有的Socket底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。">
+<meta property="og:description" content="前提情要上篇介紹到Rust的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：Cargo，如同npm對於nodejs，nuget對於.net等等，上篇安裝開發環境:rustup時已經安裝好Cargo了，只要使用它即可，上篇介紹Hello World部份是手動的方式建立檔案，透過Cargo可以建立專案，管理相依性套件，跟著筆者實作了。">
 <meta property="og:locale" content="zh_TW">
-<meta property="article:published_time" content="2021-08-20T18:49:20.000Z">
-<meta property="article:modified_time" content="2021-09-08T13:09:33.608Z">
+<meta property="article:published_time" content="2021-11-16T06:07:10.000Z">
+<meta property="article:modified_time" content="2021-11-16T06:10:42.986Z">
 <meta property="article:author" content="Eugene Su">
-<meta property="article:tag" content="dotnetcore">
-<meta property="article:tag" content="socket">
-<meta property="article:tag" content="netcoreserver">
+<meta property="article:tag" content="rust">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/">
 
 
 <script id="page-configurations">
@@ -51,7 +49,7 @@
   };
 </script>
 <meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
-  <title>[DotnetCore]Socket程式實作-解析封包 | Eugene's Blog</title>
+  <title>[Rust]教學系列-Hello Cargo | Eugene's Blog</title>
   
 
 
@@ -201,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-socket-analyze/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -214,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          [DotnetCore]Socket程式實作-解析封包
+          [Rust]教學系列-Hello Cargo
         </h1>
 
         <div class="post-meta">
@@ -225,27 +223,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
+              
 
-              <time title="創建時間：2021-08-21 02:49:20" itemprop="dateCreated datePublished" datetime="2021-08-21T02:49:20+08:00">2021-08-21</time>
+              <time title="創建時間：2021-11-16 14:07:10 / 修改時間：14:10:42" itemprop="dateCreated datePublished" datetime="2021-11-16T14:07:10+08:00">2021-11-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2021-09-08 21:09:33" itemprop="dateModified" datetime="2021-09-08T21:09:33+08:00">2021-09-08</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分類於</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/socket/" itemprop="url" rel="index"><span itemprop="name">socket</span></a>
+                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
                 </span>
             </span>
 
@@ -261,7 +249,7 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>2.5k</span>
+              <span>3k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
@@ -279,35 +267,58 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇把該有的<code>Socket</code>底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。</p>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>上篇介紹到<code>Rust</code>的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：<code>Cargo</code>，如同<code>npm</code>對於<code>nodejs</code>，<code>nuget</code>對於<code>.net</code>等等，上篇安裝開發環境:rustup時已經安裝好<code>Cargo</code>了，只要使用它即可，上篇介紹<code>Hello World</code>部份是手動的方式建立檔案，透過<code>Cargo</code>可以建立專案，管理相依性套件，跟著筆者實作了。</p>
 <span id="more"></span>
 
-<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者用過幾個Event設計的原件，基本上可以從<code>dotnet</code>預設的套件就可以看出諸多此類的設計，筆者自己也加工過幾個，例:<code>SMTP Send Mail</code>，使用<code>ProcessInfo</code>執行<code>bat file</code>皆使用上此類技巧。</p>
-<p>以筆者使用的<a target="_blank" rel="noopener" href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>來說，他所設計的方式是繼承他原有的物件，將幾個<code>socket</code>發生的事件處裡邏輯封裝成<code>virtual</code>的形式，你可以<code>override</code>成自己想要的樣子，以套件github頁面上提供的範例來說，由幾個處裡事件方法是可以複寫的，如下:</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>首先驗證一下<code>Cargo</code>的版本號</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo --version</span><br><span class="line"><span class="comment"># cargo 1.55.0 (32da73ab1 2021-08-23)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="透過Cargo建立專案"><a href="#透過Cargo建立專案" class="headerlink" title="透過Cargo建立專案"></a>透過Cargo建立專案</h2><p>透過Cargo指令的方式建立專案，使用new關鍵字，來看一下他有哪些options可以宣告</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">cargo new --<span class="built_in">help</span></span><br><span class="line"><span class="comment"># 以下為上述指令結果</span></span><br><span class="line">cargo-new</span><br><span class="line">Create a new cargo package at &lt;path&gt;</span><br><span class="line"></span><br><span class="line">USAGE:</span><br><span class="line">    cargo new [OPTIONS] &lt;path&gt;</span><br><span class="line"></span><br><span class="line">OPTIONS:</span><br><span class="line">    -q, --quiet                    No output printed to stdout</span><br><span class="line">        --registry &lt;REGISTRY&gt;      Registry to use</span><br><span class="line">        --vcs &lt;VCS&gt;                Initialize a new repository <span class="keyword">for</span> the given version control system (git, hg, pijul, or</span><br><span class="line">                                   fossil) or <span class="keyword">do</span> not initialize any version control at all (none), overriding a global</span><br><span class="line">                                   configuration. [possible values: git, hg, pijul, fossil, none]</span><br><span class="line">        --bin                      Use a binary (application) template [default]</span><br><span class="line">        --lib                      Use a library template</span><br><span class="line">        --edition &lt;YEAR&gt;           Edition to <span class="built_in">set</span> <span class="keyword">for</span> the crate generated [possible values: 2015, 2018, 2021]</span><br><span class="line">        --name &lt;NAME&gt;              Set the resulting package name, defaults to the directory name</span><br><span class="line">    -v, --verbose                  Use verbose output (-vv very verbose/build.rs output)</span><br><span class="line">        --color &lt;WHEN&gt;             Coloring: auto, always, never</span><br><span class="line">        --frozen                   Require Cargo.lock and cache are up to date</span><br><span class="line">        --locked                   Require Cargo.lock is up to date</span><br><span class="line">        --offline                  Run without accessing the network</span><br><span class="line">        --config &lt;KEY=VALUE&gt;...    Override a configuration value (unstable)</span><br><span class="line">    -Z &lt;FLAG&gt;...                   Unstable (nightly-only) flags to Cargo, see <span class="string">&#x27;cargo -Z help&#x27;</span> <span class="keyword">for</span> details</span><br><span class="line">    -h, --<span class="built_in">help</span>                     Prints <span class="built_in">help</span> information</span><br><span class="line"></span><br><span class="line">ARGS:</span><br><span class="line">    &lt;path&gt;</span><br><span class="line"></span><br><span class="line">Run `cargo <span class="built_in">help</span> new` <span class="keyword">for</span> more detailed information.</span><br></pre></td></tr></table></figure>
+
+<p>說明部份滿清楚的，只要沒有指定任何<code>Options</code>，基本上<code>cargo new</code> 時，預設會是<code>binary target</code>，類似像上篇透過<code>rustc</code>指令編譯後產生的<code>binary</code>檔案形式，之後進階使用時，可能才會考慮選擇其他選項，可以再透過<code>cargo help new</code>來觀看完整的說明，用到時再研究了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello_cargo</span><br><span class="line"><span class="built_in">cd</span> hello_cargo</span><br><span class="line"><span class="comment"># 使用vscode打開</span></span><br><span class="line">code .</span><br></pre></td></tr></table></figure>
+
+<h2 id="專案結構介紹"><a href="#專案結構介紹" class="headerlink" title="專案結構介紹"></a>專案結構介紹</h2><p>使用<code>cargo new</code>建立後的專案，結構滿簡單易懂的，包含</p>
 <ul>
-<li>Server/Session/Client<ul>
-<li>OnConnected</li>
-<li>OnDisconnected</li>
-<li>OnReceived</li>
-<li>OnError</li>
+<li><code>src</code>資料夾，裡面會自動產生一個<code>main.rs</code>，並自動生產一個<code>main</code>方法，也就是<code>Rust</code>的程式入口。</li>
 </ul>
-</li>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/main.rs</span></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>Cargo.toml</code>，相等於<code>package.json</code>，或者<code>dotnetcore</code>專案檔<code>csproj</code>中的<code>ItemGroup&gt;PackageReference</code>一樣宣告著這個專案的介紹以及相依套件及對應版本號</li>
 </ul>
-<p>筆者將擴大成將常用的事件定義成契約<code>interface</code>，才會出現<code>IServer</code>及<code>IClient</code></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IServer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 回傳特定Client封包</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;data&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Client連線事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnAccept</span>(<span class="params">Guid clientId</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 傳送事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;sent&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;pending&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client封包接受事件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clientId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;buffer&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] buffer</span>)</span>;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 特定Client關閉</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;clietId&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Server_OnClose</span>(<span class="params">Guid clietId</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 宣告該專案的資訊</span><br><span class="line">[package]</span><br><span class="line">name = <span class="string">&quot;hello_cargo&quot;</span></span><br><span class="line">version = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">edition = <span class="string">&quot;2018&quot;</span></span><br><span class="line"></span><br><span class="line"># See more keys and their definitions at https:<span class="comment">//doc.rust-lang.org/cargo/reference/manifest.html</span></span><br><span class="line"># 相依套件宣告會落於此</span><br><span class="line">[dependencies]</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IClient</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnClose</span>(<span class="params"></span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnConnect</span>(<span class="params"><span class="built_in">bool</span> obj</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Client_OnSend</span>(<span class="params"><span class="built_in">long</span> sent, <span class="built_in">long</span> pending</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Send</span>(<span class="params"><span class="built_in">byte</span>[] data, <span class="built_in">int</span> offset, <span class="built_in">int</span> length</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="透過Cargo建置專案"><a href="#透過Cargo建置專案" class="headerlink" title="透過Cargo建置專案"></a>透過Cargo建置專案</h2><p>既然透過<code>Cargo</code>建立專案，也可以透過<code>Cargo</code>指令來編譯專案，還記得我們上篇用什麼指令編譯嗎，先看看上篇的編譯方式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc main.rs</span><br></pre></td></tr></table></figure>
 
-<p>筆者在中間有換過一次底層套件，<a target="_blank" rel="noopener" href="https://github.com/chronoxor/NetCoreServer">NetCoreServer</a>還是第二次套用的底層元件，為這個套件調整過一次上述Interface，不過因為上層相依的部份只有<code>OnReceive</code>，筆者當初的想法是對於最上層Client使用端來說只有解析封包這件事是客製化的，其他行為是不會改變的，因此才有了<code>IAnalyzeService</code>﹔</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IAnalyzeService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ClientAnalyze</span>(<span class="params"><span class="built_in">byte</span>[] receiveBytes</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ServerAnalyze</span>(<span class="params">Guid arg1, <span class="built_in">byte</span>[] arg2</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>透過<code>Cargo</code>指令則</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切記要進到專案資料夾</span></span><br><span class="line">cargo build</span><br><span class="line"><span class="comment"># Finished dev [unoptimized + debuginfo] target(s) in 0.55s</span></span><br></pre></td></tr></table></figure>
 
-<p>可以看出筆者只定義了Server收到封包後的解析邏輯以及Client收到封包後的解析邏輯，筆者於各自的BaseServer及BaseClient的OnReceive中呼叫IAnalyzeService中對應的Method﹔</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseServer</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Server_OnReceive</span>(<span class="params">Guid clientId, <span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ServerAnalyze(clientId, data);</span><br><span class="line">		<span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建置完成後的檔案會產生於<code>target &gt; debug &gt; hello_cargo</code>，可以發現是debug路徑下，若想要用<code>release</code>的方式建置，要多加<code>release</code>關鍵字，產生的檔案會位於<code>target &gt; release</code> 中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --release</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//BaseClient</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Client_OnReceive</span>(<span class="params"><span class="built_in">byte</span>[] data</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//...以上省略</span></span><br><span class="line">    _analyzeService.ClientAnalyze(data);</span><br><span class="line">    <span class="comment">//...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="透過Cargo執行專案"><a href="#透過Cargo執行專案" class="headerlink" title="透過Cargo執行專案"></a>透過Cargo執行專案</h2><p>最後執行專案，上篇介紹時直接執行編譯出來的<code>binary</code>檔案的方式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./main</span><br></pre></td></tr></table></figure>
 
-<p>意即最上層Client使用端只要注入對應的實作<code>IAnalyzeService</code>，只要<code>OnReceive</code>事件觸發，底層元件會呼叫其對應的解析封包方法。</p>
-<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>藉由這邊來解釋一下底層元件與最上層Client使用端是如何連結的。</p>
+<p>透過<code>Cargo</code>指令則</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cargo run</span><br><span class="line"><span class="comment"># Finished dev [unoptimized + debuginfo] target(s) in 0.01s</span></span><br><span class="line"><span class="comment">#      Running `target/debug/hello_cargo`</span></span><br><span class="line"><span class="comment"># Hello, world!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="透過Cargo檢驗專案"><a href="#透過Cargo檢驗專案" class="headerlink" title="透過Cargo檢驗專案"></a>透過Cargo檢驗專案</h2><p>最後介紹一下另外一個常用的<code>Cargo</code>指令：<code>cargo check</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo check</span><br><span class="line"><span class="comment"># Finished dev [unoptimized + debuginfo] target(s) in 0.01s</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="常用Cargo指令"><a href="#常用Cargo指令" class="headerlink" title="常用Cargo指令"></a>常用Cargo指令</h2><p>上面敘述使用到的Cargo指令們</p>
+<ul>
+<li><code>cargo build</code> 建置專案</li>
+<li><code>cargo run</code> 其實已經包含建置專案及執行專案，意思是可以不用執行<code>cargo build</code>，直接執行<code>cargo run</code>也可以順便建置</li>
+<li><code>cargo check</code> 單傳驗證該專案是否有錯誤</li>
+</ul>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p><code>Rust</code>官方建議使用的套件管理器介紹到此，官方也建議盡量使用<code>cargo</code>指令做事情，才會享有最完整的<code>Rust</code>開發體驗，因為會有完整的教學文件可以參考，正所謂<code>生產力</code>這個優點，就是需要用到時有地方可以查看其用法，少走不少冤望路，開發起來就很順了，這篇就到這，下篇繼續。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://rust-lang.tw/book-tw/ch01-03-hello-cargo.html">https://rust-lang.tw/book-tw/ch01-03-hello-cargo.html</a></li>
+</ul>
 
     </div>
 
@@ -317,9 +328,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
-              <a href="/tags/socket/" rel="tag"># socket</a>
-              <a href="/tags/netcoreserver/" rel="tag"># netcoreserver</a>
+              <a href="/tags/rust/" rel="tag"># rust</a>
           </div>
 
         
@@ -328,13 +337,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/08/21/dotnetcore-socket/" rel="prev" title="[DotnetCore]Socket程式實作">
-      <i class="fa fa-chevron-left"></i> [DotnetCore]Socket程式實作
+    <a href="/2021/11/16/rust-series-hello-world/" rel="prev" title="[Rust]教學系列-Hello World">
+      <i class="fa fa-chevron-left"></i> [Rust]教學系列-Hello World
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/21/dotnetcore-socket-slicing/" rel="next" title="[DotnetCore]Socket程式實作-切割封包">
-      [DotnetCore]Socket程式實作-切割封包 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -394,7 +400,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E9%81%8ECargo%E5%BB%BA%E7%AB%8B%E5%B0%88%E6%A1%88"><span class="nav-number">2.1.</span> <span class="nav-text">透過Cargo建立專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E4%BB%8B%E7%B4%B9"><span class="nav-number">2.2.</span> <span class="nav-text">專案結構介紹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E9%81%8ECargo%E5%BB%BA%E7%BD%AE%E5%B0%88%E6%A1%88"><span class="nav-number">2.3.</span> <span class="nav-text">透過Cargo建置專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E9%81%8ECargo%E5%9F%B7%E8%A1%8C%E5%B0%88%E6%A1%88"><span class="nav-number">2.4.</span> <span class="nav-text">透過Cargo執行專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%8F%E9%81%8ECargo%E6%AA%A2%E9%A9%97%E5%B0%88%E6%A1%88"><span class="nav-number">2.5.</span> <span class="nav-text">透過Cargo檢驗專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8Cargo%E6%8C%87%E4%BB%A4"><span class="nav-number">2.6.</span> <span class="nav-text">常用Cargo指令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -737,7 +743,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'eugenesu0515.github.io',
       owner       : 'eugenesu0515',
       admin       : ['eugenesu0515'],
-      id          : 'e06df45676b159f2e5d804b061006e74',
+      id          : 'e149d521fe6e6ae3f3e06c3ae431b0c2',
         language: 'zh-TW',
       distractionFreeMode: true
     });

@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-16T02:52:55.808Z</updated>
+  <updated>2021-11-16T06:10:42.986Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -17,11 +17,30 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>[Rust]教學系列-Hello Cargo</title>
+    <link href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/"/>
+    <id>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/</id>
+    <published>2021-11-16T06:07:10.000Z</published>
+    <updated>2021-11-16T06:10:42.986Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;上篇介紹到&lt;code&gt;Rust&lt;/code&gt;的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：&lt;code&gt;Cargo&lt;/code&gt;，如同&lt;code&gt;npm&lt;/code&gt;對於&lt;code&gt;nodejs&lt;/code&gt;，&lt;code&gt;nuget&lt;/code&gt;對於&lt;code&gt;.net&lt;/code&gt;等等，上篇安裝開發環境:rustup時已經安裝好&lt;code&gt;Cargo&lt;/code&gt;了，只要使用它即可，上篇介紹&lt;code&gt;Hello World&lt;/code&gt;部份是手動的方式建立檔案，透過&lt;code&gt;Cargo&lt;/code&gt;可以建立專案，管理相依性套件，跟著筆者實作了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
     <title>[Rust]教學系列-Hello World</title>
     <link href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/"/>
     <id>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/</id>
     <published>2021-11-16T02:50:39.000Z</published>
-    <updated>2021-11-16T02:52:55.808Z</updated>
+    <updated>2021-11-16T05:50:25.658Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Rust&lt;/code&gt;程式語言的介紹&lt;/p&gt;
@@ -453,40 +472,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="sftp" scheme="https://eugenesu0515.github.io/tags/sftp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DotnetCore系列文章目錄</title>
-    <link href="https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/"/>
-    <id>https://eugenesu0515.github.io/2021/09/01/dotnetcore-series/</id>
-    <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2021-11-15T05:21:31.857Z</updated>
-    
-    
-    <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/21/dotnetcore-socket-analyze/&quot; title=&quot;[DotnetCore]Socket程式實作-解析封包&quot;&gt;[DotnetCore]Socket程式實作-解析封包&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/21/dotnetcore-socket-slicing/&quot; title=&quot;[DotnetCore]Socket程式實作-切割封包&quot;&gt;[DotnetCore]Socket程式實作-切割封包&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/21/dotnetcore-smtp/&quot; title=&quot;[DotnetCore]SMTP寄信服務設計&quot;&gt;[DotnetCore]SMTP寄信服務設計&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/21/dotnetcore-batch/&quot; title=&quot;[DotnetCore]Batch檔案執行及追縱&quot;&gt;[DotnetCore]Batch檔案執行及追縱&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/21/dotnetcore-cap/&quot; title=&quot;[DotnetCore]EventBus套件CAP:以RabbitMQ為例&quot;&gt;[DotnetCore]EventBus套件CAP:以RabbitMQ為例&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/20/dotnetcore-actionfilter/&quot; title=&quot;[DotnetCore]ActionFilter實作&quot;&gt;[DotnetCore]ActionFilter實作&lt;/a&gt;
-&lt;br&gt;
-&lt;a href=&quot;/2021/08/24/fluent-validation/&quot; title=&quot;[DotnetCore]後端驗證神器:Fluent Validation&quot;&gt;[DotnetCore]後端驗證神器:Fluent Validation&lt;/a&gt;
-&lt;br&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
   </entry>
   

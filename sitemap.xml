@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/</loc>
+    
+    <lastmod>2021-11-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/</loc>
     
     <lastmod>2021-11-16</lastmod>
@@ -359,13 +366,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/package.json</loc>
-    
-    <lastmod>2021-08-20</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/lib/bookmark/renovate.json</loc>
     
     <lastmod>2021-08-20</lastmod>
@@ -374,6 +374,13 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/package.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -431,6 +438,13 @@
   </url>
   
   <url>
+    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/tags/cap/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
@@ -445,7 +459,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/bat/</loc>
+    <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -453,13 +467,6 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/global-error-handler/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -480,6 +487,13 @@
   </url>
   
   <url>
+    <loc>https://eugenesu0515.github.io/tags/excel/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/tags/exception/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
@@ -488,6 +502,13 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/elmah/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/fluentftp/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -515,28 +536,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/excel/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/fluentftp/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/tags/hangfire/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/mysql/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -557,13 +557,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/efcore/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/tags/chloe/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
@@ -578,7 +571,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/message-queue/</loc>
+    <loc>https://eugenesu0515.github.io/tags/mysql/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/efcore/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -592,20 +592,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/tags/vue/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/csv/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/tags/rust/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
@@ -613,7 +599,28 @@
   </url>
   
   <url>
+    <loc>https://eugenesu0515.github.io/tags/message-queue/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/vue/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/tags/axios/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/csv/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -678,21 +685,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/categories/mysql/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu0515.github.io/categories/iis/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/categories/dotnetcore/efcore/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -713,6 +706,27 @@
   </url>
   
   <url>
+    <loc>https://eugenesu0515.github.io/categories/mysql/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/categories/dotnetcore/efcore/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/categories/rust/</loc>
+    <lastmod>2021-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/categories/message-queue/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
@@ -721,13 +735,6 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/vue/</loc>
-    <lastmod>2021-11-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/categories/rust/</loc>
     <lastmod>2021-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
