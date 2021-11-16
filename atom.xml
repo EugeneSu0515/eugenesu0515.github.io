@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-15T05:23:35.547Z</updated>
+  <updated>2021-11-16T02:52:55.808Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Rust]教學系列-Hello World</title>
+    <link href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/"/>
+    <id>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/</id>
+    <published>2021-11-16T02:50:39.000Z</published>
+    <updated>2021-11-16T02:52:55.808Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Rust&lt;/code&gt;程式語言的介紹&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;讓每個人都能打造出可靠又高效軟體的程式語言&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;足夠吸引人了吧，筆者打算花下班與假日時間，持續半年，執行學會一種新的程式語言挑戰，就挑最近火紅的&lt;code&gt;Rust&lt;/code&gt;程式語言作為挑戰的對象，Rust程式語言特色如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;高效能：編譯型程式語言，有好的不執行的函式庫及垃圾回收機制&lt;/li&gt;
+&lt;li&gt;可靠性：完整且嚴謹的型別系統，在編譯時期就能找到錯誤並改善&lt;/li&gt;
+&lt;li&gt;生產力：有完整的生態系，如教學文件、套件管理、建置工具等&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</title>
@@ -459,27 +487,6 @@
     
     
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]FTP-下載上傳</title>
-    <link href="https://eugenesu0515.github.io/2021/08/31/ftp-download/"/>
-    <id>https://eugenesu0515.github.io/2021/08/31/ftp-download/</id>
-    <published>2021-08-31T10:33:52.000Z</published>
-    <updated>2021-08-31T10:56:55.307Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者所處環境為金融業，所在的科別屬寫週邊的應用系統，開發的每個系統多多少少都需要與別的系統串接，常見的有&lt;code&gt;核心&lt;/code&gt;、&lt;code&gt;外匯&lt;/code&gt;、&lt;code&gt;通路科&lt;/code&gt;等等。如&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;那篇所提，因為通常&lt;code&gt;核心系統&lt;/code&gt;環境比較特殊，相對應的串接方式，偏Socket或者交換檔案這類的傳統型居多。這篇主要以&lt;code&gt;FTP&lt;/code&gt;交換檔案為主介紹其作法，筆者會再寫兩篇相關的文章，請拭目以待。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="fluentftp" scheme="https://eugenesu0515.github.io/tags/fluentftp/"/>
     
   </entry>
   

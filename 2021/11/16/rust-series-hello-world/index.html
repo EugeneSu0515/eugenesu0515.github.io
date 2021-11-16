@@ -23,15 +23,20 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Eugene&#39;s Blog">
-<meta property="og:url" content="https://eugenesu0515.github.io/tags/cap/index.html">
+  <meta name="description" content="前提情要Rust程式語言的介紹  讓每個人都能打造出可靠又高效軟體的程式語言  足夠吸引人了吧，筆者打算花下班與假日時間，持續半年，執行學會一種新的程式語言挑戰，就挑最近火紅的Rust程式語言作為挑戰的對象，Rust程式語言特色如下：  高效能：編譯型程式語言，有好的不執行的函式庫及垃圾回收機制 可靠性：完整且嚴謹的型別系統，在編譯時期就能找到錯誤並改善 生產力：有完整的生態系，如教學文件、套件管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Rust]教學系列-Hello World">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前提情要Rust程式語言的介紹  讓每個人都能打造出可靠又高效軟體的程式語言  足夠吸引人了吧，筆者打算花下班與假日時間，持續半年，執行學會一種新的程式語言挑戰，就挑最近火紅的Rust程式語言作為挑戰的對象，Rust程式語言特色如下：  高效能：編譯型程式語言，有好的不執行的函式庫及垃圾回收機制 可靠性：完整且嚴謹的型別系統，在編譯時期就能找到錯誤並改善 生產力：有完整的生態系，如教學文件、套件管">
 <meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-11-16T02:50:39.000Z">
+<meta property="article:modified_time" content="2021-11-16T02:52:55.808Z">
 <meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="rust">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/tags/cap/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/">
 
 
 <script id="page-configurations">
@@ -39,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-TW'
   };
 </script>
 <meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
-  <title>標籤: cap | Eugene's Blog</title>
+  <title>[Rust]教學系列-Hello World | Eugene's Blog</title>
   
 
 
@@ -187,57 +192,154 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">cap
-          <small>標籤</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Rust]教學系列-Hello World
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-11-16 10:50:39 / 修改時間：10:52:55" itemprop="dateCreated datePublished" datetime="2021-11-16T10:50:39+08:00">2021-11-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>2 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p><code>Rust</code>程式語言的介紹</p>
+<blockquote>
+<p>讓每個人都能打造出可靠又高效軟體的程式語言</p>
+</blockquote>
+<p>足夠吸引人了吧，筆者打算花下班與假日時間，持續半年，執行學會一種新的程式語言挑戰，就挑最近火紅的<code>Rust</code>程式語言作為挑戰的對象，Rust程式語言特色如下：</p>
+<ul>
+<li>高效能：編譯型程式語言，有好的不執行的函式庫及垃圾回收機制</li>
+<li>可靠性：完整且嚴謹的型別系統，在編譯時期就能找到錯誤並改善</li>
+<li>生產力：有完整的生態系，如教學文件、套件管理、建置工具等</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>第一步驟是要安裝其<code>Rust</code>的開發環境</p>
+<h2 id="安裝Rust開發環境"><a href="#安裝Rust開發環境" class="headerlink" title="安裝Rust開發環境"></a>安裝Rust開發環境</h2><h3 id="Linux-Mac"><a href="#Linux-Mac" class="headerlink" title="Linux/Mac"></a>Linux/Mac</h3><p><code>Mac</code>環境就直接下指令即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 -sSf https://sh.rustup.rs | sh</span><br><span class="line"><span class="comment"># 成功訊息</span></span><br><span class="line"><span class="comment"># Rust is installed now. Great!</span></span><br></pre></td></tr></table></figure>
+
+<p>上述指令主要是安裝<code>rustup</code>套件，使用該套件安裝<code>rust</code>，好處就是之後要更新<code>Rust</code>版本，只要下<code>rustup update</code>即可，意義上等同於<code>nvm</code>（管理<code>node</code>）。</p>
+<p>另，MacOS中，為編譯，需要額外安裝<code>xcode-select</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcode-select --install</span><br></pre></td></tr></table></figure>
+
+<h3 id="Rust版本資訊"><a href="#Rust版本資訊" class="headerlink" title="Rust版本資訊"></a>Rust版本資訊</h3><p>最後來執行看看顯示版本指令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rustc --version</span><br><span class="line"><span class="comment"># 以下為呈現結果</span></span><br><span class="line"><span class="comment"># rustc 1.55.0 (c8dfcfe04 2021-09-06)</span></span><br></pre></td></tr></table></figure>
+
+<p>若有顯示出版本號表示有安裝成功，恭喜你，可以開始撰寫<code>Rust</code>程式了</p>
+<h2 id="撰寫Hello-World"><a href="#撰寫Hello-World" class="headerlink" title="撰寫Hello World"></a>撰寫Hello World</h2><p>筆者下班後是使用Macbook Pro，因此筆者之後示範皆於Mac Os環境中執行，跟著筆者建立一個Hello World專案吧</p>
+<h3 id="建立專案"><a href="#建立專案" class="headerlink" title="建立專案"></a>建立專案</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir hello_world</span><br><span class="line"><span class="built_in">cd</span> hello_world</span><br><span class="line">touch main.rs</span><br></pre></td></tr></table></figure>
+
+<h3 id="撰寫程式"><a href="#撰寫程式" class="headerlink" title="撰寫程式"></a>撰寫程式</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>()&#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Rust</code>主要程式入口為<code>main</code>，當中使用<code>println!</code>函數印出「Hello World!」</p>
+<h3 id="編譯程式及執行"><a href="#編譯程式及執行" class="headerlink" title="編譯程式及執行"></a>編譯程式及執行</h3><p>撰寫完程式，到了編譯環節了，<code>Rust</code>語言本身也是編譯式語言，透過<code>Rust</code>編譯器編譯，編譯完成的檔案就可以直接執行了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rustc main.rs</span><br><span class="line"><span class="comment"># 主要會在同個目錄會產生一個main檔案，直接執行它即可</span></span><br><span class="line">./main</span><br><span class="line"><span class="comment"># Hello, world!</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者在年初時跟志同道合朋友，一起組<code>Go lang</code>讀書會，但讀完後沒有在工作上使用，也沒有像這樣寫部落格文章的方式記錄下來，日子久了該忘的都忘了，不該忘的也忘了，哈，覺得有點可惜，因此這次筆者自己讀<code>Rust</code>語言，就認真給他寫出來，講到別人理解，表示才真正學會，這篇就先到這邊了，希望筆者可以繼續持續下去。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://doc.rust-lang.org/book/ch01-02-hello-world.html">https://doc.rust-lang.org/book/ch01-02-hello-world.html</a></li>
+</ul>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T02:26:03+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/rust/" rel="tag"># rust</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-cap/" itemprop="url">
-            <span itemprop="name">[DotnetCore]EventBus套件CAP:以RabbitMQ為例</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/15/orm-series-sqlsugar-audit-columns/" rel="prev" title="[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -284,6 +386,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%9DRust%E9%96%8B%E7%99%BC%E7%92%B0%E5%A2%83"><span class="nav-number">2.1.</span> <span class="nav-text">安裝Rust開發環境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-Mac"><span class="nav-number">2.1.1.</span> <span class="nav-text">Linux&#x2F;Mac</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rust%E7%89%88%E6%9C%AC%E8%B3%87%E8%A8%8A"><span class="nav-number">2.1.2.</span> <span class="nav-text">Rust版本資訊</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%92%B0%E5%AF%ABHello-World"><span class="nav-number">2.2.</span> <span class="nav-text">撰寫Hello World</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%B0%88%E6%A1%88"><span class="nav-number">2.2.1.</span> <span class="nav-text">建立專案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%92%B0%E5%AF%AB%E7%A8%8B%E5%BC%8F"><span class="nav-number">2.2.2.</span> <span class="nav-text">撰寫程式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B7%A8%E8%AD%AF%E7%A8%8B%E5%BC%8F%E5%8F%8A%E5%9F%B7%E8%A1%8C"><span class="nav-number">2.2.3.</span> <span class="nav-text">編譯程式及執行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -615,6 +718,25 @@ window.addEventListener('pjax:success', () => {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '9a13d983ea4e508377ac',
+      clientSecret: 'f1ffbf947bbc56c5b76e27bc899ffabefb2fed88',
+      repo        : 'eugenesu0515.github.io',
+      owner       : 'eugenesu0515',
+      admin       : ['eugenesu0515'],
+      id          : 'a2a4a7638fd7d9430fa32d0226c01e1d',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
     </div>
 </body>

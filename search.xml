@@ -82,6 +82,55 @@
       </tags>
   </entry>
   <entry>
+    <title>[Rust]教學系列-Hello World</title>
+    <url>/2021/11/16/rust-series-hello-world/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p><code>Rust</code>程式語言的介紹</p>
+<blockquote>
+<p>讓每個人都能打造出可靠又高效軟體的程式語言</p>
+</blockquote>
+<p>足夠吸引人了吧，筆者打算花下班與假日時間，持續半年，執行學會一種新的程式語言挑戰，就挑最近火紅的<code>Rust</code>程式語言作為挑戰的對象，Rust程式語言特色如下：</p>
+<ul>
+<li>高效能：編譯型程式語言，有好的不執行的函式庫及垃圾回收機制</li>
+<li>可靠性：完整且嚴謹的型別系統，在編譯時期就能找到錯誤並改善</li>
+<li>生產力：有完整的生態系，如教學文件、套件管理、建置工具等</li>
+</ul>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>第一步驟是要安裝其<code>Rust</code>的開發環境</p>
+<h2 id="安裝Rust開發環境"><a href="#安裝Rust開發環境" class="headerlink" title="安裝Rust開發環境"></a>安裝Rust開發環境</h2><h3 id="Linux-Mac"><a href="#Linux-Mac" class="headerlink" title="Linux/Mac"></a>Linux/Mac</h3><p><code>Mac</code>環境就直接下指令即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 -sSf https://sh.rustup.rs | sh</span><br><span class="line"><span class="comment"># 成功訊息</span></span><br><span class="line"><span class="comment"># Rust is installed now. Great!</span></span><br></pre></td></tr></table></figure>
+
+<p>上述指令主要是安裝<code>rustup</code>套件，使用該套件安裝<code>rust</code>，好處就是之後要更新<code>Rust</code>版本，只要下<code>rustup update</code>即可，意義上等同於<code>nvm</code>（管理<code>node</code>）。</p>
+<p>另，MacOS中，為編譯，需要額外安裝<code>xcode-select</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xcode-select --install</span><br></pre></td></tr></table></figure>
+
+<h3 id="Rust版本資訊"><a href="#Rust版本資訊" class="headerlink" title="Rust版本資訊"></a>Rust版本資訊</h3><p>最後來執行看看顯示版本指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustc --version</span><br><span class="line"><span class="comment"># 以下為呈現結果</span></span><br><span class="line"><span class="comment"># rustc 1.55.0 (c8dfcfe04 2021-09-06)</span></span><br></pre></td></tr></table></figure>
+
+<p>若有顯示出版本號表示有安裝成功，恭喜你，可以開始撰寫<code>Rust</code>程式了</p>
+<h2 id="撰寫Hello-World"><a href="#撰寫Hello-World" class="headerlink" title="撰寫Hello World"></a>撰寫Hello World</h2><p>筆者下班後是使用Macbook Pro，因此筆者之後示範皆於Mac Os環境中執行，跟著筆者建立一個Hello World專案吧</p>
+<h3 id="建立專案"><a href="#建立專案" class="headerlink" title="建立專案"></a>建立專案</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">mkdir hello_world</span><br><span class="line"><span class="built_in">cd</span> hello_world</span><br><span class="line">touch main.rs</span><br></pre></td></tr></table></figure>
+
+<h3 id="撰寫程式"><a href="#撰寫程式" class="headerlink" title="撰寫程式"></a>撰寫程式</h3><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>()&#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Rust</code>主要程式入口為<code>main</code>，當中使用<code>println!</code>函數印出「Hello World!」</p>
+<h3 id="編譯程式及執行"><a href="#編譯程式及執行" class="headerlink" title="編譯程式及執行"></a>編譯程式及執行</h3><p>撰寫完程式，到了編譯環節了，<code>Rust</code>語言本身也是編譯式語言，透過<code>Rust</code>編譯器編譯，編譯完成的檔案就可以直接執行了</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustc main.rs</span><br><span class="line"><span class="comment"># 主要會在同個目錄會產生一個main檔案，直接執行它即可</span></span><br><span class="line">./main</span><br><span class="line"><span class="comment"># Hello, world!</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者在年初時跟志同道合朋友，一起組<code>Go lang</code>讀書會，但讀完後沒有在工作上使用，也沒有像這樣寫部落格文章的方式記錄下來，日子久了該忘的都忘了，不該忘的也忘了，哈，覺得有點可惜，因此這次筆者自己讀<code>Rust</code>語言，就認真給他寫出來，講到別人理解，表示才真正學會，這篇就先到這邊了，希望筆者可以繼續持續下去。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://doc.rust-lang.org/book/ch01-02-hello-world.html">https://doc.rust-lang.org/book/ch01-02-hello-world.html</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>rust</category>
+      </categories>
+      <tags>
+        <tag>rust</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</title>
     <url>/2021/11/15/orm-series-sqlsugar-audit-columns/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者的慣例，使用<code>ORM</code>框架時，會先找一下可以擴充的點，畢竟<code>Select</code>、<code>Insert</code>、<code>Update</code>這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個<code>ORM</code>框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，因為比較效能的時間單位都是ns級的，基本上不要差太多，是沒什麼感覺的。這篇主要是講解<code>SqlSugar</code>套件，在操作共同欄位，像<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>這種，找到對應的擴充點，做統一處理。</p>
