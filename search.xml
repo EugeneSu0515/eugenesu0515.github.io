@@ -84,7 +84,7 @@
   <entry>
     <title>[Rust]教學系列-Hello Cargo</title>
     <url>/2021/11/16/rust-series-hello-cargo/</url>
-    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>上篇介紹到<code>Rust</code>的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：<code>Cargo</code>，如同<code>npm</code>對於<code>nodejs</code>，<code>nuget</code>對於<code>.net</code>等等，上篇安裝開發環境:rustup時已經安裝好<code>Cargo</code>了，只要使用它即可，上篇介紹<code>Hello World</code>部份是手動的方式建立檔案，透過<code>Cargo</code>可以建立專案，管理相依性套件，跟著筆者實作了。</p>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>上篇介紹到<code>Rust</code>的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：<code>Cargo</code>，如同<code>npm</code>對於<code>nodejs</code>，<code>nuget</code>對於<code>.net</code>等等，上篇安裝開發環境:<code>rustup</code>時已經安裝好<code>Cargo</code>了，只要使用它即可，上篇介紹<code>Hello World</code>部份是手動的方式建立檔案，透過<code>Cargo</code>可以建立專案，管理相依性套件，跟著筆者實作了。</p>
 <span id="more"></span>
 
 <h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>首先驗證一下<code>Cargo</code>的版本號</p>
@@ -2262,8 +2262,8 @@
       </categories>
       <tags>
         <tag>dotnetcore</tag>
-        <tag>cap</tag>
         <tag>rabbitmq</tag>
+        <tag>cap</tag>
       </tags>
   </entry>
   <entry>

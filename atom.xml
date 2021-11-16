@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-16T06:10:42.986Z</updated>
+  <updated>2021-11-16T06:23:08.471Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -21,10 +21,10 @@
     <link href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/"/>
     <id>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/</id>
     <published>2021-11-16T06:07:10.000Z</published>
-    <updated>2021-11-16T06:10:42.986Z</updated>
+    <updated>2021-11-16T06:23:08.471Z</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;上篇介紹到&lt;code&gt;Rust&lt;/code&gt;的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：&lt;code&gt;Cargo&lt;/code&gt;，如同&lt;code&gt;npm&lt;/code&gt;對於&lt;code&gt;nodejs&lt;/code&gt;，&lt;code&gt;nuget&lt;/code&gt;對於&lt;code&gt;.net&lt;/code&gt;等等，上篇安裝開發環境:rustup時已經安裝好&lt;code&gt;Cargo&lt;/code&gt;了，只要使用它即可，上篇介紹&lt;code&gt;Hello World&lt;/code&gt;部份是手動的方式建立檔案，透過&lt;code&gt;Cargo&lt;/code&gt;可以建立專案，管理相依性套件，跟著筆者實作了。&lt;/p&gt;</summary>
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;上篇介紹到&lt;code&gt;Rust&lt;/code&gt;的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：&lt;code&gt;Cargo&lt;/code&gt;，如同&lt;code&gt;npm&lt;/code&gt;對於&lt;code&gt;nodejs&lt;/code&gt;，&lt;code&gt;nuget&lt;/code&gt;對於&lt;code&gt;.net&lt;/code&gt;等等，上篇安裝開發環境:&lt;code&gt;rustup&lt;/code&gt;時已經安裝好&lt;code&gt;Cargo&lt;/code&gt;了，只要使用它即可，上篇介紹&lt;code&gt;Hello World&lt;/code&gt;部份是手動的方式建立檔案，透過&lt;code&gt;Cargo&lt;/code&gt;可以建立專案，管理相依性套件，跟著筆者實作了。&lt;/p&gt;</summary>
     
     
     
