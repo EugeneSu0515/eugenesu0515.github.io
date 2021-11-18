@@ -82,6 +82,75 @@
       </tags>
   </entry>
   <entry>
+    <title>[Rust]教學系列-猜謎遊戲:取亂數</title>
+    <url>/2021/11/19/rust-series-guessing-game-rand/</url>
+    <content><![CDATA[<img src="/2021/11/19/rust-series-guessing-game-rand/Untitled-4.png" class="" title="[rand crate技術文件]">
+
+<span id="more"></span>
+<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊利用下班、假日時間，打算花半年時間學習新的程式語言，將所學過程紀錄下來，寫成部落格，雖然<code>Rust</code>的教學文件非常的完整，也有繁體中文的版本，但筆者認為唯有用自己的話寫下來，讓別人懂，才是真正學會，因此決定撰寫<code>Rust</code>教學系列文章。</p>
+<p>目前來到官網範例中的「<code>猜謎遊戲</code>」環節，<a href="/2021/11/18/rust-series-guessing-game-stdin/" title="[Rust]教學系列-猜謎遊戲:取得使用者輸入值">[Rust]教學系列-猜謎遊戲:取得使用者輸入值</a>已經可以取得使用者輸入的猜數值，這篇要來繼續撰寫，取亂數的部份，我們要用到<code>Cargo</code>的方式將取得隨機亂數函式庫引進來，使用該套件產生1~100間的亂數，跟著筆者一起實作吧。</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>這篇使用<code>rand</code>套件來實作取亂數，筆者之前就有提到官方建議<code>cargo</code>來管理其相依套件，那套件本身會在哪裡，讓我們使用<code>cargo</code>指令來下載呢，答案就是<code>crate</code>，使用其他的語言舉例來說的話，<code>nodejs</code>使用<code>npm</code>管理相依套件，那會有<code>npm public registry</code>，讓我們可以用<code>npm i</code>去下載相依套件，又如寫<code>.net</code>的工程師來說，會使用<code>nuget</code>管理相依套件，那也會有一個<code>nuget gallery</code>公開的<code>registry</code>，可以連線下載，那<code>Rust</code>語言來說用<code>cargo</code>管理相依套件，會從<a href="https://crates.io/">https://crates.io/</a>下載其相關套件。</p>
+<blockquote>
+<p><a href="http://crates.io/">Crates.io</a> 是個讓 Rust 生態系統中的每個人都能發佈它們的開源 Rust 專案並讓其他人使用的地方</p>
+</blockquote>
+<h2 id="安裝rand套件"><a href="#安裝rand套件" class="headerlink" title="安裝rand套件"></a>安裝rand套件</h2><p>筆者<a href="/2021/11/16/rust-series-hello-cargo/" title="[Rust]教學系列-Hello Cargo">[Rust]教學系列-Hello Cargo</a>中有大概講解一下其<code>cargo</code>指令建立專案後的檔案結構，其中<code>Cargo.toml</code>中的<code>dependencies</code>區塊中宣告我們相依套件，因此我們會在這宣告需要使用到的套件<code>rand</code></p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">[dependencies]</span><br><span class="line">rand = <span class="string">&quot;0.8.3&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>接著使用<code>cargo</code>指令建置，因為上面已設定相依套件，因此建置過程會安裝相依套件，意即<code>rand</code>套件相依的套件也會一併安裝</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo build</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line">    Blocking waiting <span class="keyword">for</span> file lock on package cache</span><br><span class="line">    Updating crates.io index</span><br><span class="line">    Blocking waiting <span class="keyword">for</span> file lock on package cache</span><br><span class="line">   Compiling cfg-if v1.0.0</span><br><span class="line">   Compiling ppv-lite86 v0.2.15</span><br><span class="line">   Compiling getrandom v0.2.3</span><br><span class="line">   Compiling rand_core v0.6.3</span><br><span class="line">   Compiling rand_chacha v0.3.1</span><br><span class="line">   Compiling rand v0.8.4</span><br><span class="line">   Compiling guession_game v0.1.0 (\Projects\guession_game)</span><br><span class="line">    Finished dev [unoptimized + debuginfo] target(s) <span class="keyword">in</span> 28.19s</span><br></pre></td></tr></table></figure>
+
+<p>可以看出<code>rand</code>套件相依套件有</p>
+<ul>
+<li><code>cfg-if</code></li>
+<li><code>ppv-lite86</code></li>
+<li><code>getrandom</code></li>
+<li><code>rand_core</code></li>
+<li><code>rand_chacha</code></li>
+</ul>
+<p>上述這些<code>rand</code>套件相依的套件也會一併安裝</p>
+<h2 id="產生隨機數字"><a href="#產生隨機數字" class="headerlink" title="產生隨機數字"></a>產生隨機數字</h2><p>使用<code>gen_range</code>這個方法取得隨機產生數值，可以傳入<code>start..end</code>，該方法會從<code>start</code>到<code>end</code>之間的數字中，隨機取得一個數字當作回傳值</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> secret_number = rand::thread_rng().gen_range(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;秘密數字為：&#123;&#125;&quot;</span>, secret_number);</span><br></pre></td></tr></table></figure>
+
+<p>上述程式碼中，引入<code>rand package</code>中的<code>Rng Trait</code>，其中使用<code>thread_rng</code>的函式中的<code>gen_range</code>方法，傳入參數為<code>start..end</code>，包含<code>start</code>，不包含<code>end</code>，若要包含<code>end</code>則需改用<code>start..=end</code>，以上述例子來說，我們需要改成<code>gen_range(1..=100)</code>，也是一樣的效果的。</p>
+<h2 id="透過Cargo指令產生技術文件"><a href="#透過Cargo指令產生技術文件" class="headerlink" title="透過Cargo指令產生技術文件"></a>透過Cargo指令產生技術文件</h2><p>這時候是時候要來講一下<code>Rust</code>語言的特色之一<code>生產力</code>部份，以上述來說我們要從何而知這些套件有哪些方法可以使用，<code>Rust</code>這邊有一個產生技術文件的機制，不過筆者不知道公開套件是否要上架前必須得提供技術文件，就不得而知了，不過筆者猜測是一定要的程序。</p>
+<p>我們可以透過<code>cargo doc —open</code>的方式產生並開啟，他就是一個<code>html</code>格式的技術文件。基本上<code>cargo</code>會掃描該專案下相依的套件(包含自己)，產生成可讀性高的<code>html</code>檔案，因為有下<code>—open</code>，因此會產生完畢後會自動開啟。</p>
+<p>產生技術文件檔案的相對路徑為<code>&#123;專案目錄&#125;target/doc/guession_game/index.html</code></p>
+<img src="/2021/11/19/rust-series-guessing-game-rand/Untitled.png" class="" title="[local技術文件首頁-顯示專案套件資訊]">
+
+<img src="/2021/11/19/rust-series-guessing-game-rand/Untitled-1.png" class="" title="[local技術文件-rand套件首頁]">
+
+<img src="/2021/11/19/rust-series-guessing-game-rand/Untitled-2.png" class="" title="[local技術文件-gen_range方法說明]">
+
+<p>亦可到<code>creates.io</code>中的該套件下的<code>documentation</code>連結中看到一模一樣的技術文件，筆者猜測就是拿各套件的技術文件加以包裝，變成<code>local</code>的技術文件檔案</p>
+<img src="/2021/11/19/rust-series-guessing-game-rand/Untitled-3.png" class="" title="[crates.io-套件技術文件連結]">
+
+<img src="/2021/11/19/rust-series-guessing-game-rand/Untitled-3.png" class="" title="[crate線上技術文件-rand套件首頁]">
+
+<h2 id="完整程式碼"><a href="#完整程式碼" class="headerlink" title="完整程式碼"></a>完整程式碼</h2><p>最後附上以上篇及這篇組合之下的程式碼</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;請猜測一個數字!&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> secret_number = rand::thread_rng().gen_range(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;秘密數字為：&#123;&#125;&quot;</span>, secret_number);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;請輸入你的猜測數字!&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut</span> guess = <span class="built_in">String</span>::new();</span><br><span class="line"></span><br><span class="line">    io::stdin()</span><br><span class="line">        .read_line(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">        .expect(<span class="string">&quot;讀取該行失敗&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你的猜測數字：&#123;&#125;&quot;</span>, guess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h2><p>依照完整程式碼，跟著筆者執行看看其效果吧</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo run</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line">Finished dev [unoptimized + debuginfo] target(s) <span class="keyword">in</span> 0.01s</span><br><span class="line">     Running `target\debug\guession_game.exe`</span><br><span class="line">請猜測一個數字!</span><br><span class="line">秘密數字為：51</span><br><span class="line">請輸入你的猜測數字!</span><br><span class="line">10</span><br><span class="line">你的猜測數字：10</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>到這邊，已經完成猜謎遊戲的第二部份了，最後只剩下將使用者輸入值與隨機產生的神秘數字做一個比較，此部份會於下篇說明，最後筆者recap一下這篇講到的內容</p>
+<ul>
+<li>編輯Cargo.toml中的dependencies區塊，宣告其套件其版本號，例：<code>rand = &quot;0.8.3&quot;</code>，透過<code>cargo build</code>，將相依套件安裝好</li>
+<li>透過<code>gen_range</code>方法可以取得在特定範圍內隨機產生的一組數字，有<code>overload</code>方法，一個是傳入<code>start..end</code>，另一個則<code>start..=end</code>，依照個人喜好做選擇</li>
+<li><code>cargo doc —open</code>指令的方式產生技術文件並開啟技術文件</li>
+</ul>
+<p>參考</p>
+<ul>
+<li><a href="https://rust-lang.tw/book-tw/ch02-00-guessing-game-tutorial.html">https://rust-lang.tw/book-tw/ch02-00-guessing-game-tutorial.html</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>rust</category>
+      </categories>
+      <tags>
+        <tag>rust</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Rust]教學系列-猜謎遊戲:取得使用者輸入值</title>
     <url>/2021/11/18/rust-series-guessing-game-stdin/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個<code>command line</code>互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試<code>Rust</code>的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門<code>Rust</code>的程式語法、思考邏輯、<code>Coding Style</code>等。</p>
