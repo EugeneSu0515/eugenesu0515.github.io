@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-16T06:23:08.471Z</updated>
+  <updated>2021-11-18T06:20:27.712Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Rust]教學系列-猜謎遊戲:取得使用者輸入值</title>
+    <link href="https://eugenesu0515.github.io/2021/11/18/rust-series-guessing-game-stdin/"/>
+    <id>https://eugenesu0515.github.io/2021/11/18/rust-series-guessing-game-stdin/</id>
+    <published>2021-11-18T06:12:03.000Z</published>
+    <updated>2021-11-18T06:20:27.712Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個&lt;code&gt;command line&lt;/code&gt;互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試&lt;code&gt;Rust&lt;/code&gt;的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門&lt;code&gt;Rust&lt;/code&gt;的程式語法、思考邏輯、&lt;code&gt;Coding Style&lt;/code&gt;等。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    
+  </entry>
   
   <entry>
     <title>[Rust]教學系列-Hello Cargo</title>
@@ -451,27 +470,6 @@
     <category term="sftp" scheme="https://eugenesu0515.github.io/tags/sftp/"/>
     
     <category term="resolver" scheme="https://eugenesu0515.github.io/tags/resolver/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]SFTP-下載上傳</title>
-    <link href="https://eugenesu0515.github.io/2021/09/01/sftp-download/"/>
-    <id>https://eugenesu0515.github.io/2021/09/01/sftp-download/</id>
-    <published>2021-09-01T05:29:43.000Z</published>
-    <updated>2021-09-01T10:26:08.627Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;code&gt;FTP&lt;/code&gt;下載上傳後，另一個挑戰來了，有些系統指定使用&lt;code&gt;SFTP&lt;/code&gt;協定來做交換(上傳、下載)，剛好&lt;code&gt;FluentFTP&lt;/code&gt;尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為&lt;a href=&quot;http://ssh.net/&quot;&gt;SSH.NET&lt;/a&gt;，這篇以主要介紹透過該套件實作&lt;code&gt;SFTP&lt;/code&gt;協定的下載及上傳作業。&lt;code&gt;IFtpService&lt;/code&gt;則延續使用上篇的定義，這邊多了一組&lt;code&gt;SFtpService&lt;/code&gt;的實作來完成任務。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="sftp" scheme="https://eugenesu0515.github.io/tags/sftp/"/>
     
   </entry>
   

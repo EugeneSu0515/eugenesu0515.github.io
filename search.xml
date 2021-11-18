@@ -82,6 +82,64 @@
       </tags>
   </entry>
   <entry>
+    <title>[Rust]教學系列-猜謎遊戲:取得使用者輸入值</title>
+    <url>/2021/11/18/rust-series-guessing-game-stdin/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個<code>command line</code>互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試<code>Rust</code>的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門<code>Rust</code>的程式語法、思考邏輯、<code>Coding Style</code>等。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>程式內容為使用亂數產生1~100間的數字，與使用者輸入的數字做對比，沒有猜對，可以一直猜下去，猜對則跳出成功訊息結束。</p>
+<h2 id="建立專案"><a href="#建立專案" class="headerlink" title="建立專案"></a>建立專案</h2><p>已經介紹過<code>Cargo</code>，官方也建議使用<code>Cargo</code>做建立專案，套件管理，建置、執行專案，首先，建立一個猜字遊戲專案</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo new guessing_game</span><br><span class="line"><span class="built_in">cd</span> guessing_game</span><br></pre></td></tr></table></figure>
+
+<p>先用<code>cargo</code>指令執行驗證看看</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo run</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line">Compiling guessing_game v0.1.0 (/Projects/guessing_game)</span><br><span class="line">    Finished dev [unoptimized + debuginfo] target(s) <span class="keyword">in</span> 0.38s</span><br><span class="line">     Running `target/debug/guessing_game`</span><br><span class="line">Hello, world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="讀取使用者輸入值"><a href="#讀取使用者輸入值" class="headerlink" title="讀取使用者輸入值"></a>讀取使用者輸入值</h2><p>猜謎遊戲第一步就是要讓使用者輸入猜數，程式實作要讀取使用者輸入值並存至變數中，爾後需與隨機產生的數字作比較，來看看<code>Rust</code>語言要怎麼實作吧</p>
+<h3 id="宣告變數值"><a href="#宣告變數值" class="headerlink" title="宣告變數值"></a>宣告變數值</h3><p>首先要宣告一個變數值存入使用者輸入值</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut</span> guess = <span class="built_in">String</span>::new();</span><br></pre></td></tr></table></figure>
+
+<p>由於<code>Rust</code>本身宣告變數時，預設是不可變的，若是可變動變數則需要加一個<code>mut</code>關鍵字於變數名稱前方，接著看到的是<code>String::new()</code>，new是String型別的關聯函式，需使用<code>::</code>這個符號串接，其實也沒這麼複雜，就是new出一個空字串。</p>
+<h3 id="讀取使用者輸入值-1"><a href="#讀取使用者輸入值-1" class="headerlink" title="讀取使用者輸入值"></a>讀取使用者輸入值</h3><p>讀取使用者輸入值需引入標準函式庫，使用<code>use</code>關鍵字引入函式庫，函式庫為<code>std</code>底下的<code>io</code></p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"></span><br><span class="line">io::stdin()</span><br><span class="line">    .read_line(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">    .expect(<span class="string">&quot;讀取該行失敗&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>若沒有使用<code>use std::io;</code>則撰寫時<code>std::io::stdin()</code>，就是呼叫標準函式庫下的<code>io</code>函式庫，<code>io</code>函式庫下有一個<code>command line</code>輸入值handle的型別函式<code>stdin</code>。</p>
+<p><code>stdin</code>函式底下有一個<code>method</code>名稱叫<code>read_line</code>，使用該方法可以取得使用者輸入值，那讀出來的輸入值存到哪個變數中呢，由<code>method</code>的<code>parameter</code>中傳入，道理跟上面宣告變數一樣，<code>Rust</code>世界中預設皆不可變，因此需要使用<code>&amp;mut guess</code>傳入，若維持不可變則使用<code>&amp;guess</code>傳入即可，其中<code>&amp;</code>這個符號<code>reference</code>的概念，之後筆者會照著官方教學，會有一篇獨立的教學文章來說明。</p>
+<p>最後是<code>expect</code>，<code>Rust</code>這邊將標準函式庫中的<code>method</code>回傳值都包裝成<code>泛型Result型別</code>，因此透過<code>Result</code>型別我們可以處理可能發生的<code>Exception</code>，<code>Result</code>型別底下有一個<code>method</code>，名稱叫<code>expect</code>，以結果<code>ok</code>或<code>error</code>而傳入不同參數給<code>expect</code>方法，筆者以<code>vscode</code>中<code>expect</code>的解說中的範例來說</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="comment">// expect的方法定義</span></span><br><span class="line"><span class="comment">// pub fn expect(self, msg: &amp;str) -&gt; T</span></span><br><span class="line"><span class="keyword">let</span> x: <span class="built_in">Result</span>&lt;<span class="built_in">u32</span>, &amp;<span class="built_in">str</span>&gt; = <span class="literal">Err</span>(<span class="string">&quot;emergency failure&quot;</span>);</span><br><span class="line">x.expect(<span class="string">&quot;Testing expect&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 執行結果</span></span><br><span class="line"><span class="comment">// thread &#x27;main&#x27; panicked at &#x27;Testing expect: &quot;emergency failure&quot;&#x27;, src/main.rs:4:7</span></span><br></pre></td></tr></table></figure>
+
+<p>以結果來看，若發生<code>Error</code>則，顯示訊息會是「<code>傳入的string：error訊息</code>」，因此若以筆者上述宣告的來說，發生錯誤則會顯示「<code>讀取該行失敗：error訊息</code>」，先有這樣的概念即可。</p>
+<h3 id="輸出猜數"><a href="#輸出猜數" class="headerlink" title="輸出猜數"></a>輸出猜數</h3><p>最後將使用者輸入的猜數印出來做這段的結尾，使用<code>println!</code>文字格式化輸出</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;你的猜測數字：&#123;&#125;&quot;</span>, guess);</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整程式碼"><a href="#完整程式碼" class="headerlink" title="完整程式碼"></a>完整程式碼</h3><p>最後組合一下上面宣告的那些程式碼，完整程式碼如下</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;請猜測一個數字!&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;請輸入你的猜測數字!&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut</span> guess = <span class="built_in">String</span>::new();</span><br><span class="line">    io::stdin()</span><br><span class="line">        .read_line(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">        .expect(<span class="string">&quot;讀取該行失敗&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你的猜測數字：&#123;&#125;&quot;</span>, guess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h2><p>依照上述程式碼，跟著筆者一起來看看執行結果吧</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo run</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line">Compiling guessing_game v0.1.0 (/Projects/guessing_game)</span><br><span class="line">    Finished dev [unoptimized + debuginfo] target(s) <span class="keyword">in</span> 0.44s</span><br><span class="line">     Running `target/debug/guessing_game`</span><br><span class="line">請猜測一個數字!</span><br><span class="line">請輸入你的猜測數字!</span><br><span class="line">10</span><br><span class="line">你的猜測數字：10</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>猜謎遊戲就先到這邊，下篇繼續完成其他部份，筆者最後recap一下今天所學的東西</p>
+<ul>
+<li>引入<code>package</code>函式庫，使用<code>use</code>關鍵字，例：<code>use std::io;</code></li>
+<li>宣告不可變參數，使用<code>let</code>及<code>mut</code>關鍵字，例：<code>let mut guess = String::new();</code></li>
+<li>取得使用者輸入值，使用<code>io</code>函式庫下的<code>stdin</code>函式庫中的<code>read_line</code>方法，例：<code>io::stdin().read_line(&amp;mut guess);</code></li>
+<li>泛型<code>Result</code>型別中的<code>expect</code>方法，宣告輸出<code>error</code>訊息時的搭配訊息，例：<code>expect(&quot;該行讀取失敗&quot;);</code></li>
+<li>格式化輸出技巧，使用<code>&#123;&#125;</code>符號定義參數取代位置，會依序取代，例：<code>println!(&quot;你的猜測數字：&#123;&#125;&quot;, guess);</code></li>
+<li><code>::</code>符號：函式庫取用，例：<code>io::stdin()</code>，<code>String::new()</code></li>
+<li><code>&amp;</code>符號：<code>reference</code>的方式傳入，例：<code>read_line(&amp;mut guess);</code></li>
+</ul>
+<p>參考</p>
+<ul>
+<li><a href="https://rust-lang.tw/book-tw/ch02-00-guessing-game-tutorial.html">https://rust-lang.tw/book-tw/ch02-00-guessing-game-tutorial.html</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>rust</category>
+      </categories>
+      <tags>
+        <tag>rust</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Rust]教學系列-Hello Cargo</title>
     <url>/2021/11/16/rust-series-hello-cargo/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>上篇介紹到<code>Rust</code>的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：<code>Cargo</code>，如同<code>npm</code>對於<code>nodejs</code>，<code>nuget</code>對於<code>.net</code>等等，上篇安裝開發環境:<code>rustup</code>時已經安裝好<code>Cargo</code>了，只要使用它即可，上篇介紹<code>Hello World</code>部份是手動的方式建立檔案，透過<code>Cargo</code>可以建立專案，管理相依性套件，跟著筆者實作了。</p>
@@ -2262,8 +2320,8 @@
       </categories>
       <tags>
         <tag>dotnetcore</tag>
-        <tag>rabbitmq</tag>
         <tag>cap</tag>
+        <tag>rabbitmq</tag>
       </tags>
   </entry>
   <entry>
