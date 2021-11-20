@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-18T17:24:03.680Z</updated>
+  <updated>2021-11-20T13:36:46.788Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,100 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Angular]技巧系列-BarcodeListener</title>
+    <link href="https://eugenesu0515.github.io/2021/11/20/angular-series-barcode-listener/"/>
+    <id>https://eugenesu0515.github.io/2021/11/20/angular-series-barcode-listener/</id>
+    <published>2021-11-20T13:13:23.000Z</published>
+    <updated>2021-11-20T13:36:46.788Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在工作環境中，有一個小週邊系統是給分行人員使用，其中有一段是需要透過&lt;code&gt;Barcode</summary>
+        
+      
+    
+    
+    
+    <category term="angular" scheme="https://eugenesu0515.github.io/categories/angular/"/>
+    
+    
+    <category term="angular" scheme="https://eugenesu0515.github.io/tags/angular/"/>
+    
+    <category term="barcodelistener" scheme="https://eugenesu0515.github.io/tags/barcodelistener/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列:Windows疑難雜症解決</title>
+    <link href="https://eugenesu0515.github.io/2021/11/20/rust-series-windows-execute/"/>
+    <id>https://eugenesu0515.github.io/2021/11/20/rust-series-windows-execute/</id>
+    <published>2021-11-20T13:12:52.000Z</published>
+    <updated>2021-11-20T13:34:38.167Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊主要在Windows環境中安裝好&lt;code&gt;Rust&lt;/code&gt;開發環境後，可以透過&lt;code&gt;rustc —version&lt;/code&gt;，可以順利顯示出&lt;code&gt;Rust&lt;/code&gt;版本號，&lt;code&gt;cargo new&lt;/code&gt;也沒問題，但&lt;code&gt;cargo run&lt;/code&gt;時，會出現錯誤訊息:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;linking with &lt;code&gt;link.exe&lt;/code&gt; failed: exit code: 1181&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;找了一下，是少安裝&lt;code&gt;C++ build tools&lt;/code&gt;，其實&lt;code&gt;Rust&lt;/code&gt;官方網站上的Install頁面就有提醒，除了安裝檔之外，也要記得安裝&lt;code&gt;C++build tools&lt;/code&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Windows]技巧系列-透過Proxy下載設定</title>
+    <link href="https://eugenesu0515.github.io/2021/11/20/windows-series-problem-proxy/"/>
+    <id>https://eugenesu0515.github.io/2021/11/20/windows-series-problem-proxy/</id>
+    <published>2021-11-20T13:12:29.000Z</published>
+    <updated>2021-11-20T13:32:54.907Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊想要在工作環境中安裝Rust開發環境，以利撰寫部落格會使用到的&lt;code&gt;Demo Project&lt;/code&gt;，因此想要在工作環境&lt;code&gt;Windows&lt;/code&gt;環境中安裝其開發環境，以&lt;code&gt;Rust&lt;/code&gt;官方網站上面的教學，基本上只要下載好&lt;code&gt;Install&lt;/code&gt;的&lt;code&gt;exe&lt;/code&gt;檔案，應該就會搞定。&lt;/p&gt;
+&lt;p&gt;但由於筆者環境有防火牆設定，需要透過&lt;code&gt;Proxy&lt;/code&gt;才能往外連線並下載，就像筆者跟同事們都會設定&lt;code&gt;.npmrc&lt;/code&gt;或者&lt;code&gt;vscode&lt;/code&gt;中的&lt;code&gt;proxy&lt;/code&gt;設定以及&lt;code&gt;.gitconfig&lt;/code&gt;皆會設定其&lt;code&gt;http_proxy&lt;/code&gt;的連結，但這種按下&lt;code&gt;exe&lt;/code&gt;檔案這種安裝方式，筆者還真的第一次遇到，這篇就照著&lt;code&gt;Stackoverflow&lt;/code&gt;的教學，透過&lt;code&gt;Powershell&lt;/code&gt;設定其&lt;code&gt;http_proxy&lt;/code&gt;設定後，從&lt;code&gt;Powershell&lt;/code&gt;中執行其安裝檔。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="windows" scheme="https://eugenesu0515.github.io/categories/windows/"/>
+    
+    <category term="problemsolving" scheme="https://eugenesu0515.github.io/categories/windows/problemsolving/"/>
+    
+    
+    <category term="windows" scheme="https://eugenesu0515.github.io/tags/windows/"/>
+    
+    <category term="problemsolving" scheme="https://eugenesu0515.github.io/tags/problemsolving/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列-猜謎遊戲:最終篇</title>
+    <link href="https://eugenesu0515.github.io/2021/11/20/rust-series-guessing-game-full/"/>
+    <id>https://eugenesu0515.github.io/2021/11/20/rust-series-guessing-game-full/</id>
+    <published>2021-11-20T13:12:14.000Z</published>
+    <updated>2021-11-20T13:26:03.412Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;來到「猜謎遊戲」的最終篇章了，前面兩篇&lt;a href=&quot;/2021/11/18/rust-series-guessing-game-stdin/&quot; title=&quot;[Rust]教學系列-猜謎遊戲:取得使用者輸入值&quot;&gt;[Rust]教學系列-猜謎遊戲:取得使用者輸入值&lt;/a&gt;、&lt;a href=&quot;/2021/11/19/rust-series-guessing-game-rand/&quot; title=&quot;[Rust]教學系列-猜謎遊戲:取亂數&quot;&gt;[Rust]教學系列-猜謎遊戲:取亂數&lt;/a&gt;，我們已經把前置作業該做的都做完了，最終篇就是重頭戲中的重頭戲，將取得的使用者輸入值與隨機產生的亂數做一個比較，若一樣則比賽結束，若不一致則可以讓使用者繼續猜，跟著筆者一起實作吧。&lt;/p&gt;
+&lt;p&gt;筆者先預告一下此篇主要是會使用到&lt;code&gt;Rust&lt;/code&gt;的重要方法&lt;code&gt;match&lt;/code&gt;以及若使用者輸入值與神秘數字不一樣時，可以讓使用者一直猜下去的&lt;code&gt;loop&lt;/code&gt;技巧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    
+  </entry>
   
   <entry>
     <title>[Rust]教學系列-猜謎遊戲:取亂數</title>
@@ -368,102 +462,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-Chloe:Select篇</title>
-    <link href="https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-select/"/>
-    <id>https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-select/</id>
-    <published>2021-09-07T05:29:18.000Z</published>
-    <updated>2021-09-07T05:54:46.708Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;上篇&lt;a href=&quot;/2021/09/04/orm-series-chloe-entry/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:入門篇&quot;&gt;[DotnetCore]ORM系列-Chloe:入門篇&lt;/a&gt;介紹&lt;code&gt;Chloe&lt;/code&gt;的使用方式，這篇主要繼續探討，&lt;code&gt;Chloe&lt;/code&gt;提供哪些Select相關的Method，跟著筆者一起看下去。跟著Chloe github的wiki針對筆者之前建立的範例資料庫做一個應用吧。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="chloe" scheme="https://eugenesu0515.github.io/categories/dotnetcore/chloe/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</title>
-    <link href="https://eugenesu0515.github.io/2021/09/05/orm-series-efcore-override-savechanges/"/>
-    <id>https://eugenesu0515.github.io/2021/09/05/orm-series-efcore-override-savechanges/</id>
-    <published>2021-09-05T15:53:05.000Z</published>
-    <updated>2021-09-05T15:56:10.443Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者工作環境中開發&lt;code&gt;ASP.NET CORE Web API&lt;/code&gt;，資料庫存取部份，會交叉使用&lt;code&gt;EF Core&lt;/code&gt;以及&lt;code&gt;Dapper&lt;/code&gt;，筆者單位共同認知的切分方式為若單個資料表的CRUD操作，就使用&lt;code&gt;EF Core&lt;/code&gt;，若複雜的查詢，或者呼叫Store Procedure等會使用Dapper完成操作。單個資料表的&lt;code&gt;CRUD&lt;/code&gt;，基本上透過&lt;code&gt;EF Core&lt;/code&gt;可以說是輕而易舉，會遇到一個問題是資料表共同欄位，類似於&lt;code&gt;CreatedDate, CreatedBy, UpdatedDate, UpdatedBy&lt;/code&gt;這種紀錄變更者及變更時間部份，若寫在每一個&lt;code&gt;Service&lt;/code&gt;中會顯得有點多餘，且沒有效率，擴充性也不好，假設現在要改變&lt;code&gt;CreatedDate, UpdatedDate&lt;/code&gt;的時間原本由&lt;code&gt;Local Time&lt;/code&gt;改為&lt;code&gt;UTC  Time&lt;/code&gt;，其不就是要在每個Service中做修正。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="efcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/efcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="efcore" scheme="https://eugenesu0515.github.io/tags/efcore/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-Chloe:入門篇</title>
-    <link href="https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/"/>
-    <id>https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/</id>
-    <published>2021-09-04T14:00:33.000Z</published>
-    <updated>2021-09-08T13:06:51.914Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者被朋友推薦使用&lt;a href=&quot;https://github.com/shuxinqin/Chloe/wiki&quot;&gt;Chloe&lt;/a&gt;，查了一下也看到&lt;a href=&quot;https://blog.csdn.net/qq_40600379/article/details/101680870&quot;&gt;ORM框架效能&lt;/a&gt;比較文章，效能是真的很棒，使用上也是透過linq實現所有事情，這篇主要介紹&lt;code&gt;Chloe ORM&lt;/code&gt;套件的使用，搭配筆者之前建立的MySQL範例資料庫，做一些簡單的Select查詢示範，之後會再慢慢介紹整個應用。前置作業參考&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;/2021/08/23/mysql-install/&quot; title=&quot;[MySQL]安裝與設定&quot;&gt;[MySQL]安裝與設定&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/2021/08/23/mysql-sample-db/&quot; title=&quot;[MySQL]範例資料庫設定&quot;&gt;[MySQL]範例資料庫設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="chloe" scheme="https://eugenesu0515.github.io/categories/dotnetcore/chloe/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]Reader系列-Pdf檔案</title>
-    <link href="https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/"/>
-    <id>https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/</id>
-    <published>2021-09-03T07:02:42.000Z</published>
-    <updated>2021-09-08T13:09:14.979Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;Reader系列來到pdf格式檔案了，筆者這邊使用&lt;a href=&quot;https://pdfbox.apache.org/&quot;&gt;Pdfbox&lt;/a&gt;移植的C# Library:&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;，讀取部份，看github的readme的教學基本上就滿簡單的，只有讀取一個pdf檔案會很無趣，想了一下應用點，筆者公司銀行有規定新人要考過一些金融業基礎的證照考試取得證照，例: &lt;a href=&quot;https://examweb.sfi.org.tw/regexam/exam.aspx?EXAMCERT=%E9%87%91%E8%9E%8D&amp;EXAMMID=2&quot;&gt;金融市場常識與職業道德&lt;/a&gt;，想到一個有趣的應用，基本上都有考古題下載下來做練習，可以利用&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;套件讀取pdf檔案後解析題目與選項及答案，一旦取得這些資料，利用擅長的前端架構做一個頁面，後端則利用這些資料做一個隨機出題的API，就可以完成考古題測驗Application了，筆者這篇主要做到讀取及解析的作業及取得有結構化的資料。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="reader" scheme="https://eugenesu0515.github.io/categories/dotnetcore/reader/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="pdf" scheme="https://eugenesu0515.github.io/tags/pdf/"/>
     
   </entry>
   
