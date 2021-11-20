@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-20T13:36:46.788Z</updated>
+  <updated>2021-11-20T13:39:48.633Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -21,16 +21,11 @@
     <link href="https://eugenesu0515.github.io/2021/11/20/angular-series-barcode-listener/"/>
     <id>https://eugenesu0515.github.io/2021/11/20/angular-series-barcode-listener/</id>
     <published>2021-11-20T13:13:23.000Z</published>
-    <updated>2021-11-20T13:36:46.788Z</updated>
+    <updated>2021-11-20T13:39:48.633Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在工作環境中，有一個小週邊系統是給分行人員使用，其中有一段是需要透過&lt;code&gt;Barcode</summary>
-        
-      
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者在工作環境中，有一個小週邊系統是給分行人員使用，其中有一段是需要透過&lt;code&gt;Barcode Scanner&lt;/code&gt;掃描其帳單中的條碼，作為&lt;code&gt;Form&lt;/code&gt;表單送出時的一個欄位，筆者看同事一開始的做法是在畫面上放一個&lt;code&gt;Input&lt;/code&gt;，其游標須&lt;code&gt;Focus&lt;/code&gt;在該&lt;code&gt;Input&lt;/code&gt;上，然後按下&lt;code&gt;Barcode Scanner&lt;/code&gt;去掃描條碼。&lt;/p&gt;
+&lt;p&gt;上述情境會延伸一些問題，使用者將游標移至其他表單元件或者系統上會有&lt;code&gt;Toast&lt;/code&gt;訊息，使用者可能會點擊其&lt;code&gt;Toast&lt;/code&gt;訊息關閉，上述零零總總情境後，若要掃描條碼，必須得將游標自動&lt;code&gt;Focus&lt;/code&gt;回條碼所屬的&lt;code&gt;Input&lt;/code&gt;上，極為困難，要寫很多code去做到；若沒有自動將游標&lt;code&gt;Focus&lt;/code&gt;回對應的&lt;code&gt;Input&lt;/code&gt;上，使用者會覺得困擾，每次掃描前都要移動滑鼠，將游標移回條碼所屬的&lt;code&gt;Input&lt;/code&gt;上，此篇內容就是要解決上述遇到的問題。&lt;/p&gt;</summary>
     
     
     
