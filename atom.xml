@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-20T13:39:48.633Z</updated>
+  <updated>2021-11-23T14:33:22.890Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,69 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-Modal:modal-vanilla</title>
+    <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-modal/"/>
+    <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-modal/</id>
+    <published>2021-11-23T10:30:13.000Z</published>
+    <updated>2021-11-23T14:33:22.890Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者工作環境中前端使用&lt;code&gt;angular&lt;/code&gt;框架撰寫，&lt;code&gt;model binding&lt;/code&gt;根本無敵阿，且&lt;code&gt;typescript&lt;/code&gt;語言，對於筆者這種後端人員來說，上手速度是頗快的，扯遠了，筆者要強調的是能用&lt;code&gt;angular&lt;/code&gt;或其他兩大框架寫前端根本就是一等公民，來到&lt;code&gt;Electron&lt;/code&gt;專案，是有神者有做&lt;code&gt;angular-electron&lt;/code&gt;或&lt;code&gt;vue-electron&lt;/code&gt;的版本，但筆者覺得自己前端實力不夠，怕handle不了，還是乖乖用純js撰寫其專案，根本就變回二等公民，這篇主要介紹其中需要&lt;code&gt;modal&lt;/code&gt;功能時，挑選只有&lt;code&gt;vanilla js&lt;/code&gt;的&lt;code&gt;modal&lt;/code&gt;套件來實作。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu0515.github.io/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu0515.github.io/tags/electron/"/>
+    
+    <category term="vanilla-js" scheme="https://eugenesu0515.github.io/tags/vanilla-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-Loading效果</title>
+    <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-loading/"/>
+    <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-loading/</id>
+    <published>2021-11-23T10:25:06.000Z</published>
+    <updated>2021-11-23T14:37:46.672Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊的主要遇到的情境是，因為要抓攝影鏡頭的視訊&lt;code&gt;streaming&lt;/code&gt;到畫面中的&lt;code&gt;Video tag&lt;/code&gt;上，但初始化需要一點時間，導致使用者尚未初始化完成前就去按下截圖按鈕，導致程式邏輯錯亂，筆者第一想到的就是加上&lt;code&gt;loading&lt;/code&gt;效果，就如同前面幾篇講到的，&lt;code&gt;electron&lt;/code&gt;環境，筆者這邊希望使用&lt;code&gt;Vanilla js&lt;/code&gt;的解法，幸好有找到解法，此篇就以介紹這個解法為主，跟著筆者一起套上&lt;code&gt;loading&lt;/code&gt;效果吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu0515.github.io/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu0515.github.io/tags/electron/"/>
+    
+    <category term="vanilla-js" scheme="https://eugenesu0515.github.io/tags/vanilla-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-listjs</title>
+    <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-listjs/"/>
+    <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-listjs/</id>
+    <published>2021-11-23T10:24:26.000Z</published>
+    <updated>2021-11-23T14:12:39.431Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者與&lt;code&gt;Electron&lt;/code&gt;淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是&lt;code&gt;Python&lt;/code&gt;，一個是&lt;code&gt;Electron&lt;/code&gt;，不過&lt;code&gt;Python&lt;/code&gt;則需要再找一些&lt;code&gt;UI framework&lt;/code&gt;來實作畫面部份，那時候對於&lt;code&gt;Electron&lt;/code&gt;也是一份好奇，用&lt;code&gt;html css&lt;/code&gt;就能調出畫面，還可以直接套用&lt;code&gt;bootstrap&lt;/code&gt;，簡直完美，毅然決然決定使用&lt;code&gt;Electron&lt;/code&gt;來開發，但開發過程有很多地方，尤其是硬體介接的部份，卡了很久，眼看上線時間快到，最終放棄作罷，最後使用&lt;code&gt;Python+Tkinter&lt;/code&gt;完成該專案，實為可惜。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu0515.github.io/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu0515.github.io/tags/electron/"/>
+    
+    <category term="vanilla-js" scheme="https://eugenesu0515.github.io/tags/vanilla-js/"/>
+    
+  </entry>
   
   <entry>
     <title>[Angular]技巧系列-BarcodeListener</title>
@@ -390,73 +453,6 @@
     <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
     
     <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]GlobalErrorHandler</title>
-    <link href="https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/"/>
-    <id>https://eugenesu0515.github.io/2021/09/09/dotnetcore-global-error-handler/</id>
-    <published>2021-09-09T15:37:29.000Z</published>
-    <updated>2021-09-09T15:45:38.807Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放&lt;code&gt;try catch&lt;/code&gt;，希望在一個地方統一&lt;code&gt;try catch&lt;/code&gt;就好，這樣若要改變&lt;code&gt;Exception&lt;/code&gt;處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到&lt;code&gt;Exception&lt;/code&gt;，要將某一些處理狀態要壓成&lt;code&gt;F&lt;/code&gt;等等，無論如何，筆者都會先設計一個&lt;code&gt;GlobalErrorHandler&lt;/code&gt;做統一抓取&lt;code&gt;Exception&lt;/code&gt;並處理。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="global-error-handler" scheme="https://eugenesu0515.github.io/tags/global-error-handler/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程神器-Hangfire:動態排程篇1</title>
-    <link href="https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/"/>
-    <id>https://eugenesu0515.github.io/2021/09/08/hangfire-dynamic1/</id>
-    <published>2021-09-08T07:44:18.000Z</published>
-    <updated>2021-09-11T14:18:51.258Z</updated>
-    
-    
-    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/queues.png&quot;&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-Chloe:Interceptor篇</title>
-    <link href="https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-interceptor/"/>
-    <id>https://eugenesu0515.github.io/2021/09/07/orm-series-chloe-interceptor/</id>
-    <published>2021-09-07T05:35:18.000Z</published>
-    <updated>2021-09-07T05:50:34.387Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者前篇介紹Select相關的method&lt;a href=&quot;/2021/09/07/orm-series-chloe-select/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:Select篇&quot;&gt;[DotnetCore]ORM系列-Chloe:Select篇&lt;/a&gt;，這次要來寫interceptor，觀察看看那些select method對應的sql語法，才會知道Chloe都幫我們轉成什麼語法，才不會誤用造成錯誤，筆者覺得是值得投資的。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="chloe" scheme="https://eugenesu0515.github.io/categories/dotnetcore/chloe/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="chloe" scheme="https://eugenesu0515.github.io/tags/chloe/"/>
     
   </entry>
   
