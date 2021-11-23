@@ -63,7 +63,7 @@
     <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-listjs/"/>
     <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-listjs/</id>
     <published>2021-11-23T10:24:26.000Z</published>
-    <updated>2021-11-23T14:12:39.431Z</updated>
+    <updated>2021-11-23T14:43:44.956Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者與&lt;code&gt;Electron&lt;/code&gt;淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是&lt;code&gt;Python&lt;/code&gt;，一個是&lt;code&gt;Electron&lt;/code&gt;，不過&lt;code&gt;Python&lt;/code&gt;則需要再找一些&lt;code&gt;UI framework&lt;/code&gt;來實作畫面部份，那時候對於&lt;code&gt;Electron&lt;/code&gt;也是一份好奇，用&lt;code&gt;html css&lt;/code&gt;就能調出畫面，還可以直接套用&lt;code&gt;bootstrap&lt;/code&gt;，簡直完美，毅然決然決定使用&lt;code&gt;Electron&lt;/code&gt;來開發，但開發過程有很多地方，尤其是硬體介接的部份，卡了很久，眼看上線時間快到，最終放棄作罷，最後使用&lt;code&gt;Python+Tkinter&lt;/code&gt;完成該專案，實為可惜。&lt;/p&gt;</summary>
