@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-11-23T14:33:22.890Z</updated>
+  <updated>2021-12-01T06:16:18.154Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]教學系列-指定sdk版本建立專案</title>
+    <link href="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/"/>
+    <id>https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/</id>
+    <published>2021-12-01T06:12:09.000Z</published>
+    <updated>2021-12-01T06:16:18.154Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊遇到的問題是電腦環境中有多個&lt;code&gt;sdk&lt;/code&gt;版本，需要指定比較舊的&lt;code&gt;sdk&lt;/code&gt;版本來建立專案，筆者之前剛幫公司用基礎專案時遇到&lt;code&gt;3.1LTS&lt;/code&gt;版本，因此有跟著升級，&lt;code&gt;dotnet 5&lt;/code&gt;因不是LTS版本就沒有跟著升，就坐著等&lt;code&gt;dotnet 6&lt;/code&gt;了。&lt;/p&gt;
+&lt;p&gt;依上述，筆者公司開發環境停留在&lt;code&gt;3.1&lt;/code&gt;，但因前一陣子重灌電腦，重新安裝&lt;code&gt;Visual Studio 2019&lt;/code&gt;後，預設安裝&lt;code&gt;dotnet 5&lt;/code&gt;，筆者還特地下載&lt;code&gt;dotnet core 3.1 sdk&lt;/code&gt;來安裝，因此環境中有兩個版本，但若沒有特別指定時，會以最新的&lt;code&gt;sdk&lt;/code&gt;版本對應的範本產生，最後列出筆者電腦環境的&lt;code&gt;sdk&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;dotnet --list-sdks&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 輸出內容&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3.1.415 [C:\Program Files\dotnet\sdk]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5.0.403 [C:\Program Files\dotnet\sdk]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+  </entry>
   
   <entry>
     <title>[Electron]vanilla js套件系列-Modal:modal-vanilla</title>
@@ -419,29 +440,6 @@
     
     
     <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/retries.png&quot;&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程神器-Hangfire:動態排程篇2</title>
-    <link href="https://eugenesu0515.github.io/2021/09/10/hangfire-dynamic2/"/>
-    <id>https://eugenesu0515.github.io/2021/09/10/hangfire-dynamic2/</id>
-    <published>2021-09-10T12:20:13.000Z</published>
-    <updated>2021-09-11T14:04:04.875Z</updated>
-    
-    
-    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/recurring-jobs.png&quot;&gt;</summary>
     
     
     

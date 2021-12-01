@@ -23,15 +23,20 @@
     var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Eugene&#39;s Blog">
-<meta property="og:url" content="https://eugenesu0515.github.io/tags/dotnetcore/page/4/index.html">
+  <meta name="description" content="前提情要筆者這邊遇到的問題是電腦環境中有多個sdk版本，需要指定比較舊的sdk版本來建立專案，筆者之前剛幫公司用基礎專案時遇到3.1LTS版本，因此有跟著升級，dotnet 5因不是LTS版本就沒有跟著升，就坐著等dotnet 6了。 依上述，筆者公司開發環境停留在3.1，但因前一陣子重灌電腦，重新安裝Visual Studio 2019後，預設安裝dotnet 5，筆者還特地下載dotnet c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[DotnetCore]教學系列-指定sdk版本建立專案">
+<meta property="og:url" content="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前提情要筆者這邊遇到的問題是電腦環境中有多個sdk版本，需要指定比較舊的sdk版本來建立專案，筆者之前剛幫公司用基礎專案時遇到3.1LTS版本，因此有跟著升級，dotnet 5因不是LTS版本就沒有跟著升，就坐著等dotnet 6了。 依上述，筆者公司開發環境停留在3.1，但因前一陣子重灌電腦，重新安裝Visual Studio 2019後，預設安裝dotnet 5，筆者還特地下載dotnet c">
 <meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-12-01T06:12:09.000Z">
+<meta property="article:modified_time" content="2021-12-01T06:16:18.154Z">
 <meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="dotnetcore">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/tags/dotnetcore/page/4/">
+<link rel="canonical" href="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/">
 
 
 <script id="page-configurations">
@@ -39,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-TW'
   };
 </script>
 <meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
-  <title>標籤: dotnetcore | Eugene's Blog</title>
+  <title>[DotnetCore]教學系列-指定sdk版本建立專案 | Eugene's Blog</title>
   
 
 
@@ -187,180 +192,171 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">dotnetcore
-          <small>標籤</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [DotnetCore]教學系列-指定sdk版本建立專案
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-12-01 14:12:09 / 修改時間：14:16:18" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">2021-12-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>4 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊遇到的問題是電腦環境中有多個<code>sdk</code>版本，需要指定比較舊的<code>sdk</code>版本來建立專案，筆者之前剛幫公司用基礎專案時遇到<code>3.1LTS</code>版本，因此有跟著升級，<code>dotnet 5</code>因不是LTS版本就沒有跟著升，就坐著等<code>dotnet 6</code>了。</p>
+<p>依上述，筆者公司開發環境停留在<code>3.1</code>，但因前一陣子重灌電腦，重新安裝<code>Visual Studio 2019</code>後，預設安裝<code>dotnet 5</code>，筆者還特地下載<code>dotnet core 3.1 sdk</code>來安裝，因此環境中有兩個版本，但若沒有特別指定時，會以最新的<code>sdk</code>版本對應的範本產生，最後列出筆者電腦環境的<code>sdk</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dotnet --list-sdks</span><br><span class="line"><span class="comment"># 輸出內容</span></span><br><span class="line">3.1.415 [C:\Program Files\dotnet\sdk]</span><br><span class="line">5.0.403 [C:\Program Files\dotnet\sdk]</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<span id="more"></span>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T12:59:16+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者這邊會示範加入<code>options</code>前和加入<code>options</code>之後的效果，就此紀錄成功以指定<code>sdk</code>版本建立專案過程。</p>
+<h2 id="預設範本"><a href="#預設範本" class="headerlink" title="預設範本"></a>預設範本</h2><p>筆者示範一下沒有加任何<code>options</code>時的建置專案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dotnet new webapi -o demo-5.API</span><br><span class="line"><span class="comment"># 輸出內容範本「ASP.NET Core Web API」已成功建立。</span></span><br><span class="line"></span><br><span class="line">正在處理建立後的動作...</span><br><span class="line">正在 demo-5.API\demo-5.API.csproj 上執行 <span class="string">&#x27;dotnet restore&#x27;</span>...</span><br><span class="line">  正在判斷要還原的專案...</span><br><span class="line">  已還原 &#123;path&#125;\<span class="built_in">source</span>\repos\demo-5.API\demo-5.API.csproj (177 ms 內)。</span><br><span class="line">還原成功。</span><br></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-batch/" itemprop="url">
-            <span itemprop="name">[DotnetCore]Batch檔案執行及追縱</span>
-          </a>
-      </div>
+<p>接著進到此範例API專案中，觀看一下<code>csproj</code>檔案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> demo-5.API</span><br><span class="line">code demo-5.API.csproj</span><br></pre></td></tr></table></figure>
 
-    </header>
-  </article>
+<p>使用vscode將專案檔案打開來看一下，就會發現是<code>TargetFramework</code>中的值為<code>net5.0</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk.Web&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>net5.0<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RootNamespace</span>&gt;</span>demo_5.API<span class="tag">&lt;/<span class="name">RootNamespace</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PackageReference</span> <span class="attr">Include</span>=<span class="string">&quot;Swashbuckle.AspNetCore&quot;</span> <span class="attr">Version</span>=<span class="string">&quot;5.6.3&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<h2 id="指定dotnet-sdk版本"><a href="#指定dotnet-sdk版本" class="headerlink" title="指定dotnet sdk版本"></a>指定dotnet sdk版本</h2><p>因為筆者公司開發專案還停留在<code>dotnet 3.1</code>，若自己寫一些demo或測試專案時，希望sdk版本也是一致，因此研究了一下<code>dotnet new cli</code>指令相關<code>options</code>，發現指定sdk版本是放在第二層，是跟著你的範本的，以上述筆者示範來說，<code>webapi</code>專案，<code>webapi</code>範本專案後面有諸多<code>options</code>可以設定，類似像預設不要設定<code>https</code>等等，其中<code>-f</code>這個<code>option</code>可以指定<code>sdk</code>版本，另，以官方文件指出，我們可以輸入的值如下:</p>
+<table>
+<thead>
+<tr>
+<th>SDK 版本</th>
+<th>預設值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5.0</td>
+<td>net5.0</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>netcoreapp3.1</td>
+</tr>
+<tr>
+<td>3.0</td>
+<td>netcoreapp3.0</td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>netcoreapp2.1</td>
+</tr>
+</tbody></table>
+<p>看完對照表之後，跟著筆者下指令吧，目標是建置出來的<code>webapi</code>範本專案套用<code>dotnet core 3.1</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dotnet new webapi -o demo-3.API -f netcoreapp3.1</span><br><span class="line"><span class="comment"># 輸出內容</span></span><br><span class="line">範本「ASP.NET Core Web API」已成功建立。</span><br><span class="line"></span><br><span class="line">正在處理建立後的動作...</span><br><span class="line">正在 demo-3.API\demo-3.API.csproj 上執行 <span class="string">&#x27;dotnet restore&#x27;</span>...</span><br><span class="line">  正在判斷要還原的專案...</span><br><span class="line">  已還原 &#123;path&#125;\<span class="built_in">source</span>\repos\demo-3.API\demo-3.API.csproj (59 ms 內)。</span><br><span class="line">還原成功。</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T02:53:57+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
+<p>依樣使用vscode打開專案檔來看一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> demo-3.API\</span><br><span class="line">code demo-3.API.csproj</span><br></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-socket-slicing/" itemprop="url">
-            <span itemprop="name">[DotnetCore]Socket程式實作-切割封包</span>
-          </a>
-      </div>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk.Web&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>netcoreapp3.1<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RootNamespace</span>&gt;</span>demo_3.API<span class="tag">&lt;/<span class="name">RootNamespace</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T02:49:20+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-socket-analyze/" itemprop="url">
-            <span itemprop="name">[DotnetCore]Socket程式實作-解析封包</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T02:38:24+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-socket/" itemprop="url">
-            <span itemprop="name">[DotnetCore]Socket程式實作</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T02:26:03+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-cap/" itemprop="url">
-            <span itemprop="name">[DotnetCore]EventBus套件CAP:以RabbitMQ為例</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-21T02:19:36+08:00"
-              content="2021-08-21">
-          08-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/21/dotnetcore-smtp/" itemprop="url">
-            <span itemprop="name">[DotnetCore]SMTP寄信服務設計</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-20T23:58:31+08:00"
-              content="2021-08-20">
-          08-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/20/dotnetcore-actionfilter/" itemprop="url">
-            <span itemprop="name">[DotnetCore]ActionFilter實作</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<p>從專案檔內容可以看出，成功建立<code>dotnet core3.1</code>範本專案</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p><code>dotnet cli</code>指令應有盡有，筆者趁這個機會，重新看了一下<code>cli</code>教學文件，再熟悉一下相關設定<code>options</code>，也是一個不錯的收穫，若有一樣的困擾的讀者，希望有幫助到你們。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/dotnet/core/tools/dotnet-new-sdk-templates#webapi">https://docs.microsoft.com/zh-tw/dotnet/core/tools/dotnet-new-sdk-templates#webapi</a></li>
+</ul>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/dotnetcore/" rel="tag"># dotnetcore</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/23/electron-series-vanillajs-modal/" rel="prev" title="[Electron]vanilla js套件系列-Modal:modal-vanilla">
+      <i class="fa fa-chevron-left"></i> [Electron]vanilla js套件系列-Modal:modal-vanilla
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/tags/dotnetcore/page/3/"><i class="fa fa-angle-left" aria-label="上一頁"></i></a><a class="page-number" href="/tags/dotnetcore/">1</a><span class="space">&hellip;</span><a class="page-number" href="/tags/dotnetcore/page/3/">3</a><span class="page-number current">4</span>
-  </nav>
+  
+  
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -407,6 +403,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%E6%83%85%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前提情要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A0%90%E8%A8%AD%E7%AF%84%E6%9C%AC"><span class="nav-number">2.1.</span> <span class="nav-text">預設範本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9Adotnet-sdk%E7%89%88%E6%9C%AC"><span class="nav-number">2.2.</span> <span class="nav-text">指定dotnet sdk版本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -738,6 +735,25 @@ window.addEventListener('pjax:success', () => {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '9a13d983ea4e508377ac',
+      clientSecret: 'f1ffbf947bbc56c5b76e27bc899ffabefb2fed88',
+      repo        : 'eugenesu0515.github.io',
+      owner       : 'eugenesu0515',
+      admin       : ['eugenesu0515'],
+      id          : '60994d7cf91791669f843a426d572e60',
+        language: 'zh-TW',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
     </div>
 </body>

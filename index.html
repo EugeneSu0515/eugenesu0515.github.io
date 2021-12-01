@@ -314,6 +314,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/12/01/dotnetcore-specify-sdk/" class="post-title-link" itemprop="url">[DotnetCore]教學系列-指定sdk版本建立專案</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-12-01 14:12:09 / 修改時間：14:16:18" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">2021-12-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>4 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊遇到的問題是電腦環境中有多個<code>sdk</code>版本，需要指定比較舊的<code>sdk</code>版本來建立專案，筆者之前剛幫公司用基礎專案時遇到<code>3.1LTS</code>版本，因此有跟著升級，<code>dotnet 5</code>因不是LTS版本就沒有跟著升，就坐著等<code>dotnet 6</code>了。</p>
+<p>依上述，筆者公司開發環境停留在<code>3.1</code>，但因前一陣子重灌電腦，重新安裝<code>Visual Studio 2019</code>後，預設安裝<code>dotnet 5</code>，筆者還特地下載<code>dotnet core 3.1 sdk</code>來安裝，因此環境中有兩個版本，但若沒有特別指定時，會以最新的<code>sdk</code>版本對應的範本產生，最後列出筆者電腦環境的<code>sdk</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dotnet --list-sdks</span><br><span class="line"><span class="comment"># 輸出內容</span></span><br><span class="line">3.1.415 [C:\Program Files\dotnet\sdk]</span><br><span class="line">5.0.403 [C:\Program Files\dotnet\sdk]</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/01/dotnetcore-specify-sdk/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-modal/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1089,102 +1187,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/18/rust-series-guessing-game-stdin/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/18/rust-series-guessing-game-stdin/" class="post-title-link" itemprop="url">[Rust]教學系列-猜謎遊戲:取得使用者輸入值</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-18 14:12:03 / 修改時間：14:20:27" itemprop="dateCreated datePublished" datetime="2021-11-18T14:12:03+08:00">2021-11-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>2.8k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>5 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個<code>command line</code>互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試<code>Rust</code>的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門<code>Rust</code>的程式語法、思考邏輯、<code>Coding Style</code>等。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/18/rust-series-guessing-game-stdin/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1254,7 +1256,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1296,6 +1298,14 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">
+        12/01
+      </time>
+      <a href="/2021/12/01/dotnetcore-specify-sdk/" title="[DotnetCore]教學系列-指定sdk版本建立專案">[DotnetCore]教學系列-指定sdk版本建立專案</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:30:13+08:00">
         11/23
       </time>
@@ -1324,14 +1334,6 @@
         11/20
       </time>
       <a href="/2021/11/20/angular-series-barcode-listener/" title="[Angular]技巧系列-BarcodeListener">[Angular]技巧系列-BarcodeListener</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:52+08:00">
-        11/20
-      </time>
-      <a href="/2021/11/20/rust-series-windows-execute/" title="[Rust]教學系列:Windows疑難雜症解決">[Rust]教學系列:Windows疑難雜症解決</a>
       <br>
     </li>
     
@@ -1366,12 +1368,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">269k</span>
+    <span title="總字數">271k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:10</span>
+    <span title="所需總閱讀時間">8:14</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

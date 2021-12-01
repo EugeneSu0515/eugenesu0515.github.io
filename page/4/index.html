@@ -193,6 +193,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/01/sftp-download/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/01/sftp-download/" class="post-title-link" itemprop="url">[DotnetCore]SFTP-下載上傳</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-09-01 13:29:43 / 修改時間：18:26:08" itemprop="dateCreated datePublished" datetime="2021-09-01T13:29:43+08:00">2021-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>6 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完<code>FTP</code>下載上傳後，另一個挑戰來了，有些系統指定使用<code>SFTP</code>協定來做交換(上傳、下載)，剛好<code>FluentFTP</code>尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為<a target="_blank" rel="noopener" href="http://ssh.net/">SSH.NET</a>，這篇以主要介紹透過該套件實作<code>SFTP</code>協定的下載及上傳作業。<code>IFtpService</code>則延續使用上篇的定義，這邊多了一組<code>SFtpService</code>的實作來完成任務。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/01/sftp-download/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/31/ftp-download/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1119,94 +1215,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/24/fluent-validation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/24/fluent-validation/" class="post-title-link" itemprop="url">[DotnetCore]後端驗證神器:Fluent Validation</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-08-24 15:50:13 / 修改時間：15:57:06" itemprop="dateCreated datePublished" datetime="2021-08-24T15:50:13+08:00">2021-08-24</time>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>8.5k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>15 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>現在開發網頁幾乎都切換成前後端分離的開發方式，前端採用 <code>Angular</code>, <code>Vue</code>, <code>React</code>三大框架之一，後端則只要撰寫API服務即可，一來職責分離，前端適合處理畫面的互動效果，後端搭配資料庫處理商業邏輯的運算，使用<code>json</code>格式傳送結果至前端，多完美的協作阿。</p>
-<p>通常簡單驗證邏輯會放在前端做處理，畢竟不用花費傳送成本，例如必填、長度等簡單邏輯驗證，直接在前端實作即可，但畢竟後端需要將資料儲存至資料庫，若沒有再做進一步驗證則資料儲存失敗的風險，以及日後資料運算使用時的困難。又或者系統本身需要透過<code>http</code>與其他系統介接，其他系統直接打我方API，這種情境就不需多說，需要在後端做驗證，連必填、長度等簡單邏輯驗證也必須做在後端。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/24/fluent-validation/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1276,7 +1284,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1318,6 +1326,14 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">
+        12/01
+      </time>
+      <a href="/2021/12/01/dotnetcore-specify-sdk/" title="[DotnetCore]教學系列-指定sdk版本建立專案">[DotnetCore]教學系列-指定sdk版本建立專案</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:30:13+08:00">
         11/23
       </time>
@@ -1346,14 +1362,6 @@
         11/20
       </time>
       <a href="/2021/11/20/angular-series-barcode-listener/" title="[Angular]技巧系列-BarcodeListener">[Angular]技巧系列-BarcodeListener</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:52+08:00">
-        11/20
-      </time>
-      <a href="/2021/11/20/rust-series-windows-execute/" title="[Rust]教學系列:Windows疑難雜症解決">[Rust]教學系列:Windows疑難雜症解決</a>
       <br>
     </li>
     
@@ -1388,12 +1396,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">269k</span>
+    <span title="總字數">271k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:10</span>
+    <span title="所需總閱讀時間">8:14</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

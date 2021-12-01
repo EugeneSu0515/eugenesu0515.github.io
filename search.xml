@@ -82,6 +82,72 @@
       </tags>
   </entry>
   <entry>
+    <title>[DotnetCore]教學系列-指定sdk版本建立專案</title>
+    <url>/2021/12/01/dotnetcore-specify-sdk/</url>
+    <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊遇到的問題是電腦環境中有多個<code>sdk</code>版本，需要指定比較舊的<code>sdk</code>版本來建立專案，筆者之前剛幫公司用基礎專案時遇到<code>3.1LTS</code>版本，因此有跟著升級，<code>dotnet 5</code>因不是LTS版本就沒有跟著升，就坐著等<code>dotnet 6</code>了。</p>
+<p>依上述，筆者公司開發環境停留在<code>3.1</code>，但因前一陣子重灌電腦，重新安裝<code>Visual Studio 2019</code>後，預設安裝<code>dotnet 5</code>，筆者還特地下載<code>dotnet core 3.1 sdk</code>來安裝，因此環境中有兩個版本，但若沒有特別指定時，會以最新的<code>sdk</code>版本對應的範本產生，最後列出筆者電腦環境的<code>sdk</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet --list-sdks</span><br><span class="line"><span class="comment"># 輸出內容</span></span><br><span class="line">3.1.415 [C:\Program Files\dotnet\sdk]</span><br><span class="line">5.0.403 [C:\Program Files\dotnet\sdk]</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者這邊會示範加入<code>options</code>前和加入<code>options</code>之後的效果，就此紀錄成功以指定<code>sdk</code>版本建立專案過程。</p>
+<h2 id="預設範本"><a href="#預設範本" class="headerlink" title="預設範本"></a>預設範本</h2><p>筆者示範一下沒有加任何<code>options</code>時的建置專案</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet new webapi -o demo-5.API</span><br><span class="line"><span class="comment"># 輸出內容範本「ASP.NET Core Web API」已成功建立。</span></span><br><span class="line"></span><br><span class="line">正在處理建立後的動作...</span><br><span class="line">正在 demo-5.API\demo-5.API.csproj 上執行 <span class="string">&#x27;dotnet restore&#x27;</span>...</span><br><span class="line">  正在判斷要還原的專案...</span><br><span class="line">  已還原 &#123;path&#125;\<span class="built_in">source</span>\repos\demo-5.API\demo-5.API.csproj (177 ms 內)。</span><br><span class="line">還原成功。</span><br></pre></td></tr></table></figure>
+
+<p>接著進到此範例API專案中，觀看一下<code>csproj</code>檔案</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> demo-5.API</span><br><span class="line">code demo-5.API.csproj</span><br></pre></td></tr></table></figure>
+
+<p>使用vscode將專案檔案打開來看一下，就會發現是<code>TargetFramework</code>中的值為<code>net5.0</code></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk.Web&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>net5.0<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RootNamespace</span>&gt;</span>demo_5.API<span class="tag">&lt;/<span class="name">RootNamespace</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PackageReference</span> <span class="attr">Include</span>=<span class="string">&quot;Swashbuckle.AspNetCore&quot;</span> <span class="attr">Version</span>=<span class="string">&quot;5.6.3&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="指定dotnet-sdk版本"><a href="#指定dotnet-sdk版本" class="headerlink" title="指定dotnet sdk版本"></a>指定dotnet sdk版本</h2><p>因為筆者公司開發專案還停留在<code>dotnet 3.1</code>，若自己寫一些demo或測試專案時，希望sdk版本也是一致，因此研究了一下<code>dotnet new cli</code>指令相關<code>options</code>，發現指定sdk版本是放在第二層，是跟著你的範本的，以上述筆者示範來說，<code>webapi</code>專案，<code>webapi</code>範本專案後面有諸多<code>options</code>可以設定，類似像預設不要設定<code>https</code>等等，其中<code>-f</code>這個<code>option</code>可以指定<code>sdk</code>版本，另，以官方文件指出，我們可以輸入的值如下:</p>
+<table>
+<thead>
+<tr>
+<th>SDK 版本</th>
+<th>預設值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5.0</td>
+<td>net5.0</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>netcoreapp3.1</td>
+</tr>
+<tr>
+<td>3.0</td>
+<td>netcoreapp3.0</td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>netcoreapp2.1</td>
+</tr>
+</tbody></table>
+<p>看完對照表之後，跟著筆者下指令吧，目標是建置出來的<code>webapi</code>範本專案套用<code>dotnet core 3.1</code></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dotnet new webapi -o demo-3.API -f netcoreapp3.1</span><br><span class="line"><span class="comment"># 輸出內容</span></span><br><span class="line">範本「ASP.NET Core Web API」已成功建立。</span><br><span class="line"></span><br><span class="line">正在處理建立後的動作...</span><br><span class="line">正在 demo-3.API\demo-3.API.csproj 上執行 <span class="string">&#x27;dotnet restore&#x27;</span>...</span><br><span class="line">  正在判斷要還原的專案...</span><br><span class="line">  已還原 &#123;path&#125;\<span class="built_in">source</span>\repos\demo-3.API\demo-3.API.csproj (59 ms 內)。</span><br><span class="line">還原成功。</span><br></pre></td></tr></table></figure>
+
+<p>依樣使用vscode打開專案檔來看一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> demo-3.API\</span><br><span class="line">code demo-3.API.csproj</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk.Web&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>netcoreapp3.1<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RootNamespace</span>&gt;</span>demo_3.API<span class="tag">&lt;/<span class="name">RootNamespace</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>從專案檔內容可以看出，成功建立<code>dotnet core3.1</code>範本專案</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p><code>dotnet cli</code>指令應有盡有，筆者趁這個機會，重新看了一下<code>cli</code>教學文件，再熟悉一下相關設定<code>options</code>，也是一個不錯的收穫，若有一樣的困擾的讀者，希望有幫助到你們。</p>
+<p>參考</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-tw/dotnet/core/tools/dotnet-new-sdk-templates#webapi">https://docs.microsoft.com/zh-tw/dotnet/core/tools/dotnet-new-sdk-templates#webapi</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>dotnetcore</category>
+      </categories>
+      <tags>
+        <tag>dotnetcore</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[Electron]vanilla js套件系列-Modal:modal-vanilla</title>
     <url>/2021/11/23/electron-series-vanillajs-modal/</url>
     <content><![CDATA[<h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者工作環境中前端使用<code>angular</code>框架撰寫，<code>model binding</code>根本無敵阿，且<code>typescript</code>語言，對於筆者這種後端人員來說，上手速度是頗快的，扯遠了，筆者要強調的是能用<code>angular</code>或其他兩大框架寫前端根本就是一等公民，來到<code>Electron</code>專案，是有神者有做<code>angular-electron</code>或<code>vue-electron</code>的版本，但筆者覺得自己前端實力不夠，怕handle不了，還是乖乖用純js撰寫其專案，根本就變回二等公民，這篇主要介紹其中需要<code>modal</code>功能時，挑選只有<code>vanilla js</code>的<code>modal</code>套件來實作。</p>

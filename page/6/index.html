@@ -193,6 +193,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-cap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/21/dotnetcore-cap/" class="post-title-link" itemprop="url">[DotnetCore]EventBus套件CAP:以RabbitMQ為例</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-08-21 02:26:03 / 修改時間：02:29:13" itemprop="dateCreated datePublished" datetime="2021-08-21T02:26:03+08:00">2021-08-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3.7k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>7 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則<code>Database Pooling</code>的方式進行監聽，若有撈出一筆<code>Status = N</code>的資料則進行邏輯處裡，進行完成後壓回<code>Status = Y 或 N</code>的註記方式來完成該次的串接需求，當然途中也會壓<code>Status = P</code>作為下次<code>Pooling</code>會撈到的防呆，大概就是這麼簡單的技術完成串接的需求。</p>
+<p>筆者因前一份公司有接觸過Message Queue，主要是<a target="_blank" rel="noopener" href="https://www.rabbitmq.com/">Rabbit MQ</a>，覺得使用Message Queue當作中間交換資訊平台，確實有其發展性，不論是之後需求變大時可以做分散式的處理，系統間也間接解偶了。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/21/dotnetcore-cap/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/21/dotnetcore-smtp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1183,7 +1280,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">59</span>
+          <span class="site-state-item-count">60</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1225,6 +1322,14 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">
+        12/01
+      </time>
+      <a href="/2021/12/01/dotnetcore-specify-sdk/" title="[DotnetCore]教學系列-指定sdk版本建立專案">[DotnetCore]教學系列-指定sdk版本建立專案</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:30:13+08:00">
         11/23
       </time>
@@ -1253,14 +1358,6 @@
         11/20
       </time>
       <a href="/2021/11/20/angular-series-barcode-listener/" title="[Angular]技巧系列-BarcodeListener">[Angular]技巧系列-BarcodeListener</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:52+08:00">
-        11/20
-      </time>
-      <a href="/2021/11/20/rust-series-windows-execute/" title="[Rust]教學系列:Windows疑難雜症解決">[Rust]教學系列:Windows疑難雜症解決</a>
       <br>
     </li>
     
@@ -1295,12 +1392,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">269k</span>
+    <span title="總字數">271k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:10</span>
+    <span title="所需總閱讀時間">8:14</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>
