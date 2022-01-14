@@ -314,6 +314,422 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-DI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/14/dotnetcore-generic-series-DI/" class="post-title-link" itemprop="url">[DotnetCore]泛型運用系列-注入篇</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-01-14 11:41:50 / 修改時間：13:21:32" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:50+08:00">2022-01-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>3 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>前提情要請參考<a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>，不過筆者還是在這邊再列一下會用到的技術觀念與套件：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://automapper.org/">AutoMapper</a>:運用於將檔案內容對應的物件轉成<code>EFCore</code>的物件時</li>
+<li>Generic Class/Method: 不想寫多個<code>Service</code>去處理多個檔案，設計成泛型形式以符合各種檔案類型</li>
+<li><code>Attribute</code>: 透過<code>Description Attribute</code>，註記其對應的<code>Comlumn</code>欄位順序</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>:透過該套件，將寫好的<code>Service</code>掛成排程任務</li>
+<li>Extension Method:有一些通用的<code>Method</code>，不要落落等塞在一個Service中，因此轉換成可以共用的<code>Extension Method</code></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/ef/core/">EFCore</a>:資料存取用開發套件</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/14/dotnetcore-generic-series-DI/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-domain/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/14/dotnetcore-generic-series-domain/" class="post-title-link" itemprop="url">[DotnetCore]泛型運用系列-商業邏輯實作篇</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-01-14 11:41:36 / 修改時間：13:25:20" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:36+08:00">2022-01-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>4.1k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>8 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>前提情要請參考<a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>，不過筆者還是在這邊再列一下會用到的技術觀念與套件：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://automapper.org/">AutoMapper</a>:運用於將檔案內容對應的物件轉成<code>EFCore</code>的物件時</li>
+<li>Generic Class/Method: 不想寫多個<code>Service</code>去處理多個檔案，設計成泛型形式以符合各種檔案類型</li>
+<li><code>Attribute</code>: 透過<code>Description Attribute</code>，註記其對應的<code>Comlumn</code>欄位順序</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>:透過該套件，將寫好的<code>Service</code>掛成排程任務</li>
+<li>Extension Method:有一些通用的<code>Method</code>，不要落落等塞在一個Service中，因此轉換成可以共用的<code>Extension Method</code></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/ef/core/">EFCore</a>:資料存取用開發套件</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/14/dotnetcore-generic-series-domain/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-attribute/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/14/dotnetcore-generic-series-attribute/" class="post-title-link" itemprop="url">[DotnetCore]泛型運用系列-Attribute設計篇</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-01-14 11:41:22 / 修改時間：13:08:27" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:22+08:00">2022-01-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>6 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>前提情要請參考<a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>，不過筆者還是在這邊再列一下會用到的技術觀念與套件：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://automapper.org/">AutoMapper</a>:運用於將檔案內容對應的物件轉成<code>EFCore</code>的物件時</li>
+<li>Generic Class/Method: 不想寫多個<code>Service</code>去處理多個檔案，設計成泛型形式以符合各種檔案類型</li>
+<li><code>Attribute</code>: 透過<code>Description Attribute</code>，註記其對應的<code>Comlumn</code>欄位順序</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>:透過該套件，將寫好的<code>Service</code>掛成排程任務</li>
+<li>Extension Method:有一些通用的<code>Method</code>，不要落落等塞在一個Service中，因此轉換成可以共用的<code>Extension Method</code></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/ef/core/">EFCore</a>:資料存取用開發套件</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/14/dotnetcore-generic-series-attribute/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/01/14/dotnetcore-generic-series-model/" class="post-title-link" itemprop="url">[DotnetCore]泛型運用系列-Model設計篇</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-01-14 11:41:08 / 修改時間：13:02:50" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:08+08:00">2022-01-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>1.6k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>3 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者日前工作環境中要實作，從某個<code>FTP</code>位置下載檔案，下載到檔案後將檔案內容轉成物件清單，存進資料庫中，接著這些檔案依照屬性不同，拆成四分檔案，有共同欄位，也有各自的欄位，資料表則依照最大化原則，將所有檔案欄位最大化後設計成對應的欄位，當然設計一個識別欄位:<code>EventType</code>，識別是哪個檔案的資料。最後這個檔案內容轉換成資料表中的資料，要掛在排程上面做運作，筆者簡單列一下此一系列的實作需要用到的概念與套件如下:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://automapper.org/">AutoMapper</a>:運用於將檔案內容對應的物件轉成<code>EFCore</code>的物件時</li>
+<li>Generic Class/Method: 不想寫多個<code>Service</code>去處理多個檔案，設計成泛型形式以符合各種檔案類型</li>
+<li><code>Attribute</code>: 透過<code>Description Attribute</code>，註記其對應的<code>Comlumn</code>欄位順序</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>:透過該套件，將寫好的<code>Service</code>掛成排程任務</li>
+<li>Extension Method:有一些通用的<code>Method</code>，不要落落等塞在一個<code>Service</code>中，因此轉換成可以共用的<code>Extension Method</code></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/ef/core/">EFCore</a>:資料存取用開發套件</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/01/14/dotnetcore-generic-series-model/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -793,404 +1209,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/20/rust-series-windows-execute/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/20/rust-series-windows-execute/" class="post-title-link" itemprop="url">[Rust]教學系列:Windows疑難雜症解決</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-20 21:12:52 / 修改時間：21:34:38" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:52+08:00">2021-11-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>806</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊主要在Windows環境中安裝好<code>Rust</code>開發環境後，可以透過<code>rustc —version</code>，可以順利顯示出<code>Rust</code>版本號，<code>cargo new</code>也沒問題，但<code>cargo run</code>時，會出現錯誤訊息:</p>
-<blockquote>
-<p>linking with <code>link.exe</code> failed: exit code: 1181</p>
-</blockquote>
-<p>找了一下，是少安裝<code>C++ build tools</code>，其實<code>Rust</code>官方網站上的Install頁面就有提醒，除了安裝檔之外，也要記得安裝<code>C++build tools</code>。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/20/rust-series-windows-execute/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/20/windows-series-problem-proxy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/20/windows-series-problem-proxy/" class="post-title-link" itemprop="url">[Windows]技巧系列-透過Proxy下載設定</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-20 21:12:29 / 修改時間：21:32:54" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:29+08:00">2021-11-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/windows/" itemprop="url" rel="index"><span itemprop="name">windows</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/windows/problemsolving/" itemprop="url" rel="index"><span itemprop="name">problemsolving</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>686</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>1 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊想要在工作環境中安裝Rust開發環境，以利撰寫部落格會使用到的<code>Demo Project</code>，因此想要在工作環境<code>Windows</code>環境中安裝其開發環境，以<code>Rust</code>官方網站上面的教學，基本上只要下載好<code>Install</code>的<code>exe</code>檔案，應該就會搞定。</p>
-<p>但由於筆者環境有防火牆設定，需要透過<code>Proxy</code>才能往外連線並下載，就像筆者跟同事們都會設定<code>.npmrc</code>或者<code>vscode</code>中的<code>proxy</code>設定以及<code>.gitconfig</code>皆會設定其<code>http_proxy</code>的連結，但這種按下<code>exe</code>檔案這種安裝方式，筆者還真的第一次遇到，這篇就照著<code>Stackoverflow</code>的教學，透過<code>Powershell</code>設定其<code>http_proxy</code>設定後，從<code>Powershell</code>中執行其安裝檔。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/20/windows-series-problem-proxy/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/20/rust-series-guessing-game-full/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/20/rust-series-guessing-game-full/" class="post-title-link" itemprop="url">[Rust]教學系列-猜謎遊戲:最終篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-20 21:12:14 / 修改時間：21:26:03" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:14+08:00">2021-11-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.9k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>7 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>來到「猜謎遊戲」的最終篇章了，前面兩篇<a href="/2021/11/18/rust-series-guessing-game-stdin/" title="[Rust]教學系列-猜謎遊戲:取得使用者輸入值">[Rust]教學系列-猜謎遊戲:取得使用者輸入值</a>、<a href="/2021/11/19/rust-series-guessing-game-rand/" title="[Rust]教學系列-猜謎遊戲:取亂數">[Rust]教學系列-猜謎遊戲:取亂數</a>，我們已經把前置作業該做的都做完了，最終篇就是重頭戲中的重頭戲，將取得的使用者輸入值與隨機產生的亂數做一個比較，若一樣則比賽結束，若不一致則可以讓使用者繼續猜，跟著筆者一起實作吧。</p>
-<p>筆者先預告一下此篇主要是會使用到<code>Rust</code>的重要方法<code>match</code>以及若使用者輸入值與神秘數字不一樣時，可以讓使用者一直猜下去的<code>loop</code>技巧。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/20/rust-series-guessing-game-full/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/11/19/rust-series-guessing-game-rand/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/19/rust-series-guessing-game-rand/" class="post-title-link" itemprop="url">[Rust]教學系列-猜謎遊戲:取亂數</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-19 01:10:02 / 修改時間：01:24:03" itemprop="dateCreated datePublished" datetime="2021-11-19T01:10:02+08:00">2021-11-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>2.9k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>5 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <img src="/2021/11/19/rust-series-guessing-game-rand/Untitled-4.png" class="" title="[rand crate技術文件]">
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/19/rust-series-guessing-game-rand/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
   </nav>
 
 
@@ -1256,7 +1278,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1269,7 +1291,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
@@ -1298,42 +1320,42 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:50+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-DI/" title="[DotnetCore]泛型運用系列-注入篇">[DotnetCore]泛型運用系列-注入篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:36+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-domain/" title="[DotnetCore]泛型運用系列-商業邏輯實作篇">[DotnetCore]泛型運用系列-商業邏輯實作篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:22+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-attribute/" title="[DotnetCore]泛型運用系列-Attribute設計篇">[DotnetCore]泛型運用系列-Attribute設計篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:08+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">
         12/01
       </time>
       <a href="/2021/12/01/dotnetcore-specify-sdk/" title="[DotnetCore]教學系列-指定sdk版本建立專案">[DotnetCore]教學系列-指定sdk版本建立專案</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:30:13+08:00">
-        11/23
-      </time>
-      <a href="/2021/11/23/electron-series-vanillajs-modal/" title="[Electron]vanilla js套件系列-Modal:modal-vanilla">[Electron]vanilla js套件系列-Modal:modal-vanilla</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:25:06+08:00">
-        11/23
-      </time>
-      <a href="/2021/11/23/electron-series-vanillajs-loading/" title="[Electron]vanilla js套件系列-Loading效果">[Electron]vanilla js套件系列-Loading效果</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:24:26+08:00">
-        11/23
-      </time>
-      <a href="/2021/11/23/electron-series-vanillajs-listjs/" title="[Electron]vanilla js套件系列-listjs">[Electron]vanilla js套件系列-listjs</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-20T21:13:23+08:00">
-        11/20
-      </time>
-      <a href="/2021/11/20/angular-series-barcode-listener/" title="[Angular]技巧系列-BarcodeListener">[Angular]技巧系列-BarcodeListener</a>
       <br>
     </li>
     
@@ -1359,7 +1381,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1368,12 +1390,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">271k</span>
+    <span title="總字數">283k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:14</span>
+    <span title="所需總閱讀時間">8:34</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

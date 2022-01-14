@@ -193,6 +193,418 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/05/orm-series-efcore-override-savechanges/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/05/orm-series-efcore-override-savechanges/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-09-05 23:53:05 / 修改時間：23:56:10" itemprop="dateCreated datePublished" datetime="2021-09-05T23:53:05+08:00">2021-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/efcore/" itemprop="url" rel="index"><span itemprop="name">efcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>6 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者工作環境中開發<code>ASP.NET CORE Web API</code>，資料庫存取部份，會交叉使用<code>EF Core</code>以及<code>Dapper</code>，筆者單位共同認知的切分方式為若單個資料表的CRUD操作，就使用<code>EF Core</code>，若複雜的查詢，或者呼叫Store Procedure等會使用Dapper完成操作。單個資料表的<code>CRUD</code>，基本上透過<code>EF Core</code>可以說是輕而易舉，會遇到一個問題是資料表共同欄位，類似於<code>CreatedDate, CreatedBy, UpdatedDate, UpdatedBy</code>這種紀錄變更者及變更時間部份，若寫在每一個<code>Service</code>中會顯得有點多餘，且沒有效率，擴充性也不好，假設現在要改變<code>CreatedDate, UpdatedDate</code>的時間原本由<code>Local Time</code>改為<code>UTC  Time</code>，其不就是要在每個Service中做修正。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/05/orm-series-efcore-override-savechanges/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/04/orm-series-chloe-entry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/04/orm-series-chloe-entry/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-Chloe:入門篇</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-09-04 22:00:33" itemprop="dateCreated datePublished" datetime="2021-09-04T22:00:33+08:00">2021-09-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2021-09-08 21:06:51" itemprop="dateModified" datetime="2021-09-08T21:06:51+08:00">2021-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/chloe/" itemprop="url" rel="index"><span itemprop="name">chloe</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>7 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者被朋友推薦使用<a target="_blank" rel="noopener" href="https://github.com/shuxinqin/Chloe/wiki">Chloe</a>，查了一下也看到<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40600379/article/details/101680870">ORM框架效能</a>比較文章，效能是真的很棒，使用上也是透過linq實現所有事情，這篇主要介紹<code>Chloe ORM</code>套件的使用，搭配筆者之前建立的MySQL範例資料庫，做一些簡單的Select查詢示範，之後會再慢慢介紹整個應用。前置作業參考</p>
+<ul>
+<li><a href="/2021/08/23/mysql-install/" title="[MySQL]安裝與設定">[MySQL]安裝與設定</a></li>
+<li><a href="/2021/08/23/mysql-sample-db/" title="[MySQL]範例資料庫設定">[MySQL]範例資料庫設定</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/04/orm-series-chloe-entry/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/03/reader-series-pdf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/03/reader-series-pdf/" class="post-title-link" itemprop="url">[DotnetCore]Reader系列-Pdf檔案</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-09-03 15:02:42" itemprop="dateCreated datePublished" datetime="2021-09-03T15:02:42+08:00">2021-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2021-09-08 21:09:14" itemprop="dateModified" datetime="2021-09-08T21:09:14+08:00">2021-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/reader/" itemprop="url" rel="index"><span itemprop="name">reader</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>9 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>Reader系列來到pdf格式檔案了，筆者這邊使用<a target="_blank" rel="noopener" href="https://pdfbox.apache.org/">Pdfbox</a>移植的C# Library:<a target="_blank" rel="noopener" href="https://github.com/UglyToad/PdfPig">PdfPig</a>，讀取部份，看github的readme的教學基本上就滿簡單的，只有讀取一個pdf檔案會很無趣，想了一下應用點，筆者公司銀行有規定新人要考過一些金融業基礎的證照考試取得證照，例: <a target="_blank" rel="noopener" href="https://examweb.sfi.org.tw/regexam/exam.aspx?EXAMCERT=%E9%87%91%E8%9E%8D&EXAMMID=2">金融市場常識與職業道德</a>，想到一個有趣的應用，基本上都有考古題下載下來做練習，可以利用<a target="_blank" rel="noopener" href="https://github.com/UglyToad/PdfPig">PdfPig</a>套件讀取pdf檔案後解析題目與選項及答案，一旦取得這些資料，利用擅長的前端架構做一個頁面，後端則利用這些資料做一個隨機出題的API，就可以完成考古題測驗Application了，筆者這篇主要做到讀取及解析的作業及取得有結構化的資料。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/03/reader-series-pdf/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/02/ftp-sftp-resolver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/02/ftp-sftp-resolver/" class="post-title-link" itemprop="url">[DotnetCore](S)FTP-ServiceResolver</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-09-02 07:49:32 / 修改時間：08:00:39" itemprop="dateCreated datePublished" datetime="2021-09-02T07:49:32+08:00">2021-09-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>10 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>由前兩篇的議題延續下去，參考<a href="/2021/08/31/ftp-download/" title="[DotnetCore]FTP-下載上傳">[DotnetCore]FTP-下載上傳</a>、<a href="/2021/09/01/sftp-download/" title="[DotnetCore]SFTP-下載上傳">[DotnetCore]SFTP-下載上傳</a>，因為同樣都是實作<code>IFtpService</code>，同一個專案皆有使用到Ftp及SFtp則會面臨到此篇要解決的問題，該如何分辨要採用哪種實作的下載、上傳，有哪些方法可以解決，由筆者我來細說吧，主要參考 <a target="_blank" rel="noopener" href="https://devkimchi.com/2020/07/01/5-ways-injecting-multiple-instances-of-same-interface-on-aspnet-core/">國外文章</a> :佛心的整理了五種不同的解決方式。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/02/ftp-sftp-resolver/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/09/01/sftp-download/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -798,427 +1210,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/27/hangfire-entry/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/27/hangfire-entry/" class="post-title-link" itemprop="url">[DotnetCore]排程神器-Hangfire:入門篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-
-              <time title="創建時間：2021-08-27 22:10:13" itemprop="dateCreated datePublished" datetime="2021-08-27T22:10:13+08:00">2021-08-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2021-09-08 21:08:34" itemprop="dateModified" datetime="2021-09-08T21:08:34+08:00">2021-09-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/hangfire/" itemprop="url" rel="index"><span itemprop="name">hangfire</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.7k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>7 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在上篇已介紹<code>Coravel</code>短小精幹的排程利器，固定週期排程部份皆使用<code>Coravel</code>套件完成，然而使用者需求越來越清楚的狀況下，意識到無法滿足所以使用者需求，事情是這樣的，使用者的某些作業需要從畫面操作，並將該項作業排進排程中，且是一次性作業，例如：使用者透過介面去設定日結作業的需求，我們會由介面呼叫API，於API中設定好某個時間點去執行該「日結作業」服務。</p>
-<p>以上述的需求，在Coravel套件是無法做到的，Coravel是有Queue的機制，不過無法設定特定時間，筆者最近是時不時看<a target="_blank" rel="noopener" href="https://github.com/MoienTajik/AspNetCore-Developer-Roadmap">Asp.Net Core RoadMap</a>上所列之相關技術及推薦套件，對於上面推薦的套件，都會想要來試看看，畢竟大神們整理過的，肯定有其厲害之處，剛好於Task Scheduling作業中有推薦三套相關套件，筆者已經使用過Coravel，試試看其他，廢話不多說，趕緊來介紹今天的主角<code>HangFire</code>吧。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/27/hangfire-entry/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/26/iis-always-run-setting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/26/iis-always-run-setting/" class="post-title-link" itemprop="url">[IIS]排程及背景服務站台-保持啟動設定</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-08-26 09:07:25 / 修改時間：09:23:57" itemprop="dateCreated datePublished" datetime="2021-08-26T09:07:25+08:00">2021-08-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iis/" itemprop="url" rel="index"><span itemprop="name">iis</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <img src="/2021/08/26/iis-always-run-setting/Untitled.png" class="" title="[IHostedServiceArchitecture]">
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/26/iis-always-run-setting/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/25/coravel-queue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/25/coravel-queue/" class="post-title-link" itemprop="url">[DotnetCore]排程利器-Coravel:Queue篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-
-              <time title="創建時間：2021-08-25 10:58:11" itemprop="dateCreated datePublished" datetime="2021-08-25T10:58:11+08:00">2021-08-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2021-09-08 21:09:58" itemprop="dateModified" datetime="2021-09-08T21:09:58+08:00">2021-09-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/coravel/" itemprop="url" rel="index"><span itemprop="name">coravel</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.4k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>6 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者上篇介紹完<a target="_blank" rel="noopener" href="https://docs.coravel.net/">Coravel</a>的<code>Scheduler</code>功能後，這篇要來實作<code>Queue</code>的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作<code>Data Migration</code>，為方便，不防做一個前端頁面，才可以有介面去點擊執行<code>Data Migration</code>作業，想當然爾，作業時間一定無法在一個<code>Request</code>時間內完成，一定會噴<code>Timeout Error</code>。</p>
-<p>再則為這點小功能，不想透過<a target="_blank" rel="noopener" href="https://www.hangfire.io/">Hangfire</a>的<code>BackgroundJob.Enqueue</code>來實作，這時想到<code>Coravel</code>也有提供<code>Queue</code>功能，API站台的action收到Data Migration的request後，塞入一則<code>Coravel</code>的<code>Queue</code>，由<code>Queue</code>對應的Service去往下執行對應的作業，是個完美的方案吧。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/25/coravel-queue/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/25/coravel-scheduler/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/25/coravel-scheduler/" class="post-title-link" itemprop="url">[DotnetCore]排程利器-Coravel:Scheduler篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-
-              <time title="創建時間：2021-08-25 10:48:46" itemprop="dateCreated datePublished" datetime="2021-08-25T10:48:46+08:00">2021-08-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2021-09-08 21:10:04" itemprop="dateModified" datetime="2021-09-08T21:10:04+08:00">2021-09-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/coravel/" itemprop="url" rel="index"><span itemprop="name">coravel</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.1k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>6 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由<code>Windows排程</code>去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。</p>
-<p>筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注<a target="_blank" rel="noopener" href="https://github.com/MoienTajik/AspNetCore-Developer-Roadmap">ASP.NET CORE Developer Roadmap</a>，不時會在上面找好料，<a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/25/coravel-scheduler/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一頁"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一頁"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
   </nav>
 
 
@@ -1284,7 +1279,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">64</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1297,7 +1292,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">39</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
@@ -1326,42 +1321,42 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:50+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-DI/" title="[DotnetCore]泛型運用系列-注入篇">[DotnetCore]泛型運用系列-注入篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:36+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-domain/" title="[DotnetCore]泛型運用系列-商業邏輯實作篇">[DotnetCore]泛型運用系列-商業邏輯實作篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:22+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-attribute/" title="[DotnetCore]泛型運用系列-Attribute設計篇">[DotnetCore]泛型運用系列-Attribute設計篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:08+08:00">
+        01/14
+      </time>
+      <a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">
         12/01
       </time>
       <a href="/2021/12/01/dotnetcore-specify-sdk/" title="[DotnetCore]教學系列-指定sdk版本建立專案">[DotnetCore]教學系列-指定sdk版本建立專案</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:30:13+08:00">
-        11/23
-      </time>
-      <a href="/2021/11/23/electron-series-vanillajs-modal/" title="[Electron]vanilla js套件系列-Modal:modal-vanilla">[Electron]vanilla js套件系列-Modal:modal-vanilla</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:25:06+08:00">
-        11/23
-      </time>
-      <a href="/2021/11/23/electron-series-vanillajs-loading/" title="[Electron]vanilla js套件系列-Loading效果">[Electron]vanilla js套件系列-Loading效果</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-23T18:24:26+08:00">
-        11/23
-      </time>
-      <a href="/2021/11/23/electron-series-vanillajs-listjs/" title="[Electron]vanilla js套件系列-listjs">[Electron]vanilla js套件系列-listjs</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-11-20T21:13:23+08:00">
-        11/20
-      </time>
-      <a href="/2021/11/20/angular-series-barcode-listener/" title="[Angular]技巧系列-BarcodeListener">[Angular]技巧系列-BarcodeListener</a>
       <br>
     </li>
     
@@ -1387,7 +1382,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -1396,12 +1391,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">271k</span>
+    <span title="總字數">283k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:14</span>
+    <span title="所需總閱讀時間">8:34</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

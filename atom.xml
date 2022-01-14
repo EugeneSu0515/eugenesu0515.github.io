@@ -6,7 +6,7 @@
   <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
   
   <link href="https://eugenesu0515.github.io/"/>
-  <updated>2021-12-01T06:16:18.154Z</updated>
+  <updated>2022-01-14T05:21:32.706Z</updated>
   <id>https://eugenesu0515.github.io/</id>
   
   <author>
@@ -15,6 +15,122 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-注入篇</title>
+    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-DI/"/>
+    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-DI/</id>
+    <published>2022-01-14T03:41:50.000Z</published>
+    <updated>2022-01-14T05:21:32.706Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;前提情要請參考&lt;a href=&quot;/2022/01/14/dotnetcore-generic-series-model/&quot; title=&quot;[DotnetCore]泛型運用系列-Model設計篇&quot;&gt;[DotnetCore]泛型運用系列-Model設計篇&lt;/a&gt;，不過筆者還是在這邊再列一下會用到的技術觀念與套件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個Service中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-商業邏輯實作篇</title>
+    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-domain/"/>
+    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-domain/</id>
+    <published>2022-01-14T03:41:36.000Z</published>
+    <updated>2022-01-14T05:25:20.638Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;前提情要請參考&lt;a href=&quot;/2022/01/14/dotnetcore-generic-series-model/&quot; title=&quot;[DotnetCore]泛型運用系列-Model設計篇&quot;&gt;[DotnetCore]泛型運用系列-Model設計篇&lt;/a&gt;，不過筆者還是在這邊再列一下會用到的技術觀念與套件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個Service中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-Attribute設計篇</title>
+    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-attribute/"/>
+    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-attribute/</id>
+    <published>2022-01-14T03:41:22.000Z</published>
+    <updated>2022-01-14T05:08:27.884Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;前提情要請參考&lt;a href=&quot;/2022/01/14/dotnetcore-generic-series-model/&quot; title=&quot;[DotnetCore]泛型運用系列-Model設計篇&quot;&gt;[DotnetCore]泛型運用系列-Model設計篇&lt;/a&gt;，不過筆者還是在這邊再列一下會用到的技術觀念與套件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個Service中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-Model設計篇</title>
+    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-model/"/>
+    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-model/</id>
+    <published>2022-01-14T03:41:08.000Z</published>
+    <updated>2022-01-14T05:02:50.031Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者日前工作環境中要實作，從某個&lt;code&gt;FTP&lt;/code&gt;位置下載檔案，下載到檔案後將檔案內容轉成物件清單，存進資料庫中，接著這些檔案依照屬性不同，拆成四分檔案，有共同欄位，也有各自的欄位，資料表則依照最大化原則，將所有檔案欄位最大化後設計成對應的欄位，當然設計一個識別欄位:&lt;code&gt;EventType&lt;/code&gt;，識別是哪個檔案的資料。最後這個檔案內容轉換成資料表中的資料，要掛在排程上面做運作，筆者簡單列一下此一系列的實作需要用到的概念與套件如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個&lt;code&gt;Service&lt;/code&gt;中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]教學系列-指定sdk版本建立專案</title>
@@ -359,98 +475,6 @@
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-SqlSugar:查詢篇1</title>
-    <link href="https://eugenesu0515.github.io/2021/11/02/orm-series-sqlsugar-query/"/>
-    <id>https://eugenesu0515.github.io/2021/11/02/orm-series-sqlsugar-query/</id>
-    <published>2021-11-02T14:56:44.000Z</published>
-    <updated>2021-11-03T10:23:24.354Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;昨日介紹完&lt;code&gt;SqlSugar&lt;/code&gt;後，是否被他的簡單易用吸引了呢，筆者今天就介紹它的查詢實作，就會漸漸發現其功能之強大，今天就照&lt;a href=&quot;https://www.donet5.com/Home/Doc?typeId=1187&quot;&gt;https://www.donet5.com/Home/Doc?typeId=1187&lt;/a&gt;操作一遍吧。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-SqlSugar:入門篇</title>
-    <link href="https://eugenesu0515.github.io/2021/11/01/orm-series-sqlsugar-entry/"/>
-    <id>https://eugenesu0515.github.io/2021/11/01/orm-series-sqlsugar-entry/</id>
-    <published>2021-11-01T12:38:25.000Z</published>
-    <updated>2021-11-01T15:23:38.751Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;又來到介紹ORM框架的時候到了，筆者之前就介紹過類似的&lt;a href=&quot;/2021/09/04/orm-series-chloe-entry/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:入門篇&quot;&gt;[DotnetCore]ORM系列-Chloe:入門篇&lt;/a&gt;，總覺得差一點，類似像&lt;code&gt;Interceptor&lt;/code&gt;, Chloe部份是DataBag的概念，可以於&lt;code&gt;Interceptor&lt;/code&gt;事件間傳遞物件，筆者寫過一篇&lt;a href=&quot;/2021/09/05/orm-series-efcore-override-savechanges/&quot; title=&quot;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&quot;&gt;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&lt;/a&gt;，其中針對每個表中共同擁有的欄位做更新時著實方便。&lt;br&gt;&lt;code&gt;Chloe&lt;/code&gt;也不是做不到，因&lt;code&gt;Interceptor&lt;/code&gt;中可存取到&lt;code&gt;IDBCommand&lt;/code&gt;，必須自己加以實作，不像&lt;code&gt;EFCore&lt;/code&gt;、&lt;code&gt;SqlSugar&lt;/code&gt;那樣有包好的事件可使用。筆者於公司開發專案環境中使用&lt;code&gt;EFCore&lt;/code&gt;、&lt;code&gt;Dapper&lt;/code&gt;，由於&lt;code&gt;Dapper&lt;/code&gt;必須得撰寫sql，Insert、Update時&lt;code&gt;EFCore&lt;/code&gt;方便些，由於筆者對於&lt;code&gt;EFCore&lt;/code&gt;也不是非常熟捻，因此於&lt;code&gt;Hangfire&lt;/code&gt;併發Job時吃了一點苦，高併發會導致連線錯亂，直接噴無法連線資料庫等各種不可控的錯誤，心念一轉，何不直接導入此主題要介紹的ORM框架-&lt;code&gt;SqlSugar&lt;/code&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程神器-Hangfire:動台排程篇4</title>
-    <link href="https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic4/"/>
-    <id>https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic4/</id>
-    <published>2021-09-11T13:48:02.000Z</published>
-    <updated>2021-09-11T14:05:54.432Z</updated>
-    
-    
-    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/dashboard.png&quot;&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]排程神器-Hangfire:動台排程篇3</title>
-    <link href="https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic3/"/>
-    <id>https://eugenesu0515.github.io/2021/09/11/hangfire-dynamic3/</id>
-    <published>2021-09-11T13:47:56.000Z</published>
-    <updated>2021-09-11T14:06:24.346Z</updated>
-    
-    
-    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/retries.png&quot;&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/categories/dotnetcore/hangfire/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
-    
-    <category term="hangfire" scheme="https://eugenesu0515.github.io/tags/hangfire/"/>
     
   </entry>
   

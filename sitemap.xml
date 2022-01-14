@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-domain/</loc>
+    
+    <lastmod>2022-01-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-DI/</loc>
+    
+    <lastmod>2022-01-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-attribute/</loc>
+    
+    <lastmod>2022-01-14</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-model/</loc>
+    
+    <lastmod>2022-01-14</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/</loc>
     
     <lastmod>2021-12-01</lastmod>
@@ -436,14 +464,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/renovate.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
   </url>
   
   <url>
-    <loc>https://eugenesu0515.github.io/lib/bookmark/renovate.json</loc>
+    <loc>https://eugenesu0515.github.io/lib/bookmark/README.html</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -487,7 +515,7 @@
 
   <url>
     <loc>https://eugenesu0515.github.io/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -495,266 +523,273 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/angular/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/barcodelistener/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/dotnetcore/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/coravel/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/bat/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/cap/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/rabbitmq/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/generic/</loc>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/global-error-handler/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/socket/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/netcoreserver/</loc>
-    <lastmod>2021-12-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/electron/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/vanilla-js/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/smtp/</loc>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/excel/</loc>
-    <lastmod>2021-12-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/exception/</loc>
-    <lastmod>2021-12-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/elmah/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/fluentftp/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/hangfire/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/ftp/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/sftp/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/resolver/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/iis/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/mysql/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/exception/</loc>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/elmah/</loc>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/nlog/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/chloe/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/efcore/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/sqlsugar/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/message-queue/</loc>
-    <lastmod>2021-12-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/pdf/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/csv/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/rust/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/pdf/</loc>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/vue/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/axios/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/vee-validate/</loc>
-    <lastmod>2021-12-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/windows/</loc>
-    <lastmod>2021-12-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu0515.github.io/tags/problemsolving/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/webpack/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/tags/vue-cli/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/windows/</loc>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu0515.github.io/tags/problemsolving/</loc>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -763,119 +798,119 @@
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/angular/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/coravel/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/socket/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/electron/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/reader/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/hangfire/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/iis/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/mysql/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/chloe/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/efcore/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/message-queue/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/rust/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/vue/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/windows/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://eugenesu0515.github.io/categories/windows/problemsolving/</loc>
-    <lastmod>2021-12-01</lastmod>
+    <lastmod>2022-01-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
