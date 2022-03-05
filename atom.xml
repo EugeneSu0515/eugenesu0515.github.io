@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Eugene&#39;s Blog</title>
-  <icon>https://eugenesu0515.github.io/icon.png</icon>
+  <icon>https://eugenesu.me/icon.png</icon>
   
-  <link href="https://eugenesu0515.github.io/atom.xml" rel="self"/>
+  <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
-  <link href="https://eugenesu0515.github.io/"/>
+  <link href="https://eugenesu.me/"/>
   <updated>2022-01-14T05:21:32.706Z</updated>
-  <id>https://eugenesu0515.github.io/</id>
+  <id>https://eugenesu.me/</id>
   
   <author>
     <name>Eugene Su</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>[DotnetCore]泛型運用系列-注入篇</title>
-    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-DI/"/>
-    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-DI/</id>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-DI/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-DI/</id>
     <published>2022-01-14T03:41:50.000Z</published>
     <updated>2022-01-14T05:21:32.706Z</updated>
     
@@ -36,19 +36,19 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]泛型運用系列-商業邏輯實作篇</title>
-    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-domain/"/>
-    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-domain/</id>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-domain/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-domain/</id>
     <published>2022-01-14T03:41:36.000Z</published>
     <updated>2022-01-14T06:21:47.734Z</updated>
     
@@ -65,19 +65,19 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]泛型運用系列-Attribute設計篇</title>
-    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-attribute/"/>
-    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-attribute/</id>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-attribute/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-attribute/</id>
     <published>2022-01-14T03:41:22.000Z</published>
     <updated>2022-01-14T05:49:50.601Z</updated>
     
@@ -94,19 +94,19 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]泛型運用系列-Model設計篇</title>
-    <link href="https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-model/"/>
-    <id>https://eugenesu0515.github.io/2022/01/14/dotnetcore-generic-series-model/</id>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-model/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-model/</id>
     <published>2022-01-14T03:41:08.000Z</published>
     <updated>2022-01-14T05:02:50.031Z</updated>
     
@@ -123,19 +123,19 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="generic" scheme="https://eugenesu0515.github.io/tags/generic/"/>
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]教學系列-指定sdk版本建立專案</title>
-    <link href="https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/"/>
-    <id>https://eugenesu0515.github.io/2021/12/01/dotnetcore-specify-sdk/</id>
+    <link href="https://eugenesu.me/2021/12/01/dotnetcore-specify-sdk/"/>
+    <id>https://eugenesu.me/2021/12/01/dotnetcore-specify-sdk/</id>
     <published>2021-12-01T06:12:09.000Z</published>
     <updated>2021-12-01T06:16:18.154Z</updated>
     
@@ -146,17 +146,17 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
   </entry>
   
   <entry>
     <title>[Electron]vanilla js套件系列-Modal:modal-vanilla</title>
-    <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-modal/"/>
-    <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-modal/</id>
+    <link href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-modal/"/>
+    <id>https://eugenesu.me/2021/11/23/electron-series-vanillajs-modal/</id>
     <published>2021-11-23T10:30:13.000Z</published>
     <updated>2021-11-23T14:33:22.890Z</updated>
     
@@ -165,19 +165,19 @@
     
     
     
-    <category term="electron" scheme="https://eugenesu0515.github.io/categories/electron/"/>
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
     
     
-    <category term="electron" scheme="https://eugenesu0515.github.io/tags/electron/"/>
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
     
-    <category term="vanilla-js" scheme="https://eugenesu0515.github.io/tags/vanilla-js/"/>
+    <category term="vanilla-js" scheme="https://eugenesu.me/tags/vanilla-js/"/>
     
   </entry>
   
   <entry>
     <title>[Electron]vanilla js套件系列-Loading效果</title>
-    <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-loading/"/>
-    <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-loading/</id>
+    <link href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-loading/"/>
+    <id>https://eugenesu.me/2021/11/23/electron-series-vanillajs-loading/</id>
     <published>2021-11-23T10:25:06.000Z</published>
     <updated>2021-11-23T14:37:46.672Z</updated>
     
@@ -186,19 +186,19 @@
     
     
     
-    <category term="electron" scheme="https://eugenesu0515.github.io/categories/electron/"/>
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
     
     
-    <category term="electron" scheme="https://eugenesu0515.github.io/tags/electron/"/>
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
     
-    <category term="vanilla-js" scheme="https://eugenesu0515.github.io/tags/vanilla-js/"/>
+    <category term="vanilla-js" scheme="https://eugenesu.me/tags/vanilla-js/"/>
     
   </entry>
   
   <entry>
     <title>[Electron]vanilla js套件系列-listjs</title>
-    <link href="https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-listjs/"/>
-    <id>https://eugenesu0515.github.io/2021/11/23/electron-series-vanillajs-listjs/</id>
+    <link href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/"/>
+    <id>https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/</id>
     <published>2021-11-23T10:24:26.000Z</published>
     <updated>2021-11-23T14:43:44.956Z</updated>
     
@@ -207,19 +207,19 @@
     
     
     
-    <category term="electron" scheme="https://eugenesu0515.github.io/categories/electron/"/>
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
     
     
-    <category term="electron" scheme="https://eugenesu0515.github.io/tags/electron/"/>
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
     
-    <category term="vanilla-js" scheme="https://eugenesu0515.github.io/tags/vanilla-js/"/>
+    <category term="vanilla-js" scheme="https://eugenesu.me/tags/vanilla-js/"/>
     
   </entry>
   
   <entry>
     <title>[Angular]技巧系列-BarcodeListener</title>
-    <link href="https://eugenesu0515.github.io/2021/11/20/angular-series-barcode-listener/"/>
-    <id>https://eugenesu0515.github.io/2021/11/20/angular-series-barcode-listener/</id>
+    <link href="https://eugenesu.me/2021/11/20/angular-series-barcode-listener/"/>
+    <id>https://eugenesu.me/2021/11/20/angular-series-barcode-listener/</id>
     <published>2021-11-20T13:13:23.000Z</published>
     <updated>2021-11-20T13:39:48.633Z</updated>
     
@@ -229,19 +229,19 @@
     
     
     
-    <category term="angular" scheme="https://eugenesu0515.github.io/categories/angular/"/>
+    <category term="angular" scheme="https://eugenesu.me/categories/angular/"/>
     
     
-    <category term="angular" scheme="https://eugenesu0515.github.io/tags/angular/"/>
+    <category term="angular" scheme="https://eugenesu.me/tags/angular/"/>
     
-    <category term="barcodelistener" scheme="https://eugenesu0515.github.io/tags/barcodelistener/"/>
+    <category term="barcodelistener" scheme="https://eugenesu.me/tags/barcodelistener/"/>
     
   </entry>
   
   <entry>
     <title>[Rust]教學系列:Windows疑難雜症解決</title>
-    <link href="https://eugenesu0515.github.io/2021/11/20/rust-series-windows-execute/"/>
-    <id>https://eugenesu0515.github.io/2021/11/20/rust-series-windows-execute/</id>
+    <link href="https://eugenesu.me/2021/11/20/rust-series-windows-execute/"/>
+    <id>https://eugenesu.me/2021/11/20/rust-series-windows-execute/</id>
     <published>2021-11-20T13:12:52.000Z</published>
     <updated>2021-11-20T13:34:38.167Z</updated>
     
@@ -254,17 +254,17 @@
     
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
     
   </entry>
   
   <entry>
     <title>[Windows]技巧系列-透過Proxy下載設定</title>
-    <link href="https://eugenesu0515.github.io/2021/11/20/windows-series-problem-proxy/"/>
-    <id>https://eugenesu0515.github.io/2021/11/20/windows-series-problem-proxy/</id>
+    <link href="https://eugenesu.me/2021/11/20/windows-series-problem-proxy/"/>
+    <id>https://eugenesu.me/2021/11/20/windows-series-problem-proxy/</id>
     <published>2021-11-20T13:12:29.000Z</published>
     <updated>2021-11-20T13:32:54.907Z</updated>
     
@@ -274,21 +274,21 @@
     
     
     
-    <category term="windows" scheme="https://eugenesu0515.github.io/categories/windows/"/>
+    <category term="windows" scheme="https://eugenesu.me/categories/windows/"/>
     
-    <category term="problemsolving" scheme="https://eugenesu0515.github.io/categories/windows/problemsolving/"/>
+    <category term="problemsolving" scheme="https://eugenesu.me/categories/windows/problemsolving/"/>
     
     
-    <category term="windows" scheme="https://eugenesu0515.github.io/tags/windows/"/>
+    <category term="windows" scheme="https://eugenesu.me/tags/windows/"/>
     
-    <category term="problemsolving" scheme="https://eugenesu0515.github.io/tags/problemsolving/"/>
+    <category term="problemsolving" scheme="https://eugenesu.me/tags/problemsolving/"/>
     
   </entry>
   
   <entry>
     <title>[Rust]教學系列-猜謎遊戲:最終篇</title>
-    <link href="https://eugenesu0515.github.io/2021/11/20/rust-series-guessing-game-full/"/>
-    <id>https://eugenesu0515.github.io/2021/11/20/rust-series-guessing-game-full/</id>
+    <link href="https://eugenesu.me/2021/11/20/rust-series-guessing-game-full/"/>
+    <id>https://eugenesu.me/2021/11/20/rust-series-guessing-game-full/</id>
     <published>2021-11-20T13:12:14.000Z</published>
     <updated>2021-11-20T13:26:03.412Z</updated>
     
@@ -298,17 +298,17 @@
     
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
     
   </entry>
   
   <entry>
     <title>[Rust]教學系列-猜謎遊戲:取亂數</title>
-    <link href="https://eugenesu0515.github.io/2021/11/19/rust-series-guessing-game-rand/"/>
-    <id>https://eugenesu0515.github.io/2021/11/19/rust-series-guessing-game-rand/</id>
+    <link href="https://eugenesu.me/2021/11/19/rust-series-guessing-game-rand/"/>
+    <id>https://eugenesu.me/2021/11/19/rust-series-guessing-game-rand/</id>
     <published>2021-11-18T17:10:02.000Z</published>
     <updated>2021-11-18T17:24:03.680Z</updated>
     
@@ -317,17 +317,17 @@
     
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
     
   </entry>
   
   <entry>
     <title>[Rust]教學系列-猜謎遊戲:取得使用者輸入值</title>
-    <link href="https://eugenesu0515.github.io/2021/11/18/rust-series-guessing-game-stdin/"/>
-    <id>https://eugenesu0515.github.io/2021/11/18/rust-series-guessing-game-stdin/</id>
+    <link href="https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/"/>
+    <id>https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/</id>
     <published>2021-11-18T06:12:03.000Z</published>
     <updated>2021-11-18T06:20:27.712Z</updated>
     
@@ -336,17 +336,17 @@
     
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
     
   </entry>
   
   <entry>
     <title>[Rust]教學系列-Hello Cargo</title>
-    <link href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/"/>
-    <id>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-cargo/</id>
+    <link href="https://eugenesu.me/2021/11/16/rust-series-hello-cargo/"/>
+    <id>https://eugenesu.me/2021/11/16/rust-series-hello-cargo/</id>
     <published>2021-11-16T06:07:10.000Z</published>
     <updated>2021-11-16T06:23:08.471Z</updated>
     
@@ -355,17 +355,17 @@
     
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
     
   </entry>
   
   <entry>
     <title>[Rust]教學系列-Hello World</title>
-    <link href="https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/"/>
-    <id>https://eugenesu0515.github.io/2021/11/16/rust-series-hello-world/</id>
+    <link href="https://eugenesu.me/2021/11/16/rust-series-hello-world/"/>
+    <id>https://eugenesu.me/2021/11/16/rust-series-hello-world/</id>
     <published>2021-11-16T02:50:39.000Z</published>
     <updated>2021-11-16T05:50:25.658Z</updated>
     
@@ -383,17 +383,17 @@
     
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/categories/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
     
     
-    <category term="rust" scheme="https://eugenesu0515.github.io/tags/rust/"/>
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</title>
-    <link href="https://eugenesu0515.github.io/2021/11/15/orm-series-sqlsugar-audit-columns/"/>
-    <id>https://eugenesu0515.github.io/2021/11/15/orm-series-sqlsugar-audit-columns/</id>
+    <link href="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/"/>
+    <id>https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/</id>
     <published>2021-11-15T05:03:43.000Z</published>
     <updated>2021-11-15T05:23:35.547Z</updated>
     
@@ -402,21 +402,21 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:AOP篇</title>
-    <link href="https://eugenesu0515.github.io/2021/11/12/orm-series-sqlsugar-interceptor/"/>
-    <id>https://eugenesu0515.github.io/2021/11/12/orm-series-sqlsugar-interceptor/</id>
+    <link href="https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/"/>
+    <id>https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/</id>
     <published>2021-11-12T02:54:51.000Z</published>
     <updated>2021-11-12T03:04:37.971Z</updated>
     
@@ -429,21 +429,21 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:實體產生器</title>
-    <link href="https://eugenesu0515.github.io/2021/11/11/orm-series-sqlsugar-model-generator/"/>
-    <id>https://eugenesu0515.github.io/2021/11/11/orm-series-sqlsugar-model-generator/</id>
+    <link href="https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/"/>
+    <id>https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/</id>
     <published>2021-11-10T18:28:53.000Z</published>
     <updated>2021-11-11T09:08:17.296Z</updated>
     
@@ -452,21 +452,21 @@
     
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/categories/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
     
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/categories/dotnetcore/sqlsugar/"/>
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
     
     
-    <category term="dotnetcore" scheme="https://eugenesu0515.github.io/tags/dotnetcore/"/>
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
-    <category term="sqlsugar" scheme="https://eugenesu0515.github.io/tags/sqlsugar/"/>
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
     
   </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-Chloe:共同欄位新增、編輯技巧</title>
-    <link href="https://eugenesu0515.github.io/2021/11/04/orm-series-chloe-audit-columns/"/>
-    <id>https://eugenesu0515.github.io/2021/11/04/orm-series-chloe-audit-columns/</id>
+    <link href="https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/"/>
+    <id>https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/</id>
     <published>2021-11-04T12:14:16.000Z</published>
     <updated>2021-11-04T14:35:52.034Z</updated>
     

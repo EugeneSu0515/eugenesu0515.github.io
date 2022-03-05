@@ -20,29 +20,29 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"eugenesu0515.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="前提情要筆者上篇介紹完Coravel的Scheduler功能後，這篇要來實作Queue的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作Data Migration，為方便，不防做一個前端頁面，才可以有介面去點擊執行Data Migration作業，想當然爾，作業時間一定無法在一個Request時間內完成，一定會噴Timeout Error。 再則為這點小功能，不想透過Hangf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[DotnetCore]排程利器-Coravel:Queue篇">
-<meta property="og:url" content="https://eugenesu0515.github.io/2021/08/25/coravel-queue/index.html">
+<meta property="og:url" content="https://eugenesu.me/2021/08/25/coravel-queue/index.html">
 <meta property="og:site_name" content="Eugene&#39;s Blog">
 <meta property="og:description" content="前提情要筆者上篇介紹完Coravel的Scheduler功能後，這篇要來實作Queue的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作Data Migration，為方便，不防做一個前端頁面，才可以有介面去點擊執行Data Migration作業，想當然爾，作業時間一定無法在一個Request時間內完成，一定會噴Timeout Error。 再則為這點小功能，不想透過Hangf">
 <meta property="og:locale" content="zh_TW">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-queue/Untitled.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-queue/Untitled1.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-queue/Untitled2.png">
-<meta property="og:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-queue/Untitled3.png">
+<meta property="og:image" content="https://eugenesu.me/2021/08/25/coravel-queue/Untitled.png">
+<meta property="og:image" content="https://eugenesu.me/2021/08/25/coravel-queue/Untitled1.png">
+<meta property="og:image" content="https://eugenesu.me/2021/08/25/coravel-queue/Untitled2.png">
+<meta property="og:image" content="https://eugenesu.me/2021/08/25/coravel-queue/Untitled3.png">
 <meta property="article:published_time" content="2021-08-25T02:58:11.000Z">
 <meta property="article:modified_time" content="2021-09-08T13:09:58.191Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
 <meta property="article:tag" content="coravel">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eugenesu0515.github.io/2021/08/25/coravel-queue/Untitled.png">
+<meta name="twitter:image" content="https://eugenesu.me/2021/08/25/coravel-queue/Untitled.png">
 
-<link rel="canonical" href="https://eugenesu0515.github.io/2021/08/25/coravel-queue/">
+<link rel="canonical" href="https://eugenesu.me/2021/08/25/coravel-queue/">
 
 
 <script id="page-configurations">
@@ -205,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu0515.github.io/2021/08/25/coravel-queue/">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/08/25/coravel-queue/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
