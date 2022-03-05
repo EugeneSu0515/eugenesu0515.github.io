@@ -464,7 +464,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/lib/bookmark/README.html</loc>
+    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -478,7 +478,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
+    <loc>https://eugenesu.me/lib/bookmark/README.html</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -522,6 +522,20 @@
 
   
   <url>
+    <loc>https://eugenesu.me/tags/angular/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/barcodelistener/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu.me/tags/dotnetcore/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
@@ -536,14 +550,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/angular/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/barcodelistener/</loc>
+    <loc>https://eugenesu.me/tags/generic/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -571,27 +578,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/generic/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/global-error-handler/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/smtp/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu.me/tags/socket/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
@@ -606,6 +592,20 @@
   </url>
   
   <url>
+    <loc>https://eugenesu.me/tags/smtp/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/global-error-handler/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu.me/tags/electron/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
@@ -614,34 +614,6 @@
   
   <url>
     <loc>https://eugenesu.me/tags/vanilla-js/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/excel/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/exception/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/elmah/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/fluentftp/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -670,6 +642,34 @@
   
   <url>
     <loc>https://eugenesu.me/tags/hangfire/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/excel/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/exception/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/elmah/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/fluentftp/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -760,20 +760,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/windows/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/problemsolving/</loc>
-    <lastmod>2022-03-05</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu.me/tags/vee-validate/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
@@ -794,17 +780,31 @@
     <priority>0.6</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://eugenesu.me/categories/dotnetcore/</loc>
+    <loc>https://eugenesu.me/tags/windows/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
+    <loc>https://eugenesu.me/tags/problemsolving/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
     <loc>https://eugenesu.me/categories/angular/</loc>
+    <lastmod>2022-03-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -832,14 +832,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/categories/dotnetcore/reader/</loc>
+    <loc>https://eugenesu.me/categories/dotnetcore/hangfire/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://eugenesu.me/categories/dotnetcore/hangfire/</loc>
+    <loc>https://eugenesu.me/categories/dotnetcore/reader/</loc>
     <lastmod>2022-03-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
