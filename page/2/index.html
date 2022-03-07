@@ -193,6 +193,295 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-loading/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/23/electron-series-vanillajs-loading/" class="post-title-link" itemprop="url">[Electron]vanilla js套件系列-Loading效果</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-11-23 18:25:06 / 修改時間：22:37:46" itemprop="dateCreated datePublished" datetime="2021-11-23T18:25:06+08:00">2021-11-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>4.9k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>9 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊的主要遇到的情境是，因為要抓攝影鏡頭的視訊<code>streaming</code>到畫面中的<code>Video tag</code>上，但初始化需要一點時間，導致使用者尚未初始化完成前就去按下截圖按鈕，導致程式邏輯錯亂，筆者第一想到的就是加上<code>loading</code>效果，就如同前面幾篇講到的，<code>electron</code>環境，筆者這邊希望使用<code>Vanilla js</code>的解法，幸好有找到解法，此篇就以介紹這個解法為主，跟著筆者一起套上<code>loading</code>效果吧。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/23/electron-series-vanillajs-loading/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/23/electron-series-vanillajs-listjs/" class="post-title-link" itemprop="url">[Electron]vanilla js套件系列-listjs</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-11-23 18:24:26 / 修改時間：22:43:44" itemprop="dateCreated datePublished" datetime="2021-11-23T18:24:26+08:00">2021-11-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>6.6k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>12 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者與<code>Electron</code>淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是<code>Python</code>，一個是<code>Electron</code>，不過<code>Python</code>則需要再找一些<code>UI framework</code>來實作畫面部份，那時候對於<code>Electron</code>也是一份好奇，用<code>html css</code>就能調出畫面，還可以直接套用<code>bootstrap</code>，簡直完美，毅然決然決定使用<code>Electron</code>來開發，但開發過程有很多地方，尤其是硬體介接的部份，卡了很久，眼看上線時間快到，最終放棄作罷，最後使用<code>Python+Tkinter</code>完成該專案，實為可惜。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/23/electron-series-vanillajs-listjs/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/20/angular-series-barcode-listener/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/20/angular-series-barcode-listener/" class="post-title-link" itemprop="url">[Angular]技巧系列-BarcodeListener</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2021-11-20 21:13:23 / 修改時間：21:39:48" itemprop="dateCreated datePublished" datetime="2021-11-20T21:13:23+08:00">2021-11-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/angular/" itemprop="url" rel="index"><span itemprop="name">angular</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>6 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者在工作環境中，有一個小週邊系統是給分行人員使用，其中有一段是需要透過<code>Barcode Scanner</code>掃描其帳單中的條碼，作為<code>Form</code>表單送出時的一個欄位，筆者看同事一開始的做法是在畫面上放一個<code>Input</code>，其游標須<code>Focus</code>在該<code>Input</code>上，然後按下<code>Barcode Scanner</code>去掃描條碼。</p>
+<p>上述情境會延伸一些問題，使用者將游標移至其他表單元件或者系統上會有<code>Toast</code>訊息，使用者可能會點擊其<code>Toast</code>訊息關閉，上述零零總總情境後，若要掃描條碼，必須得將游標自動<code>Focus</code>回條碼所屬的<code>Input</code>上，極為困難，要寫很多code去做到；若沒有自動將游標<code>Focus</code>回對應的<code>Input</code>上，使用者會覺得困擾，每次掃描前都要移動滑鼠，將游標移回條碼所屬的<code>Input</code>上，此篇內容就是要解決上述遇到的問題。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/20/angular-series-barcode-listener/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/20/rust-series-windows-execute/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -880,310 +1169,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/15/orm-series-sqlsugar-audit-columns/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-15 13:03:43 / 修改時間：13:23:35" itemprop="dateCreated datePublished" datetime="2021-11-15T13:03:43+08:00">2021-11-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/sqlsugar/" itemprop="url" rel="index"><span itemprop="name">sqlsugar</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>7.4k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>13 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者的慣例，使用<code>ORM</code>框架時，會先找一下可以擴充的點，畢竟<code>Select</code>、<code>Insert</code>、<code>Update</code>這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個<code>ORM</code>框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，因為比較效能的時間單位都是ns級的，基本上不要差太多，是沒什麼感覺的。這篇主要是講解<code>SqlSugar</code>套件，在操作共同欄位，像<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>這種，找到對應的擴充點，做統一處理。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/15/orm-series-sqlsugar-audit-columns/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/12/orm-series-sqlsugar-interceptor/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-SqlSugar:AOP篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-12 10:54:51 / 修改時間：11:04:37" itemprop="dateCreated datePublished" datetime="2021-11-12T10:54:51+08:00">2021-11-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/sqlsugar/" itemprop="url" rel="index"><span itemprop="name">sqlsugar</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>7k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>13 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>前幾篇介紹完<code>SqlSugar</code>的應用後，這篇筆者要來實作<code>SqlSugar</code>的<code>AOP</code>機制了，基本上就是Sql執行前後，或者發生Error後的事件，應有盡有，剛好符合筆者公司的要求，每個執行的作業出錯時要記錄下來，尤其是出錯時，最好能記錄到完整的SQL指令，釐清問題上更加有幫助，筆者介紹的幾個ORM框架通常都有類似的解決方案，表示這是大家都需要的功能</p>
-<ul>
-<li>[EFCore Interceptor]待補</li>
-<li><a href="/2021/09/07/orm-series-chloe-interceptor/" title="[DotnetCore]ORM系列-Chloe:Interceptor篇">[DotnetCore]ORM系列-Chloe:Interceptor篇</a></li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/12/orm-series-sqlsugar-interceptor/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/11/orm-series-sqlsugar-model-generator/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-SqlSugar:實體產生器</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-11 02:28:53 / 修改時間：17:08:17" itemprop="dateCreated datePublished" datetime="2021-11-11T02:28:53+08:00">2021-11-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/sqlsugar/" itemprop="url" rel="index"><span itemprop="name">sqlsugar</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>5.1k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>9 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊已經寫了幾篇<code>SqlSugar</code>的介紹文章，筆者一開始就形容<code>SqlSugar</code>是<code>EFCore</code>跟<code>Dapper</code>的完美融合體，結合兩個套件有的優點並極大化其效用，就像這篇的主題，<code>SqlSugar</code>有提供產生實體的相關API，筆者目標是加以包裝變成是一個<code>dotnet tool</code>，可以透過下指令的方式完成產生實體作業。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/11/orm-series-sqlsugar-model-generator/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1253,20 +1238,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">67</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分類</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">39</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
@@ -1295,6 +1280,30 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-03-07T16:03:32+08:00">
+        03/07
+      </time>
+      <a href="/2022/03/07/electron-series-vanillajs-toastifyjs/" title="[Electron]vanilla js套件系列-Toast:toastify-js">[Electron]vanilla js套件系列-Toast:toastify-js</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-03-07T15:59:40+08:00">
+        03/07
+      </time>
+      <a href="/2022/03/07/reader-series-eml/" title="[DotnetCore]Reader系列-EML檔案">[DotnetCore]Reader系列-EML檔案</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-03-07T15:52:20+08:00">
+        03/07
+      </time>
+      <a href="/2022/03/07/github-page-custom-domain/" title="[Hexo]Github Page:設定Domain Name">[Hexo]Github Page:設定Domain Name</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:50+08:00">
         01/14
       </time>
@@ -1307,30 +1316,6 @@
         01/14
       </time>
       <a href="/2022/01/14/dotnetcore-generic-series-domain/" title="[DotnetCore]泛型運用系列-商業邏輯實作篇">[DotnetCore]泛型運用系列-商業邏輯實作篇</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:22+08:00">
-        01/14
-      </time>
-      <a href="/2022/01/14/dotnetcore-generic-series-attribute/" title="[DotnetCore]泛型運用系列-Attribute設計篇">[DotnetCore]泛型運用系列-Attribute設計篇</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:08+08:00">
-        01/14
-      </time>
-      <a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">
-        12/01
-      </time>
-      <a href="/2021/12/01/dotnetcore-specify-sdk/" title="[DotnetCore]教學系列-指定sdk版本建立專案">[DotnetCore]教學系列-指定sdk版本建立專案</a>
       <br>
     </li>
     
@@ -1365,12 +1350,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">283k</span>
+    <span title="總字數">291k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:34</span>
+    <span title="所需總閱讀時間">8:49</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

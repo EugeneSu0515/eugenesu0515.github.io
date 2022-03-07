@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-01-14T05:21:32.706Z</updated>
+  <updated>2022-03-07T08:07:11.310Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -15,6 +15,72 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-Toast:toastify-js</title>
+    <link href="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/"/>
+    <id>https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/</id>
+    <published>2022-03-07T08:03:32.000Z</published>
+    <updated>2022-03-07T08:07:11.310Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;一個應用程式，尤其是前端少不了&lt;code&gt;alert&lt;/code&gt;訊息啦，網頁系統，基本上就可以使用alert方法可以跳出提示訊息，純網頁應該是不會有違合感，但想像一下以&lt;code&gt;PC App&lt;/code&gt;的形式來說，直接跳網頁的那種&lt;code&gt;alert&lt;/code&gt;訊息，似乎不太搭，通常一個系統一定會搭配一套&lt;code&gt;toastr&lt;/code&gt;的套件，將成功、失敗訊息顯示於&lt;code&gt;左上、右上、左下、右下角&lt;/code&gt;，清楚地告訴使用者，他的操作是否成功或失敗。&lt;/p&gt;
+&lt;p&gt;筆者認為&lt;code&gt;toastr&lt;/code&gt;的基本要素就是至少要有&lt;code&gt;成功&lt;/code&gt;或&lt;code&gt;失敗&lt;/code&gt;的&lt;code&gt;樣式&lt;/code&gt;可以選擇，以及剛提到的訊息置於&lt;code&gt;左上、右上、左下、右下角&lt;/code&gt;等選項，再則進階一點就是訊息內容本身要支援，&lt;code&gt;html格式訊息&lt;/code&gt;或&lt;code&gt;一般文字訊息&lt;/code&gt;，才可以靈活運用。這篇的前提條件跟前幾篇一樣，筆者想要找到一個&lt;code&gt;Vanilla js&lt;/code&gt;的&lt;code&gt;Toastr&lt;/code&gt;套件，這篇主要是要介紹筆者挑到在使用的&lt;a href=&quot;https://apvarun.github.io/toastify-js/&quot;&gt;https://apvarun.github.io/toastify-js/&lt;/a&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
+    
+    <category term="toastifyjs" scheme="https://eugenesu.me/tags/toastifyjs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-EML檔案</title>
+    <link href="https://eugenesu.me/2022/03/07/reader-series-eml/"/>
+    <id>https://eugenesu.me/2022/03/07/reader-series-eml/</id>
+    <published>2022-03-07T07:59:40.000Z</published>
+    <updated>2022-03-07T08:02:23.187Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司其他同仁負責的專案有一個需求是，主動幫使用者的信件內容讀取，依照附件檔案中的檔案內容做不同的事情，而不用人工的方式到系統中上傳該附件檔案。這時候就該使出&lt;code&gt;Reader系列文章&lt;/code&gt;的時候了，前置作業可能要靠其他&lt;code&gt;Infra&lt;/code&gt;同仁設定好後將信件自動轉成EML檔案格式，放置於網路空間上，由&lt;code&gt;EML Reader&lt;/code&gt;會去讀取該路經中的&lt;code&gt;EML&lt;/code&gt;檔案，並做對應的事，該篇就以讀取&lt;code&gt;EML&lt;/code&gt;檔案格式內容為主作呈現。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu.me/categories/dotnetcore/reader/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="eml" scheme="https://eugenesu.me/tags/eml/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Hexo]Github Page:設定Domain Name</title>
+    <link href="https://eugenesu.me/2022/03/07/github-page-custom-domain/"/>
+    <id>https://eugenesu.me/2022/03/07/github-page-custom-domain/</id>
+    <published>2022-03-07T07:52:20.000Z</published>
+    <updated>2022-03-07T07:58:40.700Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者寫&lt;code&gt;Blog&lt;/code&gt;有一段時間了，去年買了自己的名字域名後，一直沒空去設定它，一直都使用&lt;code&gt;github io&lt;/code&gt;預設的域名，上週終於有空來設定了。筆者買很夯的&lt;code&gt;.me&lt;/code&gt;結尾的域名，剛好歐洲的一個小國家的代碼為me，筆者這邊買的自然就是&lt;a href=&quot;https://eugenesu.me/&quot;&gt;https://eugenesu.me&lt;/a&gt;了。筆者這篇以整個設定到生效的過程一一介紹，若以筆者一樣使用hexo當blog生產工具，且想要將自己的github page掛上域名的，可以參考使用。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="hexo" scheme="https://eugenesu.me/categories/hexo/"/>
+    
+    
+    <category term="hexo" scheme="https://eugenesu.me/tags/hexo/"/>
+    
+    <category term="github-page" scheme="https://eugenesu.me/tags/github-page/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]泛型運用系列-注入篇</title>
@@ -410,71 +476,6 @@
     <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
     
     <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-SqlSugar:AOP篇</title>
-    <link href="https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/"/>
-    <id>https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/</id>
-    <published>2021-11-12T02:54:51.000Z</published>
-    <updated>2021-11-12T03:04:37.971Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;前幾篇介紹完&lt;code&gt;SqlSugar&lt;/code&gt;的應用後，這篇筆者要來實作&lt;code&gt;SqlSugar&lt;/code&gt;的&lt;code&gt;AOP&lt;/code&gt;機制了，基本上就是Sql執行前後，或者發生Error後的事件，應有盡有，剛好符合筆者公司的要求，每個執行的作業出錯時要記錄下來，尤其是出錯時，最好能記錄到完整的SQL指令，釐清問題上更加有幫助，筆者介紹的幾個ORM框架通常都有類似的解決方案，表示這是大家都需要的功能&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;[EFCore Interceptor]待補&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;/2021/09/07/orm-series-chloe-interceptor/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:Interceptor篇&quot;&gt;[DotnetCore]ORM系列-Chloe:Interceptor篇&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-SqlSugar:實體產生器</title>
-    <link href="https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/"/>
-    <id>https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/</id>
-    <published>2021-11-10T18:28:53.000Z</published>
-    <updated>2021-11-11T09:08:17.296Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊已經寫了幾篇&lt;code&gt;SqlSugar&lt;/code&gt;的介紹文章，筆者一開始就形容&lt;code&gt;SqlSugar&lt;/code&gt;是&lt;code&gt;EFCore&lt;/code&gt;跟&lt;code&gt;Dapper&lt;/code&gt;的完美融合體，結合兩個套件有的優點並極大化其效用，就像這篇的主題，&lt;code&gt;SqlSugar&lt;/code&gt;有提供產生實體的相關API，筆者目標是加以包裝變成是一個&lt;code&gt;dotnet tool&lt;/code&gt;，可以透過下指令的方式完成產生實體作業。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
-    
-    
-    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
-    
-    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>[DotnetCore]ORM系列-Chloe:共同欄位新增、編輯技巧</title>
-    <link href="https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/"/>
-    <id>https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/</id>
-    <published>2021-11-04T12:14:16.000Z</published>
-    <updated>2021-11-04T14:35:52.034Z</updated>
-    
-    
-    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;有在觀看筆者的ORM系列文就知道，其中&lt;code&gt;EFCore&lt;/code&gt;就這麼一篇出現過，即使用&lt;code&gt;override&lt;/code&gt; &lt;code&gt;SaveChanges&lt;/code&gt;方法來達到針對共同欄位的新增、編輯功能，什麼叫&lt;code&gt;共同欄位&lt;/code&gt;，筆者常設計的就是&lt;code&gt;CreatedAt&lt;/code&gt;、&lt;code&gt;CreatedBy&lt;/code&gt;、&lt;code&gt;UpdatedAt&lt;/code&gt;、&lt;code&gt;UpdatedBy&lt;/code&gt;等，這因開發環境不同，習慣的命名方式可能不一樣，但一樣的是，要紀錄該筆資料列的新增、編輯的時間及使用者，原因就這麼單純。&lt;br&gt;若以&lt;code&gt;Dapper&lt;/code&gt;或&lt;code&gt;ADO.Net&lt;/code&gt;以純SQL的方式製作，會在&lt;code&gt;Insert&lt;/code&gt;、&lt;code&gt;Update&lt;/code&gt;語法上多組這些相關欄位上去，也不是不行，但以一個大型系統來說，若偏後台管理平台來說，這些欄位都是極重要，且每張資料表皆必須要有，這時每段Service都要填上，也是會累死人，&lt;a href=&quot;/2021/09/05/orm-series-efcore-override-savechanges/&quot; title=&quot;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&quot;&gt;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&lt;/a&gt;就是於&lt;code&gt;EFCore&lt;/code&gt;世界中的解決方式，筆者今天想要來聊聊&lt;code&gt;Chloe&lt;/code&gt;的解決方式。&lt;/p&gt;</summary>
-    
-    
-    
     
   </entry>
   
