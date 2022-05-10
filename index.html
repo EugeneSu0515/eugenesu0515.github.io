@@ -314,6 +314,306 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/05/10/clean-architecture-api/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/10/clean-architecture-api/" class="post-title-link" itemprop="url">[DotnetCore]CleanArchitecture手做系列-實作API</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-05-10 20:47:56 / 修改時間：20:53:23" itemprop="dateCreated datePublished" datetime="2022-05-10T20:47:56+08:00">2022-05-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/clean-architecture/" itemprop="url" rel="index"><span itemprop="name">clean-architecture</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>6.2k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>11 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>以上篇<a href="/2022/05/10/clean-architecture-new/" title="[DotnetCore]CleanArchitecture手做系列-建立專案">[DotnetCore]CleanArchitecture手做系列-建立專案</a>實作完成後，得到一個有整潔架構的方案，筆者在這篇以<code>webapi template</code>所產生的<code>WeatherForecast API</code>查詢作業轉成<code>MediatR</code>風格的架構，筆者主要參考<a target="_blank" rel="noopener" href="https://github.com/jasontaylordev/CleanArchitecture%E5%B0%88%E6%A1%88%E9%A0%90%E8%A8%AD%E7%AF%84%E6%9C%AC%E6%89%80%E7%94%A2%E7%94%9F%E7%9A%84%E6%92%B0%E5%AF%AB%E9%A2%A8%E6%A0%BC%EF%BC%8C%E6%93%B7%E5%8F%96%E7%AD%86%E8%80%85%E8%A6%81%E7%9A%84%E9%83%A8%E4%BB%BD%EF%BC%8C%60ORM%60%E9%83%A8%E4%BB%BD%E5%89%87%E6%94%B9%E7%94%A8%60SqlSugarCore%60%E5%AF%A6%E4%BD%9C%E8%B3%87%E6%96%99%E5%BA%AB%E6%93%8D%E4%BD%9C%E8%A1%8C%E7%82%BA%EF%BC%8C%E6%AD%A4%E7%AF%87%E4%BB%A5%60webapi">https://github.com/jasontaylordev/CleanArchitecture專案預設範本所產生的撰寫風格，擷取筆者要的部份，`ORM`部份則改用`SqlSugarCore`實作資料庫操作行為，此篇以`webapi</a> template<code>所產生的</code>WeatherForecastController<code>改寫成</code>Clean Architecture`撰寫風格。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/10/clean-architecture-api/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/05/10/reader-series-pdf-itextsharp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/10/reader-series-pdf-itextsharp/" class="post-title-link" itemprop="url">[DotnetCore]Reader系列-Pdf檔案:iTextSharp</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-05-10 20:44:54 / 修改時間：20:47:16" itemprop="dateCreated datePublished" datetime="2022-05-10T20:44:54+08:00">2022-05-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/reader-series/" itemprop="url" rel="index"><span itemprop="name">reader-series</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.5k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>5 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊有一個需求是，<code>pdf</code>檔案在上傳時就判斷好是否有加密，避免後面流程中需要解析pdf檔案時，遇到解密的問題，因此為避免後面流程複雜去防呆，直接於上傳檔案時築一道防線擋掉，是最佳解。筆者在搜尋了一下<code>c# detect password protected pdf</code>的關鍵字時，基本上會跳出使用<code>iTextSharp</code>的解法，筆者就參考此解法寫一個<code>Extension</code>，主要都是參考<code>StackOverFlow</code>的解法，程式碼本身沒甚麼變動，此篇以解釋為準。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/10/reader-series-pdf-itextsharp/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/05/10/clean-architecture-new/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/10/clean-architecture-new/" class="post-title-link" itemprop="url">[DotnetCore]CleanArchitecture手做系列-建立專案</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-05-10 20:36:20 / 修改時間：20:44:08" itemprop="dateCreated datePublished" datetime="2022-05-10T20:36:20+08:00">2022-05-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/clean-architecture/" itemprop="url" rel="index"><span itemprop="name">clean-architecture</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>5 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這篇主要是以<a target="_blank" rel="noopener" href="https://github.com/jasontaylordev/CleanArchitecture%E7%9A%84%60template%60%E6%9E%B6%E6%A7%8B%EF%BC%8C%E5%9B%A0%60template%60%E7%94%A2%E5%87%BA%E4%B9%8B%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E5%8C%85%E5%90%AB%60Identity">https://github.com/jasontaylordev/CleanArchitecture的`template`架構，因`template`產出之專案結構包含`Identity</a> Server<code>，還有前端頁面等不需要的專案，因此筆者想要仿照該</code>template<code>架構，自己手動建立純</code>API<code>架構，順便熟悉一下其</code>Clean Architecture`的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/10/clean-architecture-new/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -915,304 +1215,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-model/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/14/dotnetcore-generic-series-model/" class="post-title-link" itemprop="url">[DotnetCore]泛型運用系列-Model設計篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2022-01-14 11:41:08 / 修改時間：13:02:50" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:08+08:00">2022-01-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>1.6k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>3 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者日前工作環境中要實作，從某個<code>FTP</code>位置下載檔案，下載到檔案後將檔案內容轉成物件清單，存進資料庫中，接著這些檔案依照屬性不同，拆成四分檔案，有共同欄位，也有各自的欄位，資料表則依照最大化原則，將所有檔案欄位最大化後設計成對應的欄位，當然設計一個識別欄位:<code>EventType</code>，識別是哪個檔案的資料。最後這個檔案內容轉換成資料表中的資料，要掛在排程上面做運作，筆者簡單列一下此一系列的實作需要用到的概念與套件如下:</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://automapper.org/">AutoMapper</a>:運用於將檔案內容對應的物件轉成<code>EFCore</code>的物件時</li>
-<li>Generic Class/Method: 不想寫多個<code>Service</code>去處理多個檔案，設計成泛型形式以符合各種檔案類型</li>
-<li><code>Attribute</code>: 透過<code>Description Attribute</code>，註記其對應的<code>Comlumn</code>欄位順序</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>:透過該套件，將寫好的<code>Service</code>掛成排程任務</li>
-<li>Extension Method:有一些通用的<code>Method</code>，不要落落等塞在一個<code>Service</code>中，因此轉換成可以共用的<code>Extension Method</code></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/ef/core/">EFCore</a>:資料存取用開發套件</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/14/dotnetcore-generic-series-model/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/12/01/dotnetcore-specify-sdk/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/01/dotnetcore-specify-sdk/" class="post-title-link" itemprop="url">[DotnetCore]教學系列-指定sdk版本建立專案</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-12-01 14:12:09 / 修改時間：14:16:18" itemprop="dateCreated datePublished" datetime="2021-12-01T14:12:09+08:00">2021-12-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>2.2k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>4 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊遇到的問題是電腦環境中有多個<code>sdk</code>版本，需要指定比較舊的<code>sdk</code>版本來建立專案，筆者之前剛幫公司用基礎專案時遇到<code>3.1LTS</code>版本，因此有跟著升級，<code>dotnet 5</code>因不是LTS版本就沒有跟著升，就坐著等<code>dotnet 6</code>了。</p>
-<p>依上述，筆者公司開發環境停留在<code>3.1</code>，但因前一陣子重灌電腦，重新安裝<code>Visual Studio 2019</code>後，預設安裝<code>dotnet 5</code>，筆者還特地下載<code>dotnet core 3.1 sdk</code>來安裝，因此環境中有兩個版本，但若沒有特別指定時，會以最新的<code>sdk</code>版本對應的範本產生，最後列出筆者電腦環境的<code>sdk</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dotnet --list-sdks</span><br><span class="line"><span class="comment"># 輸出內容</span></span><br><span class="line">3.1.415 [C:\Program Files\dotnet\sdk]</span><br><span class="line">5.0.403 [C:\Program Files\dotnet\sdk]</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/12/01/dotnetcore-specify-sdk/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-modal/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/23/electron-series-vanillajs-modal/" class="post-title-link" itemprop="url">[Electron]vanilla js套件系列-Modal:modal-vanilla</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-              
-
-              <time title="創建時間：2021-11-23 18:30:13 / 修改時間：22:33:22" itemprop="dateCreated datePublished" datetime="2021-11-23T18:30:13+08:00">2021-11-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>4.4k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>8 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者工作環境中前端使用<code>angular</code>框架撰寫，<code>model binding</code>根本無敵阿，且<code>typescript</code>語言，對於筆者這種後端人員來說，上手速度是頗快的，扯遠了，筆者要強調的是能用<code>angular</code>或其他兩大框架寫前端根本就是一等公民，來到<code>Electron</code>專案，是有神者有做<code>angular-electron</code>或<code>vue-electron</code>的版本，但筆者覺得自己前端實力不夠，怕handle不了，還是乖乖用純js撰寫其專案，根本就變回二等公民，這篇主要介紹其中需要<code>modal</code>功能時，挑選只有<code>vanilla js</code>的<code>modal</code>套件來實作。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/23/electron-series-vanillajs-modal/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1282,20 +1284,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">67</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分類</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">43</span>
+        <span class="site-state-item-count">45</span>
         <span class="site-state-item-name">標籤</span></a>
       </div>
   </nav>
@@ -1324,6 +1326,30 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-10T20:47:56+08:00">
+        05/10
+      </time>
+      <a href="/2022/05/10/clean-architecture-api/" title="[DotnetCore]CleanArchitecture手做系列-實作API">[DotnetCore]CleanArchitecture手做系列-實作API</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-10T20:44:54+08:00">
+        05/10
+      </time>
+      <a href="/2022/05/10/reader-series-pdf-itextsharp/" title="[DotnetCore]Reader系列-Pdf檔案:iTextSharp">[DotnetCore]Reader系列-Pdf檔案:iTextSharp</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-10T20:36:20+08:00">
+        05/10
+      </time>
+      <a href="/2022/05/10/clean-architecture-new/" title="[DotnetCore]CleanArchitecture手做系列-建立專案">[DotnetCore]CleanArchitecture手做系列-建立專案</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-03-07T16:03:32+08:00">
         03/07
       </time>
@@ -1336,30 +1362,6 @@
         03/07
       </time>
       <a href="/2022/03/07/reader-series-eml/" title="[DotnetCore]Reader系列-EML檔案">[DotnetCore]Reader系列-EML檔案</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-03-07T15:52:20+08:00">
-        03/07
-      </time>
-      <a href="/2022/03/07/github-page-custom-domain/" title="[Hexo]Github Page:設定Domain Name">[Hexo]Github Page:設定Domain Name</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:50+08:00">
-        01/14
-      </time>
-      <a href="/2022/01/14/dotnetcore-generic-series-DI/" title="[DotnetCore]泛型運用系列-注入篇">[DotnetCore]泛型運用系列-注入篇</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:36+08:00">
-        01/14
-      </time>
-      <a href="/2022/01/14/dotnetcore-generic-series-domain/" title="[DotnetCore]泛型運用系列-商業邏輯實作篇">[DotnetCore]泛型運用系列-商業邏輯實作篇</a>
       <br>
     </li>
     
@@ -1394,12 +1396,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">291k</span>
+    <span title="總字數">303k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">8:49</span>
+    <span title="所需總閱讀時間">9:10</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-03-07T08:07:11.310Z</updated>
+  <updated>2022-05-10T12:53:23.511Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -15,6 +15,75 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]CleanArchitecture手做系列-實作API</title>
+    <link href="https://eugenesu.me/2022/05/10/clean-architecture-api/"/>
+    <id>https://eugenesu.me/2022/05/10/clean-architecture-api/</id>
+    <published>2022-05-10T12:47:56.000Z</published>
+    <updated>2022-05-10T12:53:23.511Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;以上篇&lt;a href=&quot;/2022/05/10/clean-architecture-new/&quot; title=&quot;[DotnetCore]CleanArchitecture手做系列-建立專案&quot;&gt;[DotnetCore]CleanArchitecture手做系列-建立專案&lt;/a&gt;實作完成後，得到一個有整潔架構的方案，筆者在這篇以&lt;code&gt;webapi template&lt;/code&gt;所產生的&lt;code&gt;WeatherForecast API&lt;/code&gt;查詢作業轉成&lt;code&gt;MediatR&lt;/code&gt;風格的架構，筆者主要參考&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture%E5%B0%88%E6%A1%88%E9%A0%90%E8%A8%AD%E7%AF%84%E6%9C%AC%E6%89%80%E7%94%A2%E7%94%9F%E7%9A%84%E6%92%B0%E5%AF%AB%E9%A2%A8%E6%A0%BC%EF%BC%8C%E6%93%B7%E5%8F%96%E7%AD%86%E8%80%85%E8%A6%81%E7%9A%84%E9%83%A8%E4%BB%BD%EF%BC%8C%60ORM%60%E9%83%A8%E4%BB%BD%E5%89%87%E6%94%B9%E7%94%A8%60SqlSugarCore%60%E5%AF%A6%E4%BD%9C%E8%B3%87%E6%96%99%E5%BA%AB%E6%93%8D%E4%BD%9C%E8%A1%8C%E7%82%BA%EF%BC%8C%E6%AD%A4%E7%AF%87%E4%BB%A5%60webapi&quot;&gt;https://github.com/jasontaylordev/CleanArchitecture專案預設範本所產生的撰寫風格，擷取筆者要的部份，`ORM`部份則改用`SqlSugarCore`實作資料庫操作行為，此篇以`webapi&lt;/a&gt; template&lt;code&gt;所產生的&lt;/code&gt;WeatherForecastController&lt;code&gt;改寫成&lt;/code&gt;Clean Architecture`撰寫風格。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/categories/dotnetcore/clean-architecture/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/tags/clean-architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-Pdf檔案:iTextSharp</title>
+    <link href="https://eugenesu.me/2022/05/10/reader-series-pdf-itextsharp/"/>
+    <id>https://eugenesu.me/2022/05/10/reader-series-pdf-itextsharp/</id>
+    <published>2022-05-10T12:44:54.000Z</published>
+    <updated>2022-05-10T12:47:16.424Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這邊有一個需求是，&lt;code&gt;pdf&lt;/code&gt;檔案在上傳時就判斷好是否有加密，避免後面流程中需要解析pdf檔案時，遇到解密的問題，因此為避免後面流程複雜去防呆，直接於上傳檔案時築一道防線擋掉，是最佳解。筆者在搜尋了一下&lt;code&gt;c# detect password protected pdf&lt;/code&gt;的關鍵字時，基本上會跳出使用&lt;code&gt;iTextSharp&lt;/code&gt;的解法，筆者就參考此解法寫一個&lt;code&gt;Extension&lt;/code&gt;，主要都是參考&lt;code&gt;StackOverFlow&lt;/code&gt;的解法，程式碼本身沒甚麼變動，此篇以解釋為準。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader-series" scheme="https://eugenesu.me/categories/dotnetcore/reader-series/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="itextsharp" scheme="https://eugenesu.me/tags/itextsharp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]CleanArchitecture手做系列-建立專案</title>
+    <link href="https://eugenesu.me/2022/05/10/clean-architecture-new/"/>
+    <id>https://eugenesu.me/2022/05/10/clean-architecture-new/</id>
+    <published>2022-05-10T12:36:20.000Z</published>
+    <updated>2022-05-10T12:44:08.238Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是以&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture%E7%9A%84%60template%60%E6%9E%B6%E6%A7%8B%EF%BC%8C%E5%9B%A0%60template%60%E7%94%A2%E5%87%BA%E4%B9%8B%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E5%8C%85%E5%90%AB%60Identity&quot;&gt;https://github.com/jasontaylordev/CleanArchitecture的`template`架構，因`template`產出之專案結構包含`Identity&lt;/a&gt; Server&lt;code&gt;，還有前端頁面等不需要的專案，因此筆者想要仿照該&lt;/code&gt;template&lt;code&gt;架構，自己手動建立純&lt;/code&gt;API&lt;code&gt;架構，順便熟悉一下其&lt;/code&gt;Clean Architecture`的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/categories/dotnetcore/clean-architecture/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/tags/clean-architecture/"/>
+    
+  </entry>
   
   <entry>
     <title>[Electron]vanilla js套件系列-Toast:toastify-js</title>
