@@ -31,7 +31,7 @@
 <meta property="og:description" content="前提情要前幾篇介紹完SqlSugar的應用後，這篇筆者要來實作SqlSugar的AOP機制了，基本上就是Sql執行前後，或者發生Error後的事件，應有盡有，剛好符合筆者公司的要求，每個執行的作業出錯時要記錄下來，尤其是出錯時，最好能記錄到完整的SQL指令，釐清問題上更加有幫助，筆者介紹的幾個ORM框架通常都有類似的解決方案，表示這是大家都需要的功能  [EFCore Interceptor]待補">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2021-11-12T02:54:51.000Z">
-<meta property="article:modified_time" content="2021-11-12T03:04:37.971Z">
+<meta property="article:modified_time" content="2022-05-13T09:18:48.065Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
 <meta property="article:tag" content="sqlsugar">
@@ -224,10 +224,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2021-11-12 10:54:51 / 修改時間：11:04:37" itemprop="dateCreated datePublished" datetime="2021-11-12T10:54:51+08:00">2021-11-12</time>
+              <time title="創建時間：2021-11-12 10:54:51" itemprop="dateCreated datePublished" datetime="2021-11-12T10:54:51+08:00">2021-11-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2022-05-13 17:18:48" itemprop="dateModified" datetime="2022-05-13T17:18:48+08:00">2022-05-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -254,7 +260,7 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>7k</span>
+              <span>7.1k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
@@ -336,7 +342,21 @@
 <h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者在公司環境混用<code>EFCore</code>及<code>Dapper</code>，為了<code>SQL Log</code>花了一番功夫，也不是很完整的Solution，筆者這邊是用自定義的<code>SqlConnection</code>及<code>DBCommand</code>等方式完成，所以是<code>override</code>的概念來擴充，本身不會參與執行階段，變成原本的需求是Sql出現Error時才需記錄其完整SQL指令部份就沒有百分之百達到，依筆者的作法，所有的Sql指令都會紀錄，但出現Error後紀錄又是另一個事件<code>GlobalErrorHanlder</code>，因此Log紀錄會分化成兩筆資料，實際追蹤上是需要一點時間查找。</p>
 <p>反觀<code>SqlSugar</code>，可以使用Lambda操作(Insert, Update)，也可以執行原生SQL，Interceptor事件也是包得好好的，依筆者公司的需求，只要實作<code>OnError</code>事件即可，是個完美解決方案，筆者會花些時間在公司導入<code>SqlSugar</code>，以取代<code>EFCore</code>、<code>Dapper</code>混用效果。</p>
 <p>參考</p>
-
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.donet5.com/Home/Doc?typeId=1204">https://www.donet5.com/Home/Doc?typeId=1204</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
     </div>
 
     
@@ -582,7 +602,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">9:10</span>
+    <span title="所需總閱讀時間">9:12</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

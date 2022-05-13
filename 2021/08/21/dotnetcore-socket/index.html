@@ -31,7 +31,7 @@
 <meta property="og:description" content="前提情要筆者目前於金融業資訊部門就職，如大家所知，核心系統大都維持使用cobol程式語言開發，我們這種寫C#程式語言的，只能攻外圍系統，但不免俗的需要與各核心相關系統做打交道，不管是取得資料或者是更新資料等，比較舊型的架構都是透過TCP&#x2F;IP交換資料，也就是透過socket程式交換資料。界於此，筆者需要實作socket程式基礎框架適應各種Client程式的開發需求，今天就來寫一支socket co">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2021-08-20T18:38:24.000Z">
-<meta property="article:modified_time" content="2022-03-15T23:48:44.022Z">
+<meta property="article:modified_time" content="2022-05-13T09:14:00.317Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
 <meta property="article:tag" content="socket">
@@ -233,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2022-03-16 07:48:44" itemprop="dateModified" datetime="2022-03-16T07:48:44+08:00">2022-03-16</time>
+                <time title="修改時間：2022-05-13 17:14:00" itemprop="dateModified" datetime="2022-05-13T17:14:00+08:00">2022-05-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -344,7 +344,18 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;Socket&quot;</span>: </span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;Client&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;SendBufferSize&quot;</span>: <span class="number">1024</span>,</span><br><span class="line">        <span class="attr">&quot;RemoteIP&quot;</span>: <span class="string">&quot;RemoteIP&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;RemotePort&quot;</span>: RemotePort</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;Server&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;NumConnections&quot;</span>: <span class="number">20000</span>,</span><br><span class="line">        <span class="attr">&quot;ReceiveBufferSize&quot;</span>: <span class="number">1024</span>,</span><br><span class="line">        <span class="attr">&quot;ReceiveIP&quot;</span>: <span class="string">&quot;MyIP&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;ReceivePort&quot;</span>: MyPort,</span><br><span class="line">        <span class="attr">&quot;OverTime&quot;</span>: <span class="number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;Encoding&quot;</span>: <span class="string">&quot;Big5&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>雖然包了很多層，筆者追求底層邏輯封裝，讓最上層Client使用端易用性高，基本上底層邏輯封裝做得越好，若使用的底層套件有問題，還可轉用其他的，對於Client使用端來說只要接口、使用方式不變，不需調整任何程式，就可享有效能更好的底層套件體驗。筆者下一篇來解釋最上層Client使用端如何串接解析處裡封包。</p>
-
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
     </div>
 
     
@@ -591,7 +602,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">9:10</span>
+    <span title="所需總閱讀時間">9:12</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

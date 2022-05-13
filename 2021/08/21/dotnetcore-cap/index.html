@@ -31,7 +31,7 @@
 <meta property="og:description" content="前提情要筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則Database Pooling的方式進行監聽，若有撈出一筆Status &#x3D; N的資料則進行邏輯處裡，進行完成後壓回Status &#x3D; Y 或 N的註記方式來完成該次的串接需求，當然途中也會壓Status &#x3D; P作為下次Poo">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2021-08-20T18:26:03.000Z">
-<meta property="article:modified_time" content="2021-08-20T18:29:13.505Z">
+<meta property="article:modified_time" content="2022-05-13T09:12:57.826Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
 <meta property="article:tag" content="cap">
@@ -225,10 +225,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2021-08-21 02:26:03 / 修改時間：02:29:13" itemprop="dateCreated datePublished" datetime="2021-08-21T02:26:03+08:00">2021-08-21</time>
+              <time title="創建時間：2021-08-21 02:26:03" itemprop="dateCreated datePublished" datetime="2021-08-21T02:26:03+08:00">2021-08-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2022-05-13 17:12:57" itemprop="dateModified" datetime="2022-05-13T17:12:57+08:00">2022-05-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -315,6 +321,18 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">BusinessCode.Service</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ISubscriberService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">CheckReceivedMessage</span>(<span class="params">DateTime datetime</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 主要是你的Service要實作ICapSubscribe</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SubscriberService</span>: <span class="title">ISubscriberService</span>, <span class="title">ICapSubscribe</span></span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="meta">CapSubscribe(<span class="meta-string">&quot;xxx.services.show.time&quot;</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">CheckReceivedMessage</span>(<span class="params">DateTime datetime</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>透過CAP套件，你也可以很容易地使用<code>Message Queue</code>當作系統間的橋樑，這是跨入<code>Microservice</code>世界的一小步，也可以達成物件導向追求的解偶。</p>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
 
     </div>
 
@@ -562,7 +580,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">9:10</span>
+    <span title="所需總閱讀時間">9:12</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>

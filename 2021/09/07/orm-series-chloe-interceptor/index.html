@@ -31,7 +31,7 @@
 <meta property="og:description" content="前提情要筆者前篇介紹Select相關的method[DotnetCore]ORM系列-Chloe:Select篇，這次要來寫interceptor，觀察看看那些select method對應的sql語法，才會知道Chloe都幫我們轉成什麼語法，才不會誤用造成錯誤，筆者覺得是值得投資的。">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2021-09-07T05:35:18.000Z">
-<meta property="article:modified_time" content="2021-09-07T05:50:34.387Z">
+<meta property="article:modified_time" content="2022-05-13T09:17:09.507Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
 <meta property="article:tag" content="chloe">
@@ -224,10 +224,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              
 
-              <time title="創建時間：2021-09-07 13:35:18 / 修改時間：13:50:34" itemprop="dateCreated datePublished" datetime="2021-09-07T13:35:18+08:00">2021-09-07</time>
+              <time title="創建時間：2021-09-07 13:35:18" itemprop="dateCreated datePublished" datetime="2021-09-07T13:35:18+08:00">2021-09-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2022-05-13 17:17:09" itemprop="dateModified" datetime="2022-05-13T17:17:09+08:00">2022-05-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -297,7 +303,18 @@
 
 <p>以上，筆者需要解釋的就是<code>?P_0</code>、<code>?P_1</code>等，應該就是會使用sql parameter對應的參數，其他的應該都看得懂，相較於<code>EFcore</code>產出的sql，<code>Chloe</code>產出的還算看得懂。</p>
 <h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>畢竟<code>Chloe</code>套件本身也只是利用Extension及Expression解析，包裝成方便使用的<code>linq形式</code>存取對應的資料表，就像使用<code>EFCore</code>時因應效能上的考量，需要知道EFCore幫我們做了哪些事一樣，使用類似的ORM套件時，一開始使用，需要了解它底層幫我們做了什麼事是可以避免誤用的，筆者覺得是值得把時間投資在上面的。</p>
-
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
     </div>
 
     
@@ -543,7 +560,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">9:10</span>
+    <span title="所需總閱讀時間">9:12</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>
