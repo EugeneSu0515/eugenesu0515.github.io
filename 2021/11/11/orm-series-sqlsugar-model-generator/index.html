@@ -397,7 +397,13 @@
 
           </div>
           
-    <div class="comments" id="gitalk-container"></div>
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -776,23 +782,20 @@ window.addEventListener('pjax:success', () => {
 
   
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
 
 <script>
-NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
-    var gitalk = new Gitalk({
-      clientID    : '9a13d983ea4e508377ac',
-      clientSecret: 'f1ffbf947bbc56c5b76e27bc899ffabefb2fed88',
-      repo        : 'eugenesu0515.github.io',
-      owner       : 'eugenesu0515',
-      admin       : ['eugenesu0515'],
-      id          : 'f53cc9a0606f69eac0d86348b682304b',
-        language: 'zh-TW',
-      distractionFreeMode: true
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/",
+      identifier: "2021/11/11/orm-series-sqlsugar-model-generator/",
+      title     : "[DotnetCore]ORM系列-SqlSugar:實體產生器",
     });
-    gitalk.render('gitalk-container');
-  }, window.Gitalk);
+  }, window.DisqusJS);
 });
 </script>
 
