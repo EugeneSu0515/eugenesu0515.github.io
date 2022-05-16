@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-13T09:12:34.402Z</updated>
+  <updated>2022-05-16T03:04:17.403Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://eugenesu.me/2022/05/10/clean-architecture-api/"/>
     <id>https://eugenesu.me/2022/05/10/clean-architecture-api/</id>
     <published>2022-05-10T12:47:56.000Z</published>
-    <updated>2022-05-13T09:12:34.402Z</updated>
+    <updated>2022-05-16T03:04:17.403Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;以上篇&lt;a href=&quot;/2022/05/10/clean-architecture-new/&quot; title=&quot;[DotnetCore]CleanArchitecture手做系列-建立專案&quot;&gt;[DotnetCore]CleanArchitecture手做系列-建立專案&lt;/a&gt;實作完成後，得到一個有整潔架構的方案，筆者在這篇以&lt;code&gt;webapi template&lt;/code&gt;所產生的&lt;code&gt;WeatherForecast API&lt;/code&gt;查詢作業轉成&lt;code&gt;MediatR&lt;/code&gt;風格的架構，筆者主要參考&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture&quot;&gt;https://github.com/jasontaylordev/CleanArchitecture&lt;/a&gt;專案預設範本所產生的撰寫風格，擷取筆者要的部份，&lt;code&gt;ORM&lt;/code&gt;部份則改用&lt;code&gt;SqlSugarCore&lt;/code&gt;實作資料庫操作行為，此篇以&lt;code&gt;webapi template&lt;/code&gt;所產生的&lt;code&gt;WeatherForecastController&lt;/code&gt;改寫成&lt;code&gt;Clean Architecture&lt;/code&gt;撰寫風格。&lt;/p&gt;</summary>
