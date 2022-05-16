@@ -31,7 +31,7 @@
 <meta property="og:description" content="前提情要筆者這篇主要是想寫實體產生器的進階版本，怎麼會說是進階版本呢，若有用過EFCore的dotnet ef dbcontext scaffold指令會知道，預設會是符合C#命名規則，即Pascal Case，每個英文單字連在一起，每個單字的第一個字為大寫。scaffold指令還特別開放options:-use-database-names，即可保留其資料庫中的命名。 筆者當初也沒有特別注意這些">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2022-05-16T06:51:11.000Z">
-<meta property="article:modified_time" content="2022-05-16T07:19:04.947Z">
+<meta property="article:modified_time" content="2022-05-16T08:22:48.224Z">
 <meta property="article:author" content="Eugene Su">
 <meta property="article:tag" content="dotnetcore">
 <meta property="article:tag" content="sqlsugar">
@@ -226,7 +226,7 @@
               <span class="post-meta-item-text">發表於</span>
               
 
-              <time title="創建時間：2022-05-16 14:51:11 / 修改時間：15:19:04" itemprop="dateCreated datePublished" datetime="2022-05-16T14:51:11+08:00">2022-05-16</time>
+              <time title="創建時間：2022-05-16 14:51:11 / 修改時間：16:22:48" itemprop="dateCreated datePublished" datetime="2022-05-16T14:51:11+08:00">2022-05-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,7 +260,7 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-              <span>12 分鐘</span>
+              <span>11 分鐘</span>
             </span>
 
         </div>
@@ -310,7 +310,7 @@
 <p>透過Linqpad測試一下其轉換結果</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span></span><br><span class="line">&#123;	</span><br><span class="line">    <span class="keyword">var</span> testStr = <span class="string">&quot;vendor_id&quot;</span>;</span><br><span class="line">    testStr.ToPascalCase().Dump();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Linqpad結果</span></span><br><span class="line"><span class="comment">// VendorId</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="複數命名轉換"><a href="#複數命名轉換" class="headerlink" title="複數命名轉換"></a>複數命名轉換</h2><p>筆者這邊有查到 <code>.net framework</code>時有內建的服務****<code>PluralizationService</code>，但到轉換到<code>dotnet core</code>時，只查得到相關套件，就以<code>google</code>到的第一個套件為主去試看看吧。**</p>
+<h2 id="複數命名轉換"><a href="#複數命名轉換" class="headerlink" title="複數命名轉換"></a>複數命名轉換</h2><p>筆者這邊有查到 <code>.net framework</code>時有內建的服務<code>PluralizationService</code>，但到轉換到<code>dotnet core</code>時，只查得到相關套件，就以<code>google</code>到的第一個套件為主去試看看吧。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package PluralizeService.Core --version 1.2.21147.2</span><br></pre></td></tr></table></figure>
 
 <p>接著撰寫程式吧，筆者沿用上章節所用到的StringExtension，完善它。</p>

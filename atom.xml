@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-16T07:19:04.947Z</updated>
+  <updated>2022-05-16T08:22:48.224Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/"/>
     <id>https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/</id>
     <published>2022-05-16T06:51:11.000Z</published>
-    <updated>2022-05-16T07:19:04.947Z</updated>
+    <updated>2022-05-16T08:22:48.224Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是想寫實體產生器的進階版本，怎麼會說是進階版本呢，若有用過EFCore的&lt;code&gt;dotnet ef dbcontext scaffold&lt;/code&gt;指令會知道，預設會是符合&lt;code&gt;C#&lt;/code&gt;命名規則，即&lt;code&gt;Pascal Case&lt;/code&gt;，每個英文單字連在一起，每個單字的第一個字為大寫。&lt;code&gt;scaffold&lt;/code&gt;指令還特別開放&lt;code&gt;options:-use-database-names&lt;/code&gt;，即可保留其資料庫中的命名。&lt;/p&gt;
