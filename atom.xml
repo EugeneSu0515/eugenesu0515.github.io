@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-16T03:04:17.403Z</updated>
+  <updated>2022-05-16T06:57:36.199Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:實體產生器-進階</title>
+    <link href="https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/"/>
+    <id>https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/</id>
+    <published>2022-05-16T06:51:11.000Z</published>
+    <updated>2022-05-16T06:57:36.199Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是想寫實體產生器的進階版本，怎麼會說是進階版本呢，若有用過EFCore的&lt;code&gt;dotnet ef dbcontext scaffold&lt;/code&gt;指令會知道，預設會是符合&lt;code&gt;C#&lt;/code&gt;命名規則，即&lt;code&gt;Pascal Case&lt;/code&gt;，每個英文單字連在一起，每個單字的第一個字為大寫。&lt;code&gt;scaffold&lt;/code&gt;指令還特別開放&lt;code&gt;options:-use-database-names&lt;/code&gt;，即可保留其資料庫中的命名。&lt;/p&gt;
+&lt;p&gt;筆者當初也沒有特別注意這些細節，因為是有踩過一些雷，例:製作前端使用&lt;code&gt;ViewModel&lt;/code&gt;時，從上述&lt;code&gt;scaffold&lt;/code&gt;指令產出的&lt;code&gt;Entities&lt;/code&gt;複製其對應的屬性宣告，再補一些額外的屬性，然後透過&lt;code&gt;Dapper&lt;/code&gt;套件Binding屬性時發現，怎麼有些屬性明明資料庫就有回傳，怎麼沒有binding成功，仔細一看，資料庫端是使用下底線，到C#端時&lt;code&gt;scaffold&lt;/code&gt;會把下底線去掉，因此直接從&lt;code&gt;Entities&lt;/code&gt;中複製貼上則會是不一樣的屬性名稱，自從那一次後，就注意到該細節。&lt;/p&gt;
+&lt;p&gt;講到此篇主題，剛好手邊新專案，資料庫使用&lt;code&gt;MySQL&lt;/code&gt;，筆者想保持資料庫命名規則，主要是有兩點&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;小寫為主&lt;/li&gt;
+&lt;li&gt;每個單字透過下底線連結&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另一方面，筆者透過&lt;code&gt;SqlSugarCore&lt;/code&gt;提供的實體產生相關API產生相關實體時，又想保持C#命名規則，最好是跟EFCore scaffold一樣可以保有複數機制，這為此篇主要解決目的。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]CleanArchitecture手做系列-實作API</title>
@@ -942,7 +972,7 @@
     <link href="https://eugenesu.me/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu.me/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2022-05-13T09:13:36.082Z</updated>
+    <updated>2022-05-16T06:58:04.000Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;

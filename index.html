@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2022-05-13 17:13:36" itemprop="dateModified" datetime="2022-05-13T17:13:36+08:00">2022-05-13</time>
+                <time title="修改時間：2022-05-16 14:58:04" itemprop="dateModified" datetime="2022-05-16T14:58:04+08:00">2022-05-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -254,7 +254,7 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-              <span>1.1k</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="所需閱讀時間">
               <span class="post-meta-item-icon">
@@ -291,6 +291,113 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/09/01/dotnetcore-series/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/16/orm-series-sqlsugar-advanced-model-generator/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-SqlSugar:實體產生器-進階</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              
+
+              <time title="創建時間：2022-05-16 14:51:11 / 修改時間：14:57:36" itemprop="dateCreated datePublished" datetime="2022-05-16T14:51:11+08:00">2022-05-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/sqlsugar/" itemprop="url" rel="index"><span itemprop="name">sqlsugar</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>6.3k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>12 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這篇主要是想寫實體產生器的進階版本，怎麼會說是進階版本呢，若有用過EFCore的<code>dotnet ef dbcontext scaffold</code>指令會知道，預設會是符合<code>C#</code>命名規則，即<code>Pascal Case</code>，每個英文單字連在一起，每個單字的第一個字為大寫。<code>scaffold</code>指令還特別開放<code>options:-use-database-names</code>，即可保留其資料庫中的命名。</p>
+<p>筆者當初也沒有特別注意這些細節，因為是有踩過一些雷，例:製作前端使用<code>ViewModel</code>時，從上述<code>scaffold</code>指令產出的<code>Entities</code>複製其對應的屬性宣告，再補一些額外的屬性，然後透過<code>Dapper</code>套件Binding屬性時發現，怎麼有些屬性明明資料庫就有回傳，怎麼沒有binding成功，仔細一看，資料庫端是使用下底線，到C#端時<code>scaffold</code>會把下底線去掉，因此直接從<code>Entities</code>中複製貼上則會是不一樣的屬性名稱，自從那一次後，就注意到該細節。</p>
+<p>講到此篇主題，剛好手邊新專案，資料庫使用<code>MySQL</code>，筆者想保持資料庫命名規則，主要是有兩點</p>
+<ul>
+<li>小寫為主</li>
+<li>每個單字透過下底線連結</li>
+</ul>
+<p>另一方面，筆者透過<code>SqlSugarCore</code>提供的實體產生相關API產生相關實體時，又想保持C#命名規則，最好是跟EFCore scaffold一樣可以保有複數機制，這為此篇主要解決目的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/05/16/orm-series-sqlsugar-advanced-model-generator/#more" rel="contents">
                 閱讀全文 &raquo;
               </a>
             </div>
@@ -1159,120 +1266,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-attribute/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/14/dotnetcore-generic-series-attribute/" class="post-title-link" itemprop="url">[DotnetCore]泛型運用系列-Attribute設計篇</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-
-              <time title="創建時間：2022-01-14 11:41:22" itemprop="dateCreated datePublished" datetime="2022-01-14T11:41:22+08:00">2022-01-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2022-05-13 17:13:02" itemprop="dateModified" datetime="2022-05-13T17:13:02+08:00">2022-05-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
-                </span>
-            </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>3.6k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>7 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>前提情要請參考<a href="/2022/01/14/dotnetcore-generic-series-model/" title="[DotnetCore]泛型運用系列-Model設計篇">[DotnetCore]泛型運用系列-Model設計篇</a>，不過筆者還是在這邊再列一下會用到的技術觀念與套件：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://automapper.org/">AutoMapper</a>:運用於將檔案內容對應的物件轉成<code>EFCore</code>的物件時</li>
-<li>Generic Class/Method: 不想寫多個<code>Service</code>去處理多個檔案，設計成泛型形式以符合各種檔案類型</li>
-<li><code>Attribute</code>: 透過<code>Description Attribute</code>，註記其對應的<code>Comlumn</code>欄位順序</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jamesmh/coravel">Coravel</a>:透過該套件，將寫好的<code>Service</code>掛成排程任務</li>
-<li>Extension Method:有一些通用的<code>Method</code>，不要落落等塞在一個Service中，因此轉換成可以共用的<code>Extension Method</code></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-tw/ef/core/">EFCore</a>:資料存取用開發套件</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/14/dotnetcore-generic-series-attribute/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一頁"></i></a>
   </nav>
 
 
@@ -1338,7 +1335,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">70</span>
+          <span class="site-state-item-count">71</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1380,6 +1377,14 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-16T14:51:11+08:00">
+        05/16
+      </time>
+      <a href="/2022/05/16/orm-series-sqlsugar-advanced-model-generator/" title="[DotnetCore]ORM系列-SqlSugar:實體產生器-進階">[DotnetCore]ORM系列-SqlSugar:實體產生器-進階</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-10T20:47:56+08:00">
         05/10
       </time>
@@ -1408,14 +1413,6 @@
         03/07
       </time>
       <a href="/2022/03/07/electron-series-vanillajs-toastifyjs/" title="[Electron]vanilla js套件系列-Toast:toastify-js">[Electron]vanilla js套件系列-Toast:toastify-js</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-03-07T15:59:40+08:00">
-        03/07
-      </time>
-      <a href="/2022/03/07/reader-series-eml/" title="[DotnetCore]Reader系列-EML檔案">[DotnetCore]Reader系列-EML檔案</a>
       <br>
     </li>
     
@@ -1450,12 +1447,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">303k</span>
+    <span title="總字數">310k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">9:12</span>
+    <span title="所需總閱讀時間">9:23</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>
