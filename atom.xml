@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-16T08:22:48.224Z</updated>
+  <updated>2022-05-17T08:14:49.335Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]NLog-依照Environment使用Nlog.Config檔案</title>
+    <link href="https://eugenesu.me/2022/05/17/nlog-environment-config/"/>
+    <id>https://eugenesu.me/2022/05/17/nlog-environment-config/</id>
+    <published>2022-05-17T08:07:17.000Z</published>
+    <updated>2022-05-17T08:14:49.335Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司使用&lt;code&gt;NLog&lt;/code&gt;當作&lt;code&gt;Log&lt;/code&gt;工具，相當簡單易用，但用到現在會有一個困擾，畢竟為方便測試，到處埋&lt;code&gt;Info&lt;/code&gt;等級的&lt;code&gt;Log&lt;/code&gt;於程式中，為方便偵錯及追蹤，可能連傳入的資料都會記錄於文字檔中，變成正式環境也會有同樣的效果，因為這個&lt;code&gt;Nlog.Config&lt;/code&gt;又加入於版控中，要嘛就是在&lt;code&gt;release&lt;/code&gt;分支那邊將&lt;code&gt;Nlog.config&lt;/code&gt;調整成正式環境符合的設定，也是頗麻煩。&lt;/p&gt;
+&lt;p&gt;筆者這篇主要是解決上述問題，解決方式也頗簡單，將&lt;code&gt;Nlog.config&lt;/code&gt;製作多個帶有&lt;code&gt;Environment&lt;/code&gt;的檔名，&lt;code&gt;NLogBuilder&lt;/code&gt;註冊時套用不同的&lt;code&gt;NLog.Config&lt;/code&gt;檔案即可解決。基本上若為預設的&lt;code&gt;NLog.config&lt;/code&gt;則不需特別註冊也有效，因要針對不同環境，套用不同的&lt;code&gt;config&lt;/code&gt;檔案，必須宣告&lt;code&gt;NLogBuilder&lt;/code&gt;註冊。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu.me/categories/dotnetcore/nlog/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu.me/tags/nlog/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]ORM系列-SqlSugar:實體產生器-進階</title>
@@ -972,7 +996,7 @@
     <link href="https://eugenesu.me/2021/09/01/dotnetcore-series/"/>
     <id>https://eugenesu.me/2021/09/01/dotnetcore-series/</id>
     <published>2021-09-01T00:57:17.000Z</published>
-    <updated>2022-05-16T06:58:04.000Z</updated>
+    <updated>2022-05-17T08:07:33.122Z</updated>
     
     
     <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
