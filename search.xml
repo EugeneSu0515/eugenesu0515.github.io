@@ -141,6 +141,8 @@
 <li><code>target</code>: 指定 JavaScript 檔案的 ECMAScript 目標版本。 此範例會編譯與 ECMAScript 6 相容的 JavaScript 檔案</li>
 <li>目錄選項 : 產生js檔案的目錄</li>
 </ul>
+<p>宣告方式如</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">tsc hello.ts --noImplicitAny</span><br><span class="line">tsc hello.ts --target <span class="string">&quot;ES2015&quot;</span></span><br></pre></td></tr></table></figure>
 <h2 id="編譯後執行"><a href="#編譯後執行" class="headerlink" title="編譯後執行"></a>編譯後執行</h2><p>若編譯成功後會在同個目錄中會產生<code>hello.js</code>檔案，就透過<code>node</code>指令來執行hello.js吧</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node .\hello.js</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line"><span class="comment"># Hello Eugene</span></span><br></pre></td></tr></table></figure>
 
