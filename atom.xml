@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-17T08:14:49.335Z</updated>
+  <updated>2022-05-18T04:01:25.503Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[Typescript101]Typescript教學系列:介紹</title>
+    <link href="https://eugenesu.me/2022/05/18/typescript-series-introduce/"/>
+    <id>https://eugenesu.me/2022/05/18/typescript-series-introduce/</id>
+    <published>2022-05-18T03:59:37.000Z</published>
+    <updated>2022-05-18T04:01:25.503Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司使用&lt;code&gt;Angular&lt;/code&gt;開發應用系統，使用了也已經有兩三年了，雖兩三年的&lt;code&gt;Angular&lt;/code&gt;撰寫經驗，但筆者自認為只能算是一個半個前端，因開發的是內部系統，比較沒有艱深的功能要實現，且筆者公司買現成的&lt;code&gt;Template&lt;/code&gt;版型來套用，滿習慣且熟悉&lt;code&gt;Template&lt;/code&gt;版型提供的撰寫結構及相關套件，趁這一次轉換工作空檔，就先把&lt;code&gt;Typescript&lt;/code&gt;底子打好吧。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Typescipt&lt;/code&gt;本身是&lt;code&gt;Javascript&lt;/code&gt;的超集，完全相容&lt;code&gt;Javascript&lt;/code&gt;現有語法，加上&lt;code&gt;型別系統&lt;/code&gt;，前端程式寫起來，猶如寫後端程式一樣，加上&lt;code&gt;Angular2&lt;/code&gt;開始，透過&lt;code&gt;DI&lt;/code&gt;取得所有服務，筆者平常後端使用&lt;code&gt;Dotnet Core&lt;/code&gt;，因&lt;code&gt;Dotnet Core&lt;/code&gt;框架也是內建DI機制，因此對筆者來說特別熟悉感。：&lt;/p&gt;
+&lt;p&gt;筆者這邊會參考&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.typescriptlang.org/&quot;&gt;https://www.typescriptlang.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/learn/paths/build-javascript-applications-typescript/&quot;&gt;https://docs.microsoft.com/zh-tw/learn/paths/build-javascript-applications-typescript/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://willh.gitbook.io/typescript-tutorial/&quot;&gt;https://willh.gitbook.io/typescript-tutorial/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;統整上述網站內容，整理成自己理解的版本。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="typescript" scheme="https://eugenesu.me/categories/typescript/"/>
+    
+    
+    <category term="typescript" scheme="https://eugenesu.me/tags/typescript/"/>
+    
+  </entry>
   
   <entry>
     <title>[DotnetCore]NLog-依照Environment使用Nlog.Config檔案</title>
