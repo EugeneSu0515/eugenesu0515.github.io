@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-18T04:01:25.503Z</updated>
+  <updated>2022-05-18T09:29:50.659Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://eugenesu.me/2022/05/18/typescript-series-introduce/"/>
     <id>https://eugenesu.me/2022/05/18/typescript-series-introduce/</id>
     <published>2022-05-18T03:59:37.000Z</published>
-    <updated>2022-05-18T04:01:25.503Z</updated>
+    <updated>2022-05-18T09:29:50.659Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者公司使用&lt;code&gt;Angular&lt;/code&gt;開發應用系統，使用了也已經有兩三年了，雖兩三年的&lt;code&gt;Angular&lt;/code&gt;撰寫經驗，但筆者自認為只能算是一個半個前端，因開發的是內部系統，比較沒有艱深的功能要實現，且筆者公司買現成的&lt;code&gt;Template&lt;/code&gt;版型來套用，滿習慣且熟悉&lt;code&gt;Template&lt;/code&gt;版型提供的撰寫結構及相關套件，趁這一次轉換工作空檔，就先把&lt;code&gt;Typescript&lt;/code&gt;底子打好吧。&lt;/p&gt;
