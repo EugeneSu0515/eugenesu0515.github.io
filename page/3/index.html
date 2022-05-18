@@ -217,6 +217,112 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/20/rust-series-windows-execute/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/20/rust-series-windows-execute/" class="post-title-link" itemprop="url">[Rust]教學系列:Windows疑難雜症解決</a>
+        </h2>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-11-20 21:12:52" itemprop="dateCreated datePublished" datetime="2021-11-20T21:12:52+08:00">2021-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2022-05-13 17:21:09" itemprop="dateModified" datetime="2022-05-13T17:21:09+08:00">2022-05-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>818</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>1 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>筆者這邊主要在Windows環境中安裝好<code>Rust</code>開發環境後，可以透過<code>rustc —version</code>，可以順利顯示出<code>Rust</code>版本號，<code>cargo new</code>也沒問題，但<code>cargo run</code>時，會出現錯誤訊息:</p>
+<blockquote>
+<p>linking with <code>link.exe</code> failed: exit code: 1181</p>
+</blockquote>
+<p>找了一下，是少安裝<code>C++ build tools</code>，其實<code>Rust</code>官方網站上的Install頁面就有提醒，除了安裝檔之外，也要記得安裝<code>C++build tools</code>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/20/rust-series-windows-execute/#more" rel="contents">
+                閱讀全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
     <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/20/windows-series-problem-proxy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1162,99 +1268,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
-    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
-      <meta itemprop="name" content="Eugene Su">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Eugene's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/04/orm-series-chloe-audit-columns/" class="post-title-link" itemprop="url">[DotnetCore]ORM系列-Chloe:共同欄位新增、編輯技巧</a>
-        </h2>
-
-        <div class="post-meta">
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">發表於</span>
-
-              <time title="創建時間：2021-11-04 20:14:16" itemprop="dateCreated datePublished" datetime="2021-11-04T20:14:16+08:00">2021-11-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新於</span>
-                <time title="修改時間：2022-05-13 17:16:32" itemprop="dateModified" datetime="2022-05-13T17:16:32+08:00">2022-05-13</time>
-              </span>
-
-          
-            <span class="post-meta-item" title="閱讀次數">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-users"></i>
-              </span>
-              <span class="post-meta-item-text">閱讀次數：</span>
-              <span class="firestore-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="文章字數">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-              <span>6.1k</span>
-            </span>
-            <span class="post-meta-item" title="所需閱讀時間">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-              <span>11 分鐘</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="前提情要"><a href="#前提情要" class="headerlink" title="前提情要"></a>前提情要</h1><p>有在觀看筆者的ORM系列文就知道，其中<code>EFCore</code>就這麼一篇出現過，即使用<code>override</code> <code>SaveChanges</code>方法來達到針對共同欄位的新增、編輯功能，什麼叫<code>共同欄位</code>，筆者常設計的就是<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>等，這因開發環境不同，習慣的命名方式可能不一樣，但一樣的是，要紀錄該筆資料列的新增、編輯的時間及使用者，原因就這麼單純。<br>若以<code>Dapper</code>或<code>ADO.Net</code>以純SQL的方式製作，會在<code>Insert</code>、<code>Update</code>語法上多組這些相關欄位上去，也不是不行，但以一個大型系統來說，若偏後台管理平台來說，這些欄位都是極重要，且每張資料表皆必須要有，這時每段Service都要填上，也是會累死人，<a href="/2021/09/05/orm-series-efcore-override-savechanges/" title="[DotnetCore]ORM系列-EFCore:資料表共同欄位設定">[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</a>就是於<code>EFCore</code>世界中的解決方式，筆者今天想要來聊聊<code>Chloe</code>的解決方式。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/04/orm-series-chloe-audit-columns/#more" rel="contents">
-                閱讀全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1326,7 +1339,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">文章</span>
         </a>
       </div>
@@ -1371,6 +1384,14 @@
     
     
     <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-18T18:29:41+08:00">
+        05/18
+      </time>
+      <a href="/2022/05/18/typescript-series-ts-project/" title="[Typescript101]Typescript教學系列:設定Typescript專案">[Typescript101]Typescript教學系列:設定Typescript專案</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
       <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-18T11:59:37+08:00">
         05/18
       </time>
@@ -1399,14 +1420,6 @@
         05/10
       </time>
       <a href="/2022/05/10/clean-architecture-api/" title="[DotnetCore]CleanArchitecture手做系列-實作API">[DotnetCore]CleanArchitecture手做系列-實作API</a>
-      <br>
-    </li>
-    
-    <li class='pull-left' style="white-space:normal; text-align:left" >
-      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2022-05-10T20:44:54+08:00">
-        05/10
-      </time>
-      <a href="/2022/05/10/reader-series-pdf-itextsharp/" title="[DotnetCore]Reader系列-Pdf檔案:iTextSharp">[DotnetCore]Reader系列-Pdf檔案:iTextSharp</a>
       <br>
     </li>
     
@@ -1458,12 +1471,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="總字數">316k</span>
+    <span title="總字數">318k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="所需總閱讀時間">9:34</span>
+    <span title="所需總閱讀時間">9:38</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
   </div>
