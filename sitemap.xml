@@ -704,7 +704,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/lib/bookmark/package.json</loc>
+    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -713,7 +713,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
+    <loc>https://eugenesu.me/lib/bookmark/package.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -784,13 +784,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/bat/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu.me/tags/cap/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -799,6 +792,13 @@
   
   <url>
     <loc>https://eugenesu.me/tags/rabbitmq/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/bat/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -854,6 +854,13 @@
   </url>
   
   <url>
+    <loc>https://eugenesu.me/tags/toastifyjs/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu.me/tags/excel/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -875,35 +882,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/toastifyjs/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu.me/tags/fluentftp/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/ftp/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/sftp/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/resolver/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -959,6 +938,27 @@
   </url>
   
   <url>
+    <loc>https://eugenesu.me/tags/ftp/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/sftp/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/resolver/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu.me/tags/efcore/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -973,7 +973,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/message-queue/</loc>
+    <loc>https://eugenesu.me/tags/eml/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -987,7 +987,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/eml/</loc>
+    <loc>https://eugenesu.me/tags/message-queue/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1087,14 +1087,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/categories/dotnetcore/clean-architecture/</loc>
+    <loc>https://eugenesu.me/categories/dotnetcore/coravel/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eugenesu.me/categories/dotnetcore/coravel/</loc>
+    <loc>https://eugenesu.me/categories/dotnetcore/clean-architecture/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
