@@ -6,7 +6,7 @@
   <link href="https://eugenesu.me/atom.xml" rel="self"/>
   
   <link href="https://eugenesu.me/"/>
-  <updated>2022-05-18T10:33:57.634Z</updated>
+  <updated>2022-05-18T10:35:03.445Z</updated>
   <id>https://eugenesu.me/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://eugenesu.me/2022/05/18/typescript-series-ts-project/"/>
     <id>https://eugenesu.me/2022/05/18/typescript-series-ts-project/</id>
     <published>2022-05-18T10:29:41.000Z</published>
-    <updated>2022-05-18T10:33:57.634Z</updated>
+    <updated>2022-05-18T10:35:03.445Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;前提情要&quot;&gt;&lt;a href=&quot;#前提情要&quot; class=&quot;headerlink&quot; title=&quot;前提情要&quot;&gt;&lt;/a&gt;前提情要&lt;/h1&gt;&lt;p&gt;筆者的系列文章:&lt;code&gt;Typescript101&lt;/code&gt;，上一篇介紹文中提到的簡單地&lt;code&gt;hello.ts&lt;/code&gt;檔案，透過&lt;code&gt;tsc&lt;/code&gt;指令將其編譯成&lt;code&gt;javascript&lt;/code&gt;檔案，算滿簡單易懂的，這次則建立&lt;code&gt;typescript&lt;/code&gt;專案，真正在撰寫應用程式時透過這種方式居多，不妨跟著筆者實作看看吧。&lt;/p&gt;</summary>

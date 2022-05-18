@@ -713,7 +713,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/lib/bookmark/package.json</loc>
+    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -722,7 +722,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
+    <loc>https://eugenesu.me/lib/bookmark/package.json</loc>
     
     <lastmod>2021-08-20</lastmod>
     
@@ -758,20 +758,6 @@
 
   
   <url>
-    <loc>https://eugenesu.me/tags/dotnetcore/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/clean-architecture/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu.me/tags/angular/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -786,6 +772,13 @@
   </url>
   
   <url>
+    <loc>https://eugenesu.me/tags/dotnetcore/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://eugenesu.me/tags/coravel/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -793,7 +786,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/generic/</loc>
+    <loc>https://eugenesu.me/tags/clean-architecture/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/bat/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -814,7 +814,7 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/bat/</loc>
+    <loc>https://eugenesu.me/tags/generic/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -822,13 +822,6 @@
   
   <url>
     <loc>https://eugenesu.me/tags/global-error-handler/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/smtp/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -843,6 +836,13 @@
   
   <url>
     <loc>https://eugenesu.me/tags/netcoreserver/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/smtp/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -989,14 +989,14 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/csv/</loc>
+    <loc>https://eugenesu.me/tags/eml/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/eml/</loc>
+    <loc>https://eugenesu.me/tags/csv/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1052,20 +1052,6 @@
   </url>
   
   <url>
-    <loc>https://eugenesu.me/tags/webpack/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://eugenesu.me/tags/vue-cli/</loc>
-    <lastmod>2022-05-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://eugenesu.me/tags/windows/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -1079,17 +1065,31 @@
     <priority>0.2</priority>
   </url>
   
-
-  
   <url>
-    <loc>https://eugenesu.me/categories/dotnetcore/</loc>
+    <loc>https://eugenesu.me/tags/webpack/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
+    <loc>https://eugenesu.me/tags/vue-cli/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
     <loc>https://eugenesu.me/categories/angular/</loc>
+    <lastmod>2022-05-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/</loc>
     <lastmod>2022-05-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
