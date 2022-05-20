@@ -23,6 +23,16 @@
     var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
   <meta name="description" content="前提情要來到「猜謎遊戲」的最終篇章了，前面兩篇[Rust]教學系列-猜謎遊戲:取得使用者輸入值、[Rust]教學系列-猜謎遊戲:取亂數，我們已經把前置作業該做的都做完了，最終篇就是重頭戲中的重頭戲，將取得的使用者輸入值與隨機產生的亂數做一個比較，若一樣則比賽結束，若不一致則可以讓使用者繼續猜，跟著筆者一起實作吧。 筆者先預告一下此篇主要是會使用到Rust的重要方法match以及若使用者輸入值與神秘">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[Rust]教學系列-猜謎遊戲:最終篇">
