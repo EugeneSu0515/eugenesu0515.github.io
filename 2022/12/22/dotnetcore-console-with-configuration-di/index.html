@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要筆者收到主管的指示，要來寫一個執行檔(exe)程式，筆者離這種exe程式好久遠了，自從轉換到Web領域後幾乎都是寫API為主，一開始從.net MVC5開始進入Web領域，寫了幾年的Razor View後，前一份工作剛好前後端分離，前幾年都在寫dotnet core web api及angular為主，Console Application離我好遙遠阿，但筆者已經被dotnet core的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[DotnetCore]ConsoleApp擁有Configuration及ServiceCollection機制">
+<meta property="og:url" content="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要筆者收到主管的指示，要來寫一個執行檔(exe)程式，筆者離這種exe程式好久遠了，自從轉換到Web領域後幾乎都是寫API為主，一開始從.net MVC5開始進入Web領域，寫了幾年的Razor View後，前一份工作剛好前後端分離，前幾年都在寫dotnet core web api及angular為主，Console Application離我好遙遠阿，但筆者已經被dotnet core的">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/Untitled.png">
+<meta property="article:published_time" content="2022-12-22T07:00:07.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:27:13.390Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="dotnetcore">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/Untitled.png">
+
+<link rel="canonical" href="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[DotnetCore]ConsoleApp擁有Configuration及ServiceCollection機制 | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [DotnetCore]ConsoleApp擁有Configuration及ServiceCollection機制
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2022-12-22 15:00:07" itemprop="dateCreated datePublished" datetime="2022-12-22T15:00:07+08:00">2022-12-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:27:13" itemprop="dateModified" datetime="2023-03-01T00:27:13+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>5.7k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>10 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者收到主管的指示，要來寫一個執行檔(<code>exe</code>)程式，筆者離這種<code>exe</code>程式好久遠了，自從轉換到<code>Web</code>領域後幾乎都是寫API為主，一開始從<code>.net MVC5</code>開始進入<code>Web</code>領域，寫了幾年的<code>Razor View</code>後，前一份工作剛好前後端分離，前幾年都在寫<code>dotnet core web api</code>及<code>angular</code>為主，<code>Console Application</code>離我好遙遠阿，但筆者已經被<code>dotnet core</code>的內建<code>DI</code>機制及<code>AppSettings</code>當<code>Config</code>已經習以為常，對於<code>Console Application</code>來說這些都是要自己實作上去的，不妨藉由這次機會來實作看看。</p>
+<span id="more"></span>
+
+<p>筆者看了幾篇部落格後，想法是仿照<code>dotnet core web api</code>標準配置那樣</p>
+<ul>
+<li>有一個<code>Startup</code>類別</li>
+<li><code>Startup</code>類別中有<code>public get</code>的<code>Configuration</code>，令其他有需求的人可以存取<code>Configuration</code>物件</li>
+<li><code>Startup</code>中宣告<code>ConfigureServices</code>，並將配置好的<code>ServiceCollection</code>回傳</li>
+<li>宣告一個<code>App</code>類別，主要有<code>Run</code>這個<code>Method</code>，最終於<code>Program</code>中執行</li>
+</ul>
+<h2 id="製作商業邏輯Service"><a href="#製作商業邏輯Service" class="headerlink" title="製作商業邏輯Service"></a>製作商業邏輯Service</h2><p>筆者這支的主要用意是檢查某個服務是否正常，可以想見驗證方式分為</p>
+<ul>
+<li><code>ping test</code></li>
+<li><code>http request test</code></li>
+</ul>
+<p>對於應用程式來說，由注入時決定該用哪個方式即可，直接來看<code>Code</code>吧</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IPingTestService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">Task&lt;<span class="built_in">bool</span>&gt; <span class="title">PingHost</span>(<span class="params"><span class="built_in">string</span> hostName</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接著實作上面列到的兩種方式</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PingTestByPingService</span> : <span class="title">IPingTestService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;<span class="built_in">bool</span>&gt; <span class="title">PingHost</span>(<span class="params"><span class="built_in">string</span> hostName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">bool</span> pingable = <span class="literal">false</span>;</span><br><span class="line">        Ping pinger = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            pinger = <span class="keyword">new</span> Ping();</span><br><span class="line">            PingReply reply = <span class="keyword">await</span> pinger.SendPingAsync(hostName);</span><br><span class="line">            pingable = reply.Status == IPStatus.Success;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (pinger != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                pinger.Dispose();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pingable;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PintTestByHttpRequestService</span> : <span class="title">IPingTestService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;<span class="built_in">bool</span>&gt; <span class="title">PingHost</span>(<span class="params"><span class="built_in">string</span> hostName</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">using</span> <span class="keyword">var</span> httpClient = <span class="keyword">new</span> HttpClient();</span><br><span class="line">        <span class="keyword">var</span> response = <span class="keyword">await</span> httpClient.GetAsync(hostName);</span><br><span class="line">        result = response.StatusCode == HttpStatusCode.OK;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到這邊商業邏輯實作告一段落了，就先放在一邊，回頭把基礎建設都用好</p>
+<h2 id="製作Startup類別"><a href="#製作Startup類別" class="headerlink" title="製作Startup類別"></a>製作Startup類別</h2><p>我們要製作<code>Startup</code>類別中的<code>AppSettings</code>及<code>DI</code>機制需要爾外安裝相關的微軟提供套件，就先來安裝<code>nuget</code>套件們吧</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 以下為Configuration機制所需套件</span></span><br><span class="line">dotnet add package Microsoft.Extensions.Configuration</span><br><span class="line">dotnet add package Microsoft.Extensions.Configuration.Binder</span><br><span class="line">dotnet add package Microsoft.Extensions.Configuration.Json</span><br><span class="line"><span class="comment"># 以下為DI注入建置ServiceCollection所需套件</span></span><br><span class="line">dotnet add package Microsoft.Extensions.DependencyInjection</span><br></pre></td></tr></table></figure>
+
+<p>安裝好<code>nuget</code>套件後，要來製作<code>Startup</code>類別了</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Startup</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// 主要規範由Startup初始化時建置設定，對於外部來說只能取得使用</span></span><br><span class="line">    <span class="keyword">public</span> IConfiguration Configuration &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Startup</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 預設為appsettings.json</span></span><br><span class="line">        <span class="keyword">var</span> builder = <span class="keyword">new</span> ConfigurationBuilder()</span><br><span class="line">                  .SetBasePath(Directory.GetCurrentDirectory())</span><br><span class="line">                  .AddJsonFile(<span class="string">&quot;appsettings.json&quot;</span>, optional: <span class="literal">false</span>);</span><br><span class="line">        <span class="comment">// 讀取環境變數</span></span><br><span class="line">        <span class="keyword">var</span> environment = Environment.GetEnvironmentVariable(<span class="string">&quot;ASPNETCORE_ENVIRONMENT&quot;</span>);</span><br><span class="line">        <span class="comment">// 有環境變數設定則將appsettings.&#123;environment&#125;.json才是我們要建置的</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">string</span>.IsNullOrEmpty(environment))</span><br><span class="line">        &#123;</span><br><span class="line">            builder = builder.AddJsonFile(<span class="string">$&quot;appsettings.<span class="subst">&#123;environment&#125;</span>.json&quot;</span>, optional: <span class="literal">true</span>, reloadOnChange: <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 最後建置並指派給Configuration變數</span></span><br><span class="line">        <span class="keyword">this</span>.Configuration = builder.Build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServiceCollection <span class="title">ConfigureServices</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> serviceCollection = <span class="keyword">new</span> ServiceCollection();</span><br><span class="line">        serviceCollection.AddTransient&lt;App&gt;();</span><br><span class="line">        <span class="comment">// 由這邊切換一般Ping Test或Htpp Request Test</span></span><br><span class="line">        serviceCollection.AddTransient&lt;IPingTestService, PintTestByHttpRequestService&gt;();</span><br><span class="line">        <span class="keyword">return</span> serviceCollection;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置AppSettings"><a href="#配置AppSettings" class="headerlink" title="配置AppSettings"></a>配置AppSettings</h2><p>主要是新增各個環境的<code>AppSettings</code>檔案，這邊主要是要提醒大家，要將新增的<code>appsettings</code>檔案要去設定<code>Copy always</code>，筆者以<code>Development</code>檔案為準，列出筆者這邊的設定</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;EmailSetting&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;SmtpServer&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SMTP Host&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;SmtpPort&quot;</span><span class="punctuation">:</span> <span class="number">587</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Account&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SMTP Account&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SMTP Password&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 欲測試服務對象FQDN</span></span><br><span class="line">  <span class="attr">&quot;TestUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://google.com.tw&quot;</span><span class="punctuation">,</span></span><br><span class="line">	<span class="comment">// 寄信相關設定</span></span><br><span class="line">  <span class="attr">&quot;MailToDo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;MailTo&quot;</span><span class="punctuation">:</span> <span class="string">&quot;test@gmail.com;test2@gmail.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;MailCc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;Subject&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Test Subject&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="LaunchSettings配置"><a href="#LaunchSettings配置" class="headerlink" title="LaunchSettings配置"></a>LaunchSettings配置</h2><p>筆者這邊習慣調整<code>LaunchSettings</code>來切換<code>Development</code>, <code>Staging</code>, <code>UAT</code>等環境，Console Application的專案預設是沒有任何設定的，看不到<code>Properties/LaunchSettings.json</code>的，就動手加上去吧</p>
+<img src="/2022/12/22/dotnetcore-console-with-configuration-di/Untitled.png" class="" title="[LaunchSettingsUI]">
+
+<p>加上去後會在<code>Solution Explorer</code>中會看到<code>LaunchSettings.json</code>了</p>
+<h2 id="製作主要運作程式App類別"><a href="#製作主要運作程式App類別" class="headerlink" title="製作主要運作程式App類別"></a>製作主要運作程式App類別</h2><p>基礎建設都用完了，要來撰寫主要執行的<code>App</code>類別了，邏輯觀念為</p>
+<ul>
+<li>從<code>Appsettings</code>讀取<code>EmailSetting</code>及<code>Mail</code>相關設定</li>
+<li>宣告<code>MySmtpClient</code>物件</li>
+<li>執行主要<code>Ping Test</code>程式</li>
+<li>若回傳錯誤或者<code>Exception</code>則寄信通知對應的信箱</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">App</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IPingTestService _pingTestService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">App</span>(<span class="params">IPingTestService pingTestService</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _pingTestService = pingTestService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Run</span>(<span class="params">IConfiguration config</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Step0: Data Initial</span></span><br><span class="line">        <span class="keyword">var</span> emailSetting = config.GetSection(<span class="string">&quot;EmailSetting&quot;</span>).Get&lt;EmailSetting&gt;();</span><br><span class="line">        <span class="keyword">var</span> mailTodo = config.GetSection(<span class="string">&quot;MailToDo&quot;</span>).Get&lt;MailToDoItem&gt;();</span><br><span class="line">        <span class="keyword">var</span> mySmtpClient = <span class="keyword">new</span> MySmtpClient(mailTodo, emailSetting);</span><br><span class="line">        mySmtpClient.MySendCompleted += MailSendCompleted;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Step1: Ping test</span></span><br><span class="line">            <span class="keyword">var</span> result = <span class="keyword">await</span> _pingTestService.PingHost(config[<span class="string">&quot;TestUrl&quot;</span>]);</span><br><span class="line">            <span class="keyword">if</span> (!result)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Step2: Send mail if connection error</span></span><br><span class="line">                mailTodo.Message = <span class="string">&quot;Monitor作業偵測到連線異常通知&quot;</span>;</span><br><span class="line">                <span class="keyword">await</span> mySmtpClient.SendMailProcess(<span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">        &#123;</span><br><span class="line">            mailTodo.Subject = <span class="string">$&quot;Monitor作業異常通知&quot;</span>;</span><br><span class="line">            mailTodo.Message = <span class="string">$&quot;<span class="subst">&#123;ex&#125;</span>&quot;</span>;</span><br><span class="line">            <span class="keyword">await</span> mySmtpClient.SendMailProcess(<span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">MailSendCompleted</span>(<span class="params">MailToDoItem mailToDoItem, AsyncCompletedEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Send Complete Handler</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程式中用到的<code>MySmtpClient</code>、<code>EmailSetting</code>、<code>MailToDoItem</code>類別宣告就不特別在此列出，可以參考筆者這篇文章</p>
+<a href="/2021/08/21/dotnetcore-smtp/" title="[DotnetCore]SMTP寄信服務設計">[DotnetCore]SMTP寄信服務設計</a>
+
+<h2 id="Program-Main程式"><a href="#Program-Main程式" class="headerlink" title="Program:Main程式"></a>Program:Main程式</h2><p>最後要來撰寫<code>Main</code>程式了，直接用<code>Code</code>說話</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// reference: https://blog.poychang.net/dotnet-core-console-app-with-dependency-injection/</span></span><br><span class="line">    <span class="comment">// reference: https://dev.to/iamrule/add-your-appsettingsjson-to-a-c-console-application-5gd6</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">async</span> Task <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> startUp = <span class="keyword">new</span> Startup();</span><br><span class="line">        <span class="keyword">var</span> serviceProvider = startUp.ConfigureServices().BuildServiceProvider();</span><br><span class="line">        <span class="keyword">var</span> app = serviceProvider.GetRequiredService&lt;App&gt;();</span><br><span class="line">        <span class="keyword">await</span> app.Run(startUp.Configuration);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>藉由這次，平常直接透過<code>dotnet new webapi</code>這種指令建置出<code>Web API</code>專案，基本上那些相關的設定都配置好了，這次撰寫過程，就會知道，之所以可以使用<code>IConfiguration</code>則，需要安裝哪些套件，<code>DI</code>注入宣告之<code>ServiceCollection</code>需要的是哪個對應的<code>nuget</code>套件，對於筆者來說，是滿大的收穫。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.poychang.net/dotnet-core-console-app-with-dependency-injection/">https://blog.poychang.net/dotnet-core-console-app-with-dependency-injection/</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev.to/iamrule/add-your-appsettingsjson-to-a-c-console-application-5gd6">https://dev.to/iamrule/add-your-appsettingsjson-to-a-c-console-application-5gd6</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/09/01/dotnetcore-series/" rel="bookmark">DotnetCore系列文章目錄</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/11/27/dotnetcore-model-binding-middleware/" rel="bookmark">[DotnetCore]ModelBindingMiddleware</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/11/27/dotnetcore-refit-api-gateway/" rel="bookmark">[DotnetCore]Refit:類ApiGateway實作</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/11/27/fluent-validation-new/" rel="bookmark">[DotnetCore]FluentValidation再續前緣</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/11/27/dotnetcore-refit-polly/" rel="bookmark">[DotnetCore]Refit:Polly應用</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/" title="[DotnetCore]ConsoleApp擁有Configuration及ServiceCollection機制">https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/dotnetcore/" rel="tag"><i class="fa fa-tag"></i> dotnetcore</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/07/macos-recommend-software/" rel="prev" title="[macos]好物系列-鍵盤&滑鼠設定">
+      <i class="fa fa-chevron-left"></i> [macos]好物系列-鍵盤&滑鼠設定
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/02/07/dotnet-series-grpc101-greeting-server/" rel="next" title="[DotnetCore]gRPC101: Gretting專案-Server篇">
+      [DotnetCore]gRPC101: Gretting專案-Server篇 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%BD%E4%BD%9C%E5%95%86%E6%A5%AD%E9%82%8F%E8%BC%AFService"><span class="nav-number">1.1.</span> <span class="nav-text">製作商業邏輯Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%BD%E4%BD%9CStartup%E9%A1%9E%E5%88%A5"><span class="nav-number">1.2.</span> <span class="nav-text">製作Startup類別</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEAppSettings"><span class="nav-number">1.3.</span> <span class="nav-text">配置AppSettings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LaunchSettings%E9%85%8D%E7%BD%AE"><span class="nav-number">1.4.</span> <span class="nav-text">LaunchSettings配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%BD%E4%BD%9C%E4%B8%BB%E8%A6%81%E9%81%8B%E4%BD%9C%E7%A8%8B%E5%BC%8FApp%E9%A1%9E%E5%88%A5"><span class="nav-number">1.5.</span> <span class="nav-text">製作主要運作程式App類別</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Program-Main%E7%A8%8B%E5%BC%8F"><span class="nav-number">1.6.</span> <span class="nav-text">Program:Main程式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">2.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/",
+      identifier: "2022/12/22/dotnetcore-console-with-configuration-di/",
+      title     : "[DotnetCore]ConsoleApp擁有Configuration及ServiceCollection機制",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

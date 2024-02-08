@@ -1,0 +1,1532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://eugenesu.me/2023/11/27/dotnetcore-model-binding-middleware/</loc>
+    
+    <lastmod>2023-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/11/27/dotnetcore-refit-api-gateway/</loc>
+    
+    <lastmod>2023-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/11/27/fluent-validation-new/</loc>
+    
+    <lastmod>2023-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/24/fluent-validation/</loc>
+    
+    <lastmod>2023-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/11/27/dotnetcore-refit-polly/</loc>
+    
+    <lastmod>2023-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/11/27/dotnetcore-refit-http-handler/</loc>
+    
+    <lastmod>2023-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/07/08/dotnetcore-refit-api-intro/</loc>
+    
+    <lastmod>2023-07-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/07/06/dotnetcore-refit-intro/</loc>
+    
+    <lastmod>2023-07-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/01/dotnetcore-series/</loc>
+    
+    <lastmod>2023-07-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/07/06/dotnetcore-refit-webapi/</loc>
+    
+    <lastmod>2023-07-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/02/10/dotnet-series-grpc101-postman-request/</loc>
+    
+    <lastmod>2023-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/02/08/dotnet-series-grpc101-greeting-client/</loc>
+    
+    <lastmod>2023-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/03/15/dotnetcore-aop-logging/</loc>
+    
+    <lastmod>2023-03-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/20/windows-series-problem-proxy/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/04/25/vue-webpack/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/06/25/vue-vee-validate/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/04/23/vue-intro/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/06/25/vue-instance-component/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/05/24/vue-guide/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/06/22/vue-directive/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2018/06/25/vue-axios/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/18/typescript-series-ts-project/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/18/typescript-series-introduce/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/01/sftp-download/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/20/rust-series-windows-execute/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/16/rust-series-hello-world/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/16/rust-series-hello-cargo/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/19/rust-series-guessing-game-rand/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/20/rust-series-guessing-game-full/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/28/reader-series-csv/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/03/reader-series-pdf/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/10/reader-series-pdf-itextsharp/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/03/07/reader-series-eml/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/rabbitmq-install/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/02/orm-series-sqlsugar-query/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/01/orm-series-sqlsugar-entry/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/05/orm-series-efcore-override-savechanges/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/07/orm-series-chloe-select/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/07/orm-series-chloe-interceptor/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/04/orm-series-chloe-entry/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/23/nlog/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/23/nlog-loggermanager/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/17/nlog-environment-config/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/23/mysql-sample-db/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/23/mysql-install/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/10/07/macos-recommend-software/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/26/iis-always-run-setting/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/27/hangfire-entry/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/11/hangfire-dynamic4/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/11/hangfire-dynamic3/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/10/hangfire-dynamic2/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/08/hangfire-dynamic1/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/27/hangfire-advanced1/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/03/07/github-page-custom-domain/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/02/ftp-sftp-resolver/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/31/ftp-download/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/08/10/flutter-series-dart101-symbol/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/08/10/flutter-series-dart101-strings/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/08/10/flutter-series-dart101-numbers/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/08/10/flutter-series-dart101-hello-world/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/08/27/flutter-series-dart101-function/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/29/exception-elmah/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/30/excel-reader/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/23/electron-series-vanillajs-modal/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/23/electron-series-vanillajs-loading/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/12/01/dotnetcore-specify-sdk/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/dotnetcore-socket/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/dotnetcore-socket-analyze/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/dotnetcore-smtp/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/09/09/dotnetcore-global-error-handler/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-model/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-domain/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-DI/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-attribute/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/dotnetcore-cap/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/21/dotnetcore-batch/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/20/dotnetcore-actionfilter/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/02/07/dotnet-series-grpc101-greeting-server/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/25/coravel-scheduler/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/08/25/coravel-queue/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/10/clean-architecture-new/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2022/05/10/clean-architecture-api/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2023/02/23/chatgpt-bootstrap-datepicker/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/2021/11/20/angular-series-barcode-listener/</loc>
+    
+    <lastmod>2023-02-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/about/index.html</loc>
+    
+    <lastmod>2021-08-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/lib/three/README.html</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/lib/three/package.json</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/lib/three/renovate.json</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/lib/bookmark/README.html</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/lib/bookmark/package.json</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/lib/bookmark/renovate.json</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/index.html</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/index.html</loc>
+    
+    <lastmod>2021-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://eugenesu.me/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://eugenesu.me/tags/angular/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/barcodelistener/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/chatgpt/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/jquery/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/dotnetcore/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/clean-architecture/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/coravel/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/gRPC/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/aop/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/bat/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/cap/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/rabbitmq/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/generic/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/global-error-handler/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/refit/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/smtp/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/socket/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/netcoreserver/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/electron/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/vanilla-js/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/toastifyjs/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/excel/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/exception/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/elmah/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/fluent-validation/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/flutter/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/dart/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/fluentftp/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/ftp/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/sftp/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/resolver/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/hexo/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/github-page/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/hangfire/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/iis/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/macos/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/software/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/mysql/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/nlog/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/chloe/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/efcore/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/sqlsugar/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/message-queue/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/csv/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/eml/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/itextsharp/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/pdf/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/rust/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/typescript/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/vue/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/axios/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/vee-validate/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/webpack/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/vue-cli/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/windows/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/tags/problemsolving/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://eugenesu.me/categories/angular/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/chatgpt/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/gRPC/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/clean-architecture/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/coravel/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/refit/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/socket/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/electron/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/reader/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/fluent-validation/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/flutter/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/hexo/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/hangfire/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/iis/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/macos/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/mysql/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/nlog/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/chloe/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/efcore/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/dotnetcore/sqlsugar/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/message-queue/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/rust/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/typescript/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/vue/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/windows/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://eugenesu.me/categories/windows/problemsolving/</loc>
+    <lastmod>2024-02-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+</urlset>

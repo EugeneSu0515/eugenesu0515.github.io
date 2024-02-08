@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要筆者與Electron淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是Python，一個是Electron，不過Python則需要再找一些UI framework來實作畫面部份，那時候對於Electron也是一份好奇，用html css就能調出畫面，還可以直接套用bootstrap，簡直完美，毅然決然決定使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Electron]vanilla js套件系列-listjs">
+<meta property="og:url" content="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要筆者與Electron淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是Python，一個是Electron，不過Python則需要再找一些UI framework來實作畫面部份，那時候對於Electron也是一份好奇，用html css就能調出畫面，還可以直接套用bootstrap，簡直完美，毅然決然決定使">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/Untitled.png">
+<meta property="og:image" content="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/Untitled-1.png">
+<meta property="og:image" content="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/Untitled-2.png">
+<meta property="article:published_time" content="2021-11-23T10:24:26.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:28:04.860Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="electron">
+<meta property="article:tag" content="vanilla-js">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/Untitled.png">
+
+<link rel="canonical" href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[Electron]vanilla js套件系列-listjs | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Electron]vanilla js套件系列-listjs
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-11-23 18:24:26" itemprop="dateCreated datePublished" datetime="2021-11-23T18:24:26+08:00">2021-11-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:28:04" itemprop="dateModified" datetime="2023-03-01T00:28:04+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>6.6k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>12 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者與<code>Electron</code>淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是<code>Python</code>，一個是<code>Electron</code>，不過<code>Python</code>則需要再找一些<code>UI framework</code>來實作畫面部份，那時候對於<code>Electron</code>也是一份好奇，用<code>html css</code>就能調出畫面，還可以直接套用<code>bootstrap</code>，簡直完美，毅然決然決定使用<code>Electron</code>來開發，但開發過程有很多地方，尤其是硬體介接的部份，卡了很久，眼看上線時間快到，最終放棄作罷，最後使用<code>Python+Tkinter</code>完成該專案，實為可惜。</p>
+<span id="more"></span>
+
+<p>這次有專案要實作<code>Streaming</code>的小專案，筆者又燃起Electron魂，想到html5的media相關API非常成熟，直接實作了，但第一版有使用jquery刻一些互動效果，要開發進階功能實遇到太多引用問題了，換回最原始使用<code>Vanilla js</code>的方式撰寫，其中學會技巧就是要找到純js的套件時需要下關鍵字<code>Vanilla</code>，才會找到比較符合期待的套件，該篇主題為實作<code>table</code>的<code>搜尋</code>及<code>pagination</code>時找到的套件介紹。</p>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者盡量模擬<code>Electron</code>開發環境，大概就是不要引用<code>jquery</code>相關套件，連<code>bootstrap</code>部份也只引入<code>css</code>部份而已，再則盡量使用<code>script src</code>宣告的方式引入<code>js</code>相關套件，筆者針對此篇的需求，使用的是<a target="_blank" rel="noopener" href="https://listjs.com/">list.js</a>，跟著筆者實作吧。</p>
+<h2 id="Public-API"><a href="#Public-API" class="headerlink" title="Public API"></a>Public API</h2><p>筆者為示範，必須得找到一個公開的API，筆者撰寫的electron專案使用情境是會有一個<code>Sqlite</code>檔案資料庫，使用<code>knex</code>套件存取，筆者會有另一篇介紹<code>knex</code>套件的文章，此篇就以存取公開API的結果來呈現其table的結構。</p>
+<p>筆者之前在寫vue系列實就找到過一個public api，繼續沿用下去了，<a target="_blank" rel="noopener" href="https://jsonplaceholder.typicode.com/posts">Posts API</a>，另，筆者者邊會使用<code>axios</code>套件實作<code>http request</code>。</p>
+<p>實際撰寫的程式碼如下</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">&quot;https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    axios</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      .<span class="title function_">get</span>(<span class="string">&quot;https://jsonplaceholder.typicode.com/posts&quot;</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="comment">// 到時寫處理邏輯在這</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">				<span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">data</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      .<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Error: &quot;</span>, err));</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<img src="/2021/11/23/electron-series-vanillajs-listjs/Untitled.png" class="" title="[public api結果]">
+
+<p>可以看到印出的結果，欄位分別為</p>
+<ul>
+<li>id</li>
+<li>title</li>
+<li>body</li>
+<li>userId</li>
+</ul>
+<p>存取API部份就先寫到這邊，接下來介紹Html結構及listjs的宣告方式。</p>
+<h2 id="List-js宣告"><a href="#List-js宣告" class="headerlink" title="List.js宣告"></a>List.js宣告</h2><p>筆者這邊套用官方文件教學中的<a target="_blank" rel="noopener" href="https://listjs.com/examples/new-list/">NewList</a>這個章節的應用，意思就是<code>html</code>結構中的<code>table</code>是空的，全部資料由外部注入，照著刻應該沒有甚麼問題，上章節已經知道欄位了，就照著欄位在Listjs的初始化options中宣告</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">    <span class="attr">valueNames</span>: [ <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;body&#x27;</span>, <span class="string">&#x27;userId&#x27;</span> ],</span><br><span class="line">    <span class="comment">// listjs塞入資料實的結構，筆者這邊使用table結構，因此宣告成tr&gt;td結構</span></span><br><span class="line">    <span class="attr">item</span>: <span class="string">&#x27;&lt;tr&gt;&lt;td class=&quot;id&quot;&gt;&lt;/td&gt;&lt;td class=&quot;title&quot;&gt;&lt;/td&gt;&lt;td class=&quot;body&quot;&gt;&lt;/td&gt;&lt;td class=&quot;userId&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&#x27;</span>,</span><br><span class="line">    <span class="attr">page</span>: <span class="number">10</span>,</span><br><span class="line">    <span class="attr">pagination</span>: <span class="literal">true</span></span><br><span class="line">    &#125;;</span><br><span class="line"><span class="keyword">var</span> values = res.<span class="property">data</span>;</span><br><span class="line"><span class="keyword">var</span> postList = <span class="keyword">new</span> <span class="title class_">List</span>(<span class="string">&#x27;table-list&#x27;</span>, options, values);</span><br></pre></td></tr></table></figure>
+
+<p>上述程式碼對應的html結構為</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--listjs對應的tag--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;table-list&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-3 mb-3 mt-3&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--只要宣告input並且class設定為search即可擁有listjs的搜尋功能--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">&quot;search form-control&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Search&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;pagination&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">table</span> <span class="attr">class</span>=<span class="string">&quot;table table-bordered table-hover&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">thead</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">td</span>&gt;</span>Id<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">td</span>&gt;</span>抬頭<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">td</span>&gt;</span>內文<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">td</span>&gt;</span>使用者<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--listjs預設抓class名稱為list的區塊當作資料塞入的識別--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tbody</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span></span><br><span class="line">          </span><br><span class="line">        <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Pagination及美化版面"><a href="#Pagination及美化版面" class="headerlink" title="Pagination及美化版面"></a>Pagination及美化版面</h2><p>Pagination部份滿簡單的，主要在options中設定</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">page</span>: <span class="number">10</span>,<span class="comment">// 一頁幾筆資料設定值</span></span><br><span class="line"><span class="attr">pagination</span>: <span class="literal">true</span> <span class="comment">// 預設為false</span></span><br></pre></td></tr></table></figure>
+
+<p>但是預設效果滿醜的，需要修改它，筆者也不是甚麼專業的UI/UX，想要直接套用<code>bootstrap pagination</code>的效果，但是<code>listjs</code>沒有開放設定<code>pagination</code>中的每一個<code>item</code>套用的自定義<code>class</code>，不過它的套用<code>tag</code>是固定的，最外層的<code>class</code>預設是<code>pagination</code>，但可以透過<code>options</code>設定可以更改，但內層的是不能變更</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul <span class="keyword">class</span>=<span class="string">&quot;pagination&quot;</span>&gt;</span><br><span class="line">	&lt;!--依照是否該頁碼與當頁頁碼相符而自動套上active--&gt;</span><br><span class="line">	<span class="language-xml"><span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">&quot;active&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;page&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+
+<p>要直接抄<code>bootstrap pagination</code>是無法靠靜態檔案的，因為<code>bootstrap</code>最新的都是<code>scss</code>版本了，需要執行中的頁面才可以看出完整的<code>css</code>設定，筆者透過<a target="_blank" rel="noopener" href="https://getbootstrap.com/docs/5.1/components/pagination/">bootstrap pagination</a>，參考了一下其結構後宣告為</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">    <span class="selector-class">.pagination</span>&#123;</span><br><span class="line">        <span class="attribute">display</span>: flex;</span><br><span class="line">        <span class="attribute">padding-left</span>: <span class="number">0</span>;</span><br><span class="line">        <span class="attribute">list-style</span>: none;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-tag">li</span><span class="selector-class">.active</span> <span class="selector-class">.page</span> &#123;</span><br><span class="line">        <span class="attribute">z-index</span>: <span class="number">3</span>;</span><br><span class="line">        <span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">        <span class="attribute">background-color</span>: <span class="number">#0d6efd</span>;</span><br><span class="line">        <span class="attribute">border-color</span>: <span class="number">#0d6efd</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-tag">li</span> <span class="selector-class">.page</span> &#123;</span><br><span class="line">        <span class="attribute">padding</span>: <span class="number">0.375rem</span> <span class="number">0.75rem</span>;</span><br><span class="line">        <span class="attribute">position</span>: relative;</span><br><span class="line">        <span class="attribute">display</span>: block;</span><br><span class="line">        <span class="attribute">color</span>: <span class="number">#0d6efd</span>;</span><br><span class="line">        <span class="attribute">text-decoration</span>: none;</span><br><span class="line">        <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span><br><span class="line">        <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#dee2e6</span>;</span><br><span class="line">        <span class="attribute">transition</span>: color .<span class="number">15s</span> ease-in-out,background-color .<span class="number">15s</span> ease-in-out,border-color .<span class="number">15s</span> ease-in-out,box-shadow .<span class="number">15s</span> ease-in-out;</span><br><span class="line">    &#125;       </span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="完整程式碼"><a href="#完整程式碼" class="headerlink" title="完整程式碼"></a>完整程式碼</h2><p>最後看一下組合之後的完整程式碼</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">link</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">href</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">integrity</span>=<span class="string">&quot;sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">crossorigin</span>=<span class="string">&quot;anonymous&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">    /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Demo Listjs<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"></span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">        <span class="selector-class">.pagination</span>&#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">display</span>: flex;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">padding-left</span>: <span class="number">0</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">list-style</span>: none;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">        &#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">        <span class="selector-tag">li</span><span class="selector-class">.active</span> <span class="selector-class">.page</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">z-index</span>: <span class="number">3</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">color</span>: <span class="number">#fff</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">background-color</span>: <span class="number">#0d6efd</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">border-color</span>: <span class="number">#0d6efd</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">        &#125;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">        <span class="selector-tag">li</span> <span class="selector-class">.page</span> &#123;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">padding</span>: <span class="number">0.375rem</span> <span class="number">0.75rem</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">position</span>: relative;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">display</span>: block;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">color</span>: <span class="number">#0d6efd</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">text-decoration</span>: none;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">background-color</span>: <span class="number">#fff</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#dee2e6</span>;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">            <span class="attribute">transition</span>: color .<span class="number">15s</span> ease-in-out,background-color .<span class="number">15s</span> ease-in-out,border-color .<span class="number">15s</span> ease-in-out,box-shadow .<span class="number">15s</span> ease-in-out;</span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">        &#125;       </span></span></span><br><span class="line"><span class="language-css"><span class="language-xml">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">body</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;table-list&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-3 mb-3 mt-3&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">&quot;search form-control&quot;</span> <span class="attr">placeholder</span>=<span class="string">&quot;Search&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;pagination&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">table</span> <span class="attr">class</span>=<span class="string">&quot;table table-bordered table-hover&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">thead</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">td</span>&gt;</span>Id<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">td</span>&gt;</span>抬頭<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">td</span>&gt;</span>內文<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">td</span>&gt;</span>使用者<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">tbody</span> <span class="attr">class</span>=<span class="string">&quot;list&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                </span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMContentLoaded&quot;</span>, <span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        axios</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">          .<span class="title function_">get</span>(<span class="string">&quot;https://jsonplaceholder.typicode.com/posts&quot;</span>)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">          .<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">            <span class="keyword">var</span> options = &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">                <span class="attr">valueNames</span>: [ <span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;body&#x27;</span>, <span class="string">&#x27;userId&#x27;</span> ],</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">                <span class="attr">item</span>: <span class="string">&#x27;&lt;tr&gt;&lt;td class=&quot;id&quot;&gt;&lt;/td&gt;&lt;td class=&quot;title&quot;&gt;&lt;/td&gt;&lt;td class=&quot;body&quot;&gt;&lt;/td&gt;&lt;td class=&quot;userId&quot;&gt;&lt;/td&gt;&lt;/tr&gt;&#x27;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">                <span class="attr">page</span>: <span class="number">10</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">                <span class="attr">pagination</span>: <span class="literal">true</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">                &#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">            <span class="keyword">var</span> values = res.<span class="property">data</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">            <span class="keyword">var</span> postList = <span class="keyword">new</span> <span class="title class_">List</span>(<span class="string">&#x27;table-list&#x27;</span>, options, values);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">            <span class="comment">// console.log(res.data);</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">          &#125;)</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">          .<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Error: &quot;</span>, err));</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="實際效果"><a href="#實際效果" class="headerlink" title="實際效果"></a>實際效果</h2><p>做到這邊，告一段落了，完美的只使用<code>Vanilla js</code>就能做到<code>table</code>的<code>search</code>, <code>pagination</code>，太棒了</p>
+<img src="/2021/11/23/electron-series-vanillajs-listjs/Untitled-1.png" class="" title="[分頁效果]">
+
+<img src="/2021/11/23/electron-series-vanillajs-listjs/Untitled-2.png" class="" title="[搜尋效果]">
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者在<code>Electron</code>專案套用也是順利地套上去了，由於專案內容不能貼出，只能用html靜態檔案的方式做<code>demo</code>，希望有幫助到跟筆者有一樣需求的人。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://listjs.com/examples/new-list/">https://listjs.com/examples/new-list/</a></li>
+<li><a target="_blank" rel="noopener" href="https://getbootstrap.com/docs/5.1/components/pagination/">https://getbootstrap.com/docs/5.1/components/pagination/</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/23/electron-series-vanillajs-modal/" rel="bookmark">[Electron]vanilla js套件系列-Modal:modal-vanilla</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/23/electron-series-vanillajs-loading/" rel="bookmark">[Electron]vanilla js套件系列-Loading效果</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/03/07/electron-series-vanillajs-toastifyjs/" rel="bookmark">[Electron]vanilla js套件系列-Toast:toastify-js</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/" title="[Electron]vanilla js套件系列-listjs">https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/electron/" rel="tag"><i class="fa fa-tag"></i> electron</a>
+              <a href="/tags/vanilla-js/" rel="tag"><i class="fa fa-tag"></i> vanilla-js</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/20/angular-series-barcode-listener/" rel="prev" title="[Angular]技巧系列-BarcodeListener">
+      <i class="fa fa-chevron-left"></i> [Angular]技巧系列-BarcodeListener
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/23/electron-series-vanillajs-loading/" rel="next" title="[Electron]vanilla js套件系列-Loading效果">
+      [Electron]vanilla js套件系列-Loading效果 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Public-API"><span class="nav-number">2.1.</span> <span class="nav-text">Public API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List-js%E5%AE%A3%E5%91%8A"><span class="nav-number">2.2.</span> <span class="nav-text">List.js宣告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pagination%E5%8F%8A%E7%BE%8E%E5%8C%96%E7%89%88%E9%9D%A2"><span class="nav-number">2.3.</span> <span class="nav-text">Pagination及美化版面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A8%8B%E5%BC%8F%E7%A2%BC"><span class="nav-number">2.4.</span> <span class="nav-text">完整程式碼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%A6%E9%9A%9B%E6%95%88%E6%9E%9C"><span class="nav-number">2.5.</span> <span class="nav-text">實際效果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/",
+      identifier: "2021/11/23/electron-series-vanillajs-listjs/",
+      title     : "[Electron]vanilla js套件系列-listjs",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

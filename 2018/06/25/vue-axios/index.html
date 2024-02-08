@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要筆者在公司的專案開發上選擇vue作為前端開發framework，不外呼就是開發應用程式，當然免不了基本的CRUD功能，此時需要一個強而有力的呼叫API套件，之所以選擇axios，沒有爾外的原因，因為是vue作者推薦使用，這樣不需有任何的疑慮，用下去就對了，此篇就以axios來探討其用法介紹及經驗分享。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Vue]Vue套件介紹：axios">
+<meta property="og:url" content="https://eugenesu.me/2018/06/25/vue-axios/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要筆者在公司的專案開發上選擇vue作為前端開發framework，不外呼就是開發應用程式，當然免不了基本的CRUD功能，此時需要一個強而有力的呼叫API套件，之所以選擇axios，沒有爾外的原因，因為是vue作者推薦使用，這樣不需有任何的疑慮，用下去就對了，此篇就以axios來探討其用法介紹及經驗分享。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://eugenesu.me/2018/06/25/vue-axios/Axios_Demo.gif">
+<meta property="og:image" content="https://eugenesu.me/2018/06/25/vue-axios/Axios_Interceptor_Demo.gif">
+<meta property="article:published_time" content="2018-06-25T09:58:30.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:33:11.870Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="axios">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eugenesu.me/2018/06/25/vue-axios/Axios_Demo.gif">
+
+<link rel="canonical" href="https://eugenesu.me/2018/06/25/vue-axios/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[Vue]Vue套件介紹：axios | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2018/06/25/vue-axios/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Vue]Vue套件介紹：axios
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2018-06-25 17:58:30" itemprop="dateCreated datePublished" datetime="2018-06-25T17:58:30+08:00">2018-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:33:11" itemprop="dateModified" datetime="2023-03-01T00:33:11+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>13k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>23 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者在公司的專案開發上選擇vue作為前端開發framework，不外呼就是開發應用程式，當然免不了基本的CRUD功能，此時需要一個強而有力的呼叫API套件，之所以選擇<code>axios</code>，沒有爾外的原因，因為是vue作者推薦使用，這樣不需有任何的疑慮，用下去就對了，此篇就以<code>axios</code>來探討其用法介紹及經驗分享。</p>
+<span id="more"></span>
+<blockquote>
+<p>使用工具及環境參考<a href="/2018/05/24/vue-guide/" title="[Vue]Vue基本語法">[Vue]Vue基本語法</a></p>
+</blockquote>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>我們要在專案上使用第一部就是使用<code>npm</code>來安裝它</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install axios</span><br></pre></td></tr></table></figure>
+<p>若要在component上套用axios則，需先import它</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>接下來我們先來看一下簡單的get指令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Make a request for a user with a given ID</span></span><br><span class="line">axios.<span class="title function_">get</span>(<span class="string">&#x27;/user?ID=12345&#x27;</span>)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response);</span><br><span class="line">  &#125;)</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="建立axios實體"><a href="#建立axios實體" class="headerlink" title="建立axios實體"></a>建立axios實體</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> instance = axios.<span class="title function_">create</span>(&#123;</span><br><span class="line">  <span class="attr">baseURL</span>: <span class="string">&#x27;https://some-domain.com/api/&#x27;</span>,</span><br><span class="line">  <span class="attr">timeout</span>: <span class="number">1000</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;<span class="string">&#x27;X-Custom-Header&#x27;</span>: <span class="string">&#x27;foobar&#x27;</span>&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>視情況會使用到自己宣告出來的axios實體，筆者遇到的情形是</p>
+<ol>
+<li>呼叫不同的API站台時</li>
+<li>需要有獨立的config設定時</li>
+</ol>
+<h2 id="alias別名-簡寫"><a href="#alias別名-簡寫" class="headerlink" title="alias別名(簡寫)"></a>alias別名(簡寫)</h2><p>以上使用到<code>axios</code>所提供的簡寫功能<code>get</code>，axios提供我們會常用到<code>http action</code>的簡寫宣告</p>
+<ul>
+<li>axios.request(config)</li>
+<li>axios.get(url[, config])</li>
+<li>axios.delete(url[, config])</li>
+<li>axios.head(url[, config])</li>
+<li>axios.options(url[, config])</li>
+<li>axios.post(url[, data[, config]])</li>
+<li>axios.put(url[, data[, config]])</li>
+<li>axios.patch(url[, data[, config]])</li>
+</ul>
+<h2 id="Config項目介紹"><a href="#Config項目介紹" class="headerlink" title="Config項目介紹"></a>Config項目介紹</h2><p>接下來介紹有哪些config可以設定，先來看一下一般的宣告方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Send a POST request</span></span><br><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&#x27;/user/12345&#x27;</span>,</span><br><span class="line">  <span class="attr">data</span>: &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&#x27;Fred&#x27;</span>,</span><br><span class="line">    <span class="attr">lastName</span>: <span class="string">&#x27;Flintstone&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>完整的config項目列表，其中<code>url</code>為必填之外，其他為選填項目，筆者盡量以自己的理解的方式寫上註解</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 欲呼叫的目標API的URL</span></span><br><span class="line">    <span class="attr">url</span>: <span class="string">&#x27;/user&#x27;</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// http action(對應到api定義的http action)</span></span><br><span class="line">    <span class="comment">// 若沒宣告此屬性則，預設為get</span></span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;get&#x27;</span>, <span class="comment">// default</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 欲呼叫的目標API的BaseUrl</span></span><br><span class="line">    <span class="comment">// 假設API網址有</span></span><br><span class="line">    <span class="comment">// http://localhost:5000/api/user</span></span><br><span class="line">    <span class="comment">// http://localhost:5000/api/user/5</span></span><br><span class="line">    <span class="comment">// 對我們來說以上兩個API的BaseUrl為http://localhost:5000/api</span></span><br><span class="line">    <span class="attr">baseURL</span>: <span class="string">&#x27;https://some-domain.com/api/&#x27;</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 傳送server端之前，可以透過此function撰寫統一處理邏輯</span></span><br><span class="line">    <span class="comment">// 只支援於http action如put、post、patch</span></span><br><span class="line">    <span class="comment">// 最後必須回傳處理過後的request封包，形式可為string/buffer/fomdata/stream等</span></span><br><span class="line">    <span class="attr">transformRequest</span>: [<span class="keyword">function</span> (<span class="params">data, headers</span>) &#123;</span><br><span class="line">        <span class="comment">// Do whatever you want to transform the data</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如同transformRequest，這個是針對response做處理</span></span><br><span class="line">    <span class="attr">transformResponse</span>: [<span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">        <span class="comment">// Do whatever you want to transform the data</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 可自定義header參數</span></span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;X-Requested-With&#x27;</span>: <span class="string">&#x27;XMLHttpRequest&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// querystring參數</span></span><br><span class="line">    <span class="attr">params</span>: &#123;</span><br><span class="line">        <span class="attr">ID</span>: <span class="number">12345</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 可自定義parameter serialize的function</span></span><br><span class="line">    <span class="attr">paramsSerializer</span>: <span class="keyword">function</span> (<span class="params">params</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Qs</span>.<span class="title function_">stringify</span>(params, &#123;</span><br><span class="line">            <span class="attr">arrayFormat</span>: <span class="string">&#x27;brackets&#x27;</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// put/post/patch使用，request物件</span></span><br><span class="line">    <span class="attr">data</span>: &#123;</span><br><span class="line">        <span class="attr">firstName</span>: <span class="string">&#x27;Fred&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定義request timeout時間，單位為豪秒ms</span></span><br><span class="line">    <span class="attr">timeout</span>: <span class="number">1000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上僅列出部份config項目，完整請參考<a target="_blank" rel="noopener" href="https://github.com/axios/axios">axios github中的說明</a></p>
+<h2 id="全域設定"><a href="#全域設定" class="headerlink" title="全域設定"></a>全域設定</h2><h3 id="設定方式"><a href="#設定方式" class="headerlink" title="設定方式"></a>設定方式</h3><p><code>axios</code>很貼心的提供了全域設定的功能，等於說有些設定是共用的，可以透過<code>defaults</code>來設定，通常一定會設置一個<code>baseURL</code>，頁面上的呼叫api設定的url就只要設定相對url即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="property">defaults</span>.<span class="property">baseURL</span> = <span class="string">&#x27;https://api.example.com&#x27;</span>;</span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">headers</span>.<span class="property">common</span>[<span class="string">&#x27;Authorization&#x27;</span>] = <span class="variable constant_">AUTH_TOKEN</span>;</span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">headers</span>.<span class="property">post</span>[<span class="string">&#x27;Content-Type&#x27;</span>] = <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>以上只是很簡單的舉了三個例子，第一個是設定baseURL，第二個是將登入成功後取得的token，設定於每次request中的header參數中，第三個是指定post時的content type為html encode過後的，以防腳本攻擊。這些只是簡單的例子，基本上<code>defaults</code>後面可以接上述提到的所有config項目。</p>
+<h3 id="設定優先順序探討"><a href="#設定優先順序探討" class="headerlink" title="設定優先順序探討"></a>設定優先順序探討</h3><p>參考<code>axios</code>github中的<code>Config order of precedence</code></p>
+<ol>
+<li>request當中<code>config</code></li>
+<li><code>defaults</code>關鍵字設定之全域設定</li>
+<li><code>lib/defaults.js</code></li>
+</ol>
+<h2 id="Interceptor攔截器"><a href="#Interceptor攔截器" class="headerlink" title="Interceptor攔截器"></a>Interceptor攔截器</h2><h3 id="使用方式-1"><a href="#使用方式-1" class="headerlink" title="使用方式"></a>使用方式</h3><p>筆者特別想介紹這個部份，此功能非常重要，我們要做什麼事情，有了這個攔截器，根本就是事半功倍阿。簡單來說就是<code>axios</code>開放request前或response得到後事件，方便我們撰寫統一處理邏輯。</p>
+<p>最簡單的應用就是我們在request的時候，無論是取得下拉式選單的data source，設定條件後按下「查詢」取得相對應的資料，都需要等待時間，現代都是求速成，連一秒都不願意等待，需要馬上有feedback，通常我們都會選擇使用<code>顯示loading</code>讓使用者知道我們很努力的在獲取資料。</p>
+<p>這個時候這個攔截器的好處就浮現了，一般沒有攔截器的情況下，我們必須得在每一個request中必須處理<code>顯示loading</code>的邏輯，但這樣一來，重複的程式碼出現在不同地方，需要更改效果時根本就是惡夢阿。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Add a request interceptor</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="keyword">function</span> (<span class="params">config</span>) &#123;</span><br><span class="line">    <span class="comment">// Do something before request is sent</span></span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">  &#125;, <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="comment">// Do something with request error</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add a response interceptor</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(<span class="keyword">function</span> (<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="comment">// Do something with response data</span></span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">  &#125;, <span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="comment">// Do something with response error</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="移除攔截器"><a href="#移除攔截器" class="headerlink" title="移除攔截器"></a>移除攔截器</h3><p>我們可以使用<code>interceptor攔截器</code>，當然也可以移除它</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用const變數宣告request interceptor</span></span><br><span class="line"><span class="keyword">const</span> myInterceptor = axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;<span class="comment">/*...*/</span>&#125;);</span><br><span class="line"><span class="comment">//將上述interceptor使用eject的方式移除</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">eject</span>(myInterceptor);</span><br></pre></td></tr></table></figure>
+<p>筆者當初看到這個說明會覺得不會使用到它，直到有些頁面中有<code>autocomplete</code>功能時，就會用上它了。我們專案的情境是我們會在<code>main.js</code>中宣告全域的interceptor，每次發出呼叫API的request前先將<code>loading...</code>畫面顯示，得到response後將其關閉。但問題來了，我們的<code>autocomplete</code>功能，也是會產生呼叫API的情形，會變成每打一個字會產生<code>loading...</code>效果，這是我們不希望的。</p>
+<p>筆者在上述的問題解決方式採用上面提到的宣告一個新的<code>axios實體</code>方式，並且將該實體的interceptor設定中使用<code>eject</code>方式移除特定interceptor，當然在呼叫API時使用該<code>axios實體</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 宣告於main.js中</span></span><br><span class="line"><span class="keyword">const</span> myInterceptor = axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;<span class="comment">/*...*/</span>&#125;);</span><br><span class="line"><span class="title class_">Vue</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">$myInterceptor</span> = myInterceptor;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以下為個別的Vue檔案中script區塊</span></span><br><span class="line"><span class="comment">// import axios</span></span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span>;</span><br><span class="line"><span class="comment">// 宣告axios實體變數於data區塊中</span></span><br><span class="line"><span class="title function_">data</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">      <span class="attr">myAxios</span>: <span class="literal">null</span>  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 宣告axios實體初始化於created事件中</span></span><br><span class="line"><span class="attr">created</span>: <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    myAxios = axios.<span class="title function_">create</span>(&#123;</span><br><span class="line">        <span class="attr">baseURL</span>: <span class="string">&#x27;https://some-domain.com/api/&#x27;</span>,</span><br><span class="line">        <span class="attr">timeout</span>: <span class="number">1000</span>,</span><br><span class="line">        <span class="attr">headers</span>: &#123;<span class="string">&#x27;X-Custom-Header&#x27;</span>: <span class="string">&#x27;foobar&#x27;</span>&#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    myAxios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">eject</span>(<span class="variable language_">this</span>.<span class="property">$myInterceptor</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 該頁面中呼叫api時使用myAxios這個實體</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="多個請求Concurrency化"><a href="#多個請求Concurrency化" class="headerlink" title="多個請求Concurrency化"></a>多個請求Concurrency化</h2><p><code>axios</code>有提供多個request平行處理的功能<code>all</code>，然後可以使用<code>spread</code>將多個response當作參數接進來</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">axios.<span class="title function_">all</span>([</span><br><span class="line">    axios.<span class="title function_">get</span>(<span class="string">&#x27;/users&#x27;</span>),</span><br><span class="line">    axios.<span class="title function_">get</span>(<span class="string">&#x27;/posts&#x27;</span>, <span class="attr">params</span>:&#123;</span><br><span class="line">        <span class="attr">userId</span>: userId</span><br><span class="line">    &#125;)</span><br><span class="line">])</span><br><span class="line">.<span class="title function_">then</span>(</span><br><span class="line">    axios.<span class="title function_">spread</span>(<span class="function">(<span class="params">userResponse, postResponse</span>)=&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(userResponse);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(postResponse);</span><br><span class="line">    &#125;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="實例"><a href="#實例" class="headerlink" title="實例"></a>實例</h2><p>我們來做一下實例吧，找一個公開的api <a target="_blank" rel="noopener" href="https://jsonplaceholder.typicode.com/">jsonplaceholder</a> 串接，並使用<code>interceptor</code>做進一步的處理。</p>
+<h3 id="安裝及設置前置作業"><a href="#安裝及設置前置作業" class="headerlink" title="安裝及設置前置作業"></a>安裝及設置前置作業</h3><p>前置作業很多，但我會以這個專案為模版，其他文章的範例會使用這個專案繼續完成其他套件示範。</p>
+<ol>
+<li>使用<code>vue-cli</code>initial webpack模版專案<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue init webpack DemoApp</span><br></pre></td></tr></table></figure></li>
+<li>安裝<code>bootstrap-vue</code><br>接著使用<code>visual studio code</code>開啟專案，為了版面漂亮，我們來安裝一下<code>bootstrap</code>吧，為了使用現成的bootstrap component，我們就直接安裝<code>bootstrap-vue</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install bootstrap-vue --save</span><br></pre></td></tr></table></figure>
+ 接著我們在<code>main.js</code>中<code>bootstrap-vue</code>的import及使用宣告<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// import及使用</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">BootstrapVue</span> <span class="keyword">from</span> <span class="string">&#x27;bootstrap-vue&#x27;</span></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">BootstrapVue</span>);</span><br><span class="line"><span class="comment">// 載入相關css</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;bootstrap/dist/css/bootstrap.css&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;bootstrap-vue/dist/bootstrap-vue.css&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li>安裝<code>jquery</code>及<code>popper.js</code><br>因為我們專案使用<code>bootstrap 4</code>版本，需要安裝<code>jquery</code>及<code>popper.js</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install jquery --save</span><br><span class="line">npm install popper.js --save</span><br></pre></td></tr></table></figure></li>
+<li>安裝<code>font-awesome</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install font-awesome</span><br></pre></td></tr></table></figure>
+ 接著我們在<code>main.js</code>中載入相關css<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;font-awesome/css/font-awesome.css&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li>安裝我們的主角<code>axios</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install axios</span><br></pre></td></tr></table></figure>
+ 以上面所介紹的，我們在<code>main.js</code>中加入<code>defaults</code>設定值，先加入<code>baseURL</code>吧<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span></span><br><span class="line"></span><br><span class="line">axios.<span class="property">defaults</span>.<span class="property">baseURL</span> = <span class="string">&#x27;https://jsonplaceholder.typicode.com&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="撰寫程式"><a href="#撰寫程式" class="headerlink" title="撰寫程式"></a>撰寫程式</h3>這個範例會使用<a target="_blank" rel="noopener" href="https://jsonplaceholder.typicode.com/posts">https://jsonplaceholder.typicode.com/posts</a>做示範，先看一下回傳的object結構<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;userId&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sunt aut facere repellat provident occaecati excepturi optio reprehenderit&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;body&quot;</span><span class="punctuation">:</span> <span class="string">&quot;quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+我們這篇的範例就示範印出<code>title</code>及<code>body</code>欄位。筆者就增加一點困難，我們就先列出<code>title</code>欄位列表，然後點下<code>title</code>後相對應的<code>body</code>內容才會以<code>collapse</code>效果彈出顯示，使用<code>font-awesome</code>在顯示隱藏效果下，切換顯示 <i class="fa fa-plus-square-o"></i> 及 <i class="fa fa-minus-square-o"></i> 符號。<code>body</code>欄位隱藏的狀態下會顯示 <i class="fa fa-plus-square-o"></i> 表示可以點開內容，若已顯示狀態下則切換顯示為 <i class="fa fa-minus-square-o"></i>，表示已打開內容。需求講完了，我們就來實際動手做吧。<h4 id="建立Component-AxiosDemo-vue"><a href="#建立Component-AxiosDemo-vue" class="headerlink" title="建立Component:AxiosDemo.vue"></a>建立Component:AxiosDemo.vue</h4>在<code>Explorer</code>視窗中，直接在components上按右鍵加入<code>AxiosDemo.vue</code>，我們先來宣告一下data部份，到時呼叫api後得到的response data使用這個data變數去接<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">postInfos</span>: []</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+接下來我們就直接在<code>created</code>事件中呼叫API，取得資料，因我們已經於<code>main.js</code>中設置<code>baseURL</code>，geturl只要設置相對路徑即可<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">created</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    axios.<span class="title function_">get</span>(<span class="string">&quot;/posts&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> tempInfos = response.<span class="property">data</span>;</span><br><span class="line">      tempInfos.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        item.<span class="property">show</span> = <span class="literal">false</span>;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">postInfos</span>.<span class="title function_">push</span>(item);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+以上程式碼稍微要講解一下，我們先用<code>tempInfos</code>接response data，之後再使用<code>foreach</code>倒出資料時，順邊指定<code>show</code>屬性，預設設為<code>false</code>，其控制<code>body</code>欄位資料顯示隱藏邏輯，設定好的資料push至我們的data變數<code>postInfos</code>。</li>
+</ol>
+<p>都設置完邏輯面的部份，我們來處理一下ui面吧，這裡會使用到<code>bootstrap</code>中的<code>card</code>結構，<code>title</code>欄位資料放於<code>card-header</code>中，<code>body</code>資料放於<code>card-body</code>中(預設隱藏)。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-for</span>=<span class="string">&quot;post in postInfos&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:key</span>=<span class="string">&quot;post.id&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card-header&quot;</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">click</span>=<span class="string">&quot;post.show = !post.show&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-plus-square-o&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;!post.show&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-minus-square-o&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;post.show&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> &#123;&#123;post.title&#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card-body&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-show</span>=<span class="string">&quot;post.show&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span></span><br><span class="line">        &#123;&#123;post.body&#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上述程式碼使用到vue相關技巧如下</p>
+<ul>
+<li><code>vue directive</code>有<code>v-for</code>、<code>v-show</code></li>
+<li>事件監聽<code>v-on</code>如<code>@click</code></li>
+<li><code>javascript表達式</code>寫於<code>@click</code>，將show改為目前show值相反值<ul>
+<li>例:true改為false、false則反之。</li>
+</ul>
+</li>
+<li>一定要會的<code>Mustache語法</code>使用，將<code>title</code>、<code>body</code>欄位值印出</li>
+</ul>
+<p>完整的<code>AxiosDemo.vue</code>程式碼如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;axiosdemo&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">         <span class="attr">v-for</span>=<span class="string">&quot;post in postInfos&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">         <span class="attr">:key</span>=<span class="string">&quot;post.id&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card-header&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">           @<span class="attr">click</span>=<span class="string">&quot;post.show = !post.show&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-plus-square-o&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;!post.show&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-minus-square-o&quot;</span> <span class="attr">v-show</span>=<span class="string">&quot;post.show&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> &#123;&#123;post.title&#125;&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card-body&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">           <span class="attr">v-show</span>=<span class="string">&quot;post.show&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;&#123;post.body&#125;&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">name</span>: <span class="string">&quot;AxiosDemo&quot;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">postInfos</span>: []</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">created</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    axios.<span class="title function_">get</span>(<span class="string">&quot;/posts&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">let</span> tempInfos = response.<span class="property">data</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      tempInfos.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        item.<span class="property">show</span> = <span class="literal">false</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="variable language_">this</span>.<span class="property">postInfos</span>.<span class="title function_">push</span>(item);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="設定Route"><a href="#設定Route" class="headerlink" title="設定Route"></a>設定Route</h4><p>我們找到<code>router\index.js</code>，擴充<code>routes</code>陣列</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先import Component</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">AxiosDemo</span> <span class="keyword">from</span> <span class="string">&#x27;@/components/AxiosDemo&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 擴充routes陣列</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;axios&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;AxiosDemo&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">AxiosDemo</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>npm run dev</code>執行網站，效果如下</p>
+<img src="/2018/06/25/vue-axios/Axios_Demo.gif" class="" title="[Axios_Demo]">
+
+<h3 id="套用axios攔截器及loading效果"><a href="#套用axios攔截器及loading效果" class="headerlink" title="套用axios攔截器及loading效果"></a>套用axios攔截器及loading效果</h3><p>上面有介紹到<code>interceptor攔截器</code>的功能，筆者就以上述範例繼續以擴充的方式完成</p>
+<ol>
+<li>安裝loading效果實現套件<code>vue-blockui</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install vue-blockui --save</span><br></pre></td></tr></table></figure></li>
+<li>接著在<code>main.js</code>中引入<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 將套件import進來</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">BlockUI</span> <span class="keyword">from</span> <span class="string">&#x27;vue-blockui&#x27;</span></span><br><span class="line"><span class="comment">// 套用於vue中</span></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">BlockUI</span>)</span><br></pre></td></tr></table></figure></li>
+<li><code>AxiosDemo.vue</code>頁面中加入<code>vue-blockui</code>ui區塊<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 使用data變數spinnerStatus來控制顯示與否 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 使用data變數msg來動態設定顯示字串 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">BlockUI</span> <span class="attr">:message</span>=<span class="string">&quot;msg&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-show</span>=<span class="string">&quot;spinnerStatus&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-cog fa-spin fa-3x fa-fw&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">BlockUI</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>上步驟宣告中有使用到<code>data</code>變數<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">data</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">postInfos</span>: [],</span><br><span class="line">        <span class="attr">msg</span>: <span class="string">&quot;Loading...&quot;</span>,</span><br><span class="line">        <span class="attr">spinnerStatus</span>: <span class="literal">false</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure></li>
+<li>在<code>created</code>事件中加入相關程式碼<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> $vue = <span class="variable language_">this</span>;</span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(</span><br><span class="line">    <span class="keyword">function</span>(<span class="params">config</span>) &#123;</span><br><span class="line">        $vue.<span class="property">spinnerStatus</span> = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">return</span> config;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params">error</span>) &#123;</span><br><span class="line">        $vue.<span class="property">spinnerStatus</span> = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"><span class="comment">// 使用setTimeout是為了demo效果，不然資料撈太快，會沒看到loading效果</span></span><br><span class="line"><span class="comment">// 因此故意延遲3秒後才隱藏loading視窗</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(</span><br><span class="line">    <span class="keyword">function</span>(<span class="params">response</span>) &#123;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            $vue.<span class="property">spinnerStatus</span> = <span class="literal">false</span>;</span><br><span class="line">        &#125;, <span class="number">3000</span>);</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">function</span>(<span class="params">error</span>) &#123;</span><br><span class="line">        $vue.<span class="property">spinnerStatus</span> = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<li>完整的程式碼(加入<code>axios.get</code>及<code>axios.interceptors</code>)<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;axiosdemo&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">         <span class="attr">v-for</span>=<span class="string">&quot;post in postInfos&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">         <span class="attr">:key</span>=<span class="string">&quot;post.id&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card-header&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">           @<span class="attr">click</span>=<span class="string">&quot;post.show = !post.show&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-plus-square-o&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">           <span class="attr">v-show</span>=<span class="string">&quot;!post.show&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-minus-square-o&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">           <span class="attr">v-show</span>=<span class="string">&quot;post.show&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> &#123;&#123;post.title&#125;&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;card-body&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">           <span class="attr">v-show</span>=<span class="string">&quot;post.show&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">&quot;card-text&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;&#123;post.body&#125;&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="comment">&lt;!-- blockui --&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">BlockUI</span> <span class="attr">:message</span>=<span class="string">&quot;msg&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">             <span class="attr">v-show</span>=<span class="string">&quot;spinnerStatus&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">&quot;fa fa-cog fa-spin fa-3x fa-fw&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">BlockUI</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&quot;axios&quot;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">name</span>: <span class="string">&quot;AxiosDemo&quot;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">return</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">postInfos</span>: [],</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">msg</span>: <span class="string">&quot;Loading...&quot;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="attr">spinnerStatus</span>: <span class="literal">false</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">created</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="keyword">let</span> $vue = <span class="variable language_">this</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">function</span>(<span class="params">config</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        $vue.<span class="property">spinnerStatus</span> = <span class="literal">true</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="keyword">return</span> config;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">function</span>(<span class="params">error</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        $vue.<span class="property">spinnerStatus</span> = <span class="literal">false</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    );</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    <span class="comment">// Add a response interceptor</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    axios.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">function</span>(<span class="params">response</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">          $vue.<span class="property">spinnerStatus</span> = <span class="literal">false</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        &#125;, <span class="number">3000</span>);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="keyword">return</span> response;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">function</span>(<span class="params">error</span>) &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        $vue.<span class="property">spinnerStatus</span> = <span class="literal">false</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    );</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    axios.<span class="title function_">get</span>(<span class="string">&quot;/posts&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      <span class="keyword">let</span> tempInfos = response.<span class="property">data</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      tempInfos.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        item.<span class="property">show</span> = <span class="literal">false</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">        <span class="variable language_">this</span>.<span class="property">postInfos</span>.<span class="title function_">push</span>(item);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">      &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+最終完成效果如下<img src="/2018/06/25/vue-axios/Axios_Interceptor_Demo.gif" class="" title="[Axios_Interceptor_Demo]"></li>
+</ol>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>我們建構應用程式最基本的功能就是CRUD，<code>axios</code>套件是一定要投資的，筆者建議一定要花時間研究及練習，老話一句，一定要記得<code>axios</code>提供哪些功能，這樣需要用到時，很快就能查出相對應的解法，介紹就到這邊，我們下篇再見。</p>
+<p>範例檔案參考<a target="_blank" rel="noopener" href="https://github.com/EugeneSu0515/VueDemoApp">https://github.com/EugeneSu0515/VueDemoApp</a></p>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2018/06/25/vue-vee-validate/" rel="bookmark">[Vue]Vue套件介紹:vee-validate</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2018/06/25/vue-instance-component/" rel="bookmark">Vue系列文章五：Vue Instance與Component</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2018/06/22/vue-directive/" rel="bookmark">[Vue]Vue Directive</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2018/05/24/vue-guide/" rel="bookmark">[Vue]Vue基本語法</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2018/04/25/vue-webpack/" rel="bookmark">[Vue]VueWepackTemplate檔案結構介紹</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2018/06/25/vue-axios/" title="[Vue]Vue套件介紹：axios">https://eugenesu.me/2018/06/25/vue-axios/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/vue/" rel="tag"><i class="fa fa-tag"></i> vue</a>
+              <a href="/tags/axios/" rel="tag"><i class="fa fa-tag"></i> axios</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/25/vue-vee-validate/" rel="prev" title="[Vue]Vue套件介紹:vee-validate">
+      <i class="fa fa-chevron-left"></i> [Vue]Vue套件介紹:vee-validate
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/20/dotnetcore-actionfilter/" rel="next" title="[DotnetCore]ActionFilter實作">
+      [DotnetCore]ActionFilter實作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8Baxios%E5%AF%A6%E9%AB%94"><span class="nav-number">2.2.</span> <span class="nav-text">建立axios實體</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alias%E5%88%A5%E5%90%8D-%E7%B0%A1%E5%AF%AB"><span class="nav-number">2.3.</span> <span class="nav-text">alias別名(簡寫)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Config%E9%A0%85%E7%9B%AE%E4%BB%8B%E7%B4%B9"><span class="nav-number">2.4.</span> <span class="nav-text">Config項目介紹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E5%9F%9F%E8%A8%AD%E5%AE%9A"><span class="nav-number">2.5.</span> <span class="nav-text">全域設定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E6%96%B9%E5%BC%8F"><span class="nav-number">2.5.1.</span> <span class="nav-text">設定方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9A%E5%84%AA%E5%85%88%E9%A0%86%E5%BA%8F%E6%8E%A2%E8%A8%8E"><span class="nav-number">2.5.2.</span> <span class="nav-text">設定優先順序探討</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interceptor%E6%94%94%E6%88%AA%E5%99%A8"><span class="nav-number">2.6.</span> <span class="nav-text">Interceptor攔截器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F-1"><span class="nav-number">2.6.1.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E9%99%A4%E6%94%94%E6%88%AA%E5%99%A8"><span class="nav-number">2.6.2.</span> <span class="nav-text">移除攔截器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%80%8B%E8%AB%8B%E6%B1%82Concurrency%E5%8C%96"><span class="nav-number">2.7.</span> <span class="nav-text">多個請求Concurrency化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%A6%E4%BE%8B"><span class="nav-number">2.8.</span> <span class="nav-text">實例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E5%8F%8A%E8%A8%AD%E7%BD%AE%E5%89%8D%E7%BD%AE%E4%BD%9C%E6%A5%AD"><span class="nav-number">2.8.1.</span> <span class="nav-text">安裝及設置前置作業</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%92%B0%E5%AF%AB%E7%A8%8B%E5%BC%8F"><span class="nav-number">2.8.2.</span> <span class="nav-text">撰寫程式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8BComponent-AxiosDemo-vue"><span class="nav-number">2.8.2.1.</span> <span class="nav-text">建立Component:AxiosDemo.vue</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A8%AD%E5%AE%9ARoute"><span class="nav-number">2.8.2.2.</span> <span class="nav-text">設定Route</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%97%E7%94%A8axios%E6%94%94%E6%88%AA%E5%99%A8%E5%8F%8Aloading%E6%95%88%E6%9E%9C"><span class="nav-number">2.8.3.</span> <span class="nav-text">套用axios攔截器及loading效果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2018/06/25/vue-axios/",
+      identifier: "2018/06/25/vue-axios/",
+      title     : "[Vue]Vue套件介紹：axios",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

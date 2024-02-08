@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個command line互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試Rust的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門Rust的程式語法、思考邏輯、Coding Style等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Rust]教學系列-猜謎遊戲:取得使用者輸入值">
+<meta property="og:url" content="https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個command line互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試Rust的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門Rust的程式語法、思考邏輯、Coding Style等。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-11-18T06:12:03.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:32:45.100Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="rust">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[Rust]教學系列-猜謎遊戲:取得使用者輸入值 | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Rust]教學系列-猜謎遊戲:取得使用者輸入值
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-11-18 14:12:03" itemprop="dateCreated datePublished" datetime="2021-11-18T14:12:03+08:00">2021-11-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:32:45" itemprop="dateModified" datetime="2023-03-01T00:32:45+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/rust/" itemprop="url" rel="index"><span itemprop="name">rust</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>5 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個<code>command line</code>互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試<code>Rust</code>的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門<code>Rust</code>的程式語法、思考邏輯、<code>Coding Style</code>等。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>程式內容為使用亂數產生1~100間的數字，與使用者輸入的數字做對比，沒有猜對，可以一直猜下去，猜對則跳出成功訊息結束。</p>
+<h2 id="建立專案"><a href="#建立專案" class="headerlink" title="建立專案"></a>建立專案</h2><p>已經介紹過<code>Cargo</code>，官方也建議使用<code>Cargo</code>做建立專案，套件管理，建置、執行專案，首先，建立一個猜字遊戲專案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cargo new guessing_game</span><br><span class="line"><span class="built_in">cd</span> guessing_game</span><br></pre></td></tr></table></figure>
+
+<p>先用<code>cargo</code>指令執行驗證看看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cargo run</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line">Compiling guessing_game v0.1.0 (/Projects/guessing_game)</span><br><span class="line">    Finished dev [unoptimized + debuginfo] target(s) <span class="keyword">in</span> 0.38s</span><br><span class="line">     Running `target/debug/guessing_game`</span><br><span class="line">Hello, world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="讀取使用者輸入值"><a href="#讀取使用者輸入值" class="headerlink" title="讀取使用者輸入值"></a>讀取使用者輸入值</h2><p>猜謎遊戲第一步就是要讓使用者輸入猜數，程式實作要讀取使用者輸入值並存至變數中，爾後需與隨機產生的數字作比較，來看看<code>Rust</code>語言要怎麼實作吧</p>
+<h3 id="宣告變數值"><a href="#宣告變數值" class="headerlink" title="宣告變數值"></a>宣告變數值</h3><p>首先要宣告一個變數值存入使用者輸入值</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br></pre></td></tr></table></figure>
+
+<p>由於<code>Rust</code>本身宣告變數時，預設是不可變的，若是可變動變數則需要加一個<code>mut</code>關鍵字於變數名稱前方，接著看到的是<code>String::new()</code>，new是String型別的關聯函式，需使用<code>::</code>這個符號串接，其實也沒這麼複雜，就是new出一個空字串。</p>
+<h3 id="讀取使用者輸入值-1"><a href="#讀取使用者輸入值-1" class="headerlink" title="讀取使用者輸入值"></a>讀取使用者輸入值</h3><p>讀取使用者輸入值需引入標準函式庫，使用<code>use</code>關鍵字引入函式庫，函式庫為<code>std</code>底下的<code>io</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"></span><br><span class="line">io::<span class="title function_ invoke__">stdin</span>()</span><br><span class="line">    .<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">    .<span class="title function_ invoke__">expect</span>(<span class="string">&quot;讀取該行失敗&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>若沒有使用<code>use std::io;</code>則撰寫時<code>std::io::stdin()</code>，就是呼叫標準函式庫下的<code>io</code>函式庫，<code>io</code>函式庫下有一個<code>command line</code>輸入值handle的型別函式<code>stdin</code>。</p>
+<p><code>stdin</code>函式底下有一個<code>method</code>名稱叫<code>read_line</code>，使用該方法可以取得使用者輸入值，那讀出來的輸入值存到哪個變數中呢，由<code>method</code>的<code>parameter</code>中傳入，道理跟上面宣告變數一樣，<code>Rust</code>世界中預設皆不可變，因此需要使用<code>&amp;mut guess</code>傳入，若維持不可變則使用<code>&amp;guess</code>傳入即可，其中<code>&amp;</code>這個符號<code>reference</code>的概念，之後筆者會照著官方教學，會有一篇獨立的教學文章來說明。</p>
+<p>最後是<code>expect</code>，<code>Rust</code>這邊將標準函式庫中的<code>method</code>回傳值都包裝成<code>泛型Result型別</code>，因此透過<code>Result</code>型別我們可以處理可能發生的<code>Exception</code>，<code>Result</code>型別底下有一個<code>method</code>，名稱叫<code>expect</code>，以結果<code>ok</code>或<code>error</code>而傳入不同參數給<code>expect</code>方法，筆者以<code>vscode</code>中<code>expect</code>的解說中的範例來說</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// expect的方法定義</span></span><br><span class="line"><span class="comment">// pub fn expect(self, msg: &amp;str) -&gt; T</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span>: <span class="type">Result</span>&lt;<span class="type">u32</span>, &amp;<span class="type">str</span>&gt; = <span class="title function_ invoke__">Err</span>(<span class="string">&quot;emergency failure&quot;</span>);</span><br><span class="line">x.<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Testing expect&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 執行結果</span></span><br><span class="line"><span class="comment">// thread &#x27;main&#x27; panicked at &#x27;Testing expect: &quot;emergency failure&quot;&#x27;, src/main.rs:4:7</span></span><br></pre></td></tr></table></figure>
+
+<p>以結果來看，若發生<code>Error</code>則，顯示訊息會是「<code>傳入的string：error訊息</code>」，因此若以筆者上述宣告的來說，發生錯誤則會顯示「<code>讀取該行失敗：error訊息</code>」，先有這樣的概念即可。</p>
+<h3 id="輸出猜數"><a href="#輸出猜數" class="headerlink" title="輸出猜數"></a>輸出猜數</h3><p>最後將使用者輸入的猜數印出來做這段的結尾，使用<code>println!</code>文字格式化輸出</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;你的猜測數字：&#123;&#125;&quot;</span>, guess);</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整程式碼"><a href="#完整程式碼" class="headerlink" title="完整程式碼"></a>完整程式碼</h3><p>最後組合一下上面宣告的那些程式碼，完整程式碼如下</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;請猜測一個數字!&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;請輸入你的猜測數字!&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    io::<span class="title function_ invoke__">stdin</span>()</span><br><span class="line">        .<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess)</span><br><span class="line">        .<span class="title function_ invoke__">expect</span>(<span class="string">&quot;讀取該行失敗&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你的猜測數字：&#123;&#125;&quot;</span>, guess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="執行結果"><a href="#執行結果" class="headerlink" title="執行結果"></a>執行結果</h2><p>依照上述程式碼，跟著筆者一起來看看執行結果吧</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cargo run</span><br><span class="line"><span class="comment"># 輸出結果</span></span><br><span class="line">Compiling guessing_game v0.1.0 (/Projects/guessing_game)</span><br><span class="line">    Finished dev [unoptimized + debuginfo] target(s) <span class="keyword">in</span> 0.44s</span><br><span class="line">     Running `target/debug/guessing_game`</span><br><span class="line">請猜測一個數字!</span><br><span class="line">請輸入你的猜測數字!</span><br><span class="line">10</span><br><span class="line">你的猜測數字：10</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>猜謎遊戲就先到這邊，下篇繼續完成其他部份，筆者最後recap一下今天所學的東西</p>
+<ul>
+<li>引入<code>package</code>函式庫，使用<code>use</code>關鍵字，例：<code>use std::io;</code></li>
+<li>宣告不可變參數，使用<code>let</code>及<code>mut</code>關鍵字，例：<code>let mut guess = String::new();</code></li>
+<li>取得使用者輸入值，使用<code>io</code>函式庫下的<code>stdin</code>函式庫中的<code>read_line</code>方法，例：<code>io::stdin().read_line(&amp;mut guess);</code></li>
+<li>泛型<code>Result</code>型別中的<code>expect</code>方法，宣告輸出<code>error</code>訊息時的搭配訊息，例：<code>expect(&quot;該行讀取失敗&quot;);</code></li>
+<li>格式化輸出技巧，使用<code>&#123;&#125;</code>符號定義參數取代位置，會依序取代，例：<code>println!(&quot;你的猜測數字：&#123;&#125;&quot;, guess);</code></li>
+<li><code>::</code>符號：函式庫取用，例：<code>io::stdin()</code>，<code>String::new()</code></li>
+<li><code>&amp;</code>符號：<code>reference</code>的方式傳入，例：<code>read_line(&amp;mut guess);</code></li>
+</ul>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://rust-lang.tw/book-tw/ch02-00-guessing-game-tutorial.html">https://rust-lang.tw/book-tw/ch02-00-guessing-game-tutorial.html</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/20/rust-series-windows-execute/" rel="bookmark">[Rust]教學系列:Windows疑難雜症解決</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/20/rust-series-guessing-game-full/" rel="bookmark">[Rust]教學系列-猜謎遊戲:最終篇</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/19/rust-series-guessing-game-rand/" rel="bookmark">[Rust]教學系列-猜謎遊戲:取亂數</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/16/rust-series-hello-cargo/" rel="bookmark">[Rust]教學系列-Hello Cargo</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/16/rust-series-hello-world/" rel="bookmark">[Rust]教學系列-Hello World</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/" title="[Rust]教學系列-猜謎遊戲:取得使用者輸入值">https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/rust/" rel="tag"><i class="fa fa-tag"></i> rust</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/16/rust-series-hello-cargo/" rel="prev" title="[Rust]教學系列-Hello Cargo">
+      <i class="fa fa-chevron-left"></i> [Rust]教學系列-Hello Cargo
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/19/rust-series-guessing-game-rand/" rel="next" title="[Rust]教學系列-猜謎遊戲:取亂數">
+      [Rust]教學系列-猜謎遊戲:取亂數 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E5%B0%88%E6%A1%88"><span class="nav-number">2.1.</span> <span class="nav-text">建立專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%80%E5%8F%96%E4%BD%BF%E7%94%A8%E8%80%85%E8%BC%B8%E5%85%A5%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">讀取使用者輸入值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A3%E5%91%8A%E8%AE%8A%E6%95%B8%E5%80%BC"><span class="nav-number">2.2.1.</span> <span class="nav-text">宣告變數值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%80%E5%8F%96%E4%BD%BF%E7%94%A8%E8%80%85%E8%BC%B8%E5%85%A5%E5%80%BC-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">讀取使用者輸入值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BC%B8%E5%87%BA%E7%8C%9C%E6%95%B8"><span class="nav-number">2.2.3.</span> <span class="nav-text">輸出猜數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A8%8B%E5%BC%8F%E7%A2%BC"><span class="nav-number">2.2.4.</span> <span class="nav-text">完整程式碼</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%B7%E8%A1%8C%E7%B5%90%E6%9E%9C"><span class="nav-number">2.3.</span> <span class="nav-text">執行結果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/",
+      identifier: "2021/11/18/rust-series-guessing-game-stdin/",
+      title     : "[Rust]教學系列-猜謎遊戲:取得使用者輸入值",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

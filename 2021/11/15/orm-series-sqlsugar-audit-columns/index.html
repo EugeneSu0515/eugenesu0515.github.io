@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要筆者的慣例，使用ORM框架時，會先找一下可以擴充的點，畢竟Select、Insert、Update這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個ORM框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧">
+<meta property="og:url" content="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要筆者的慣例，使用ORM框架時，會先找一下可以擴充的點，畢竟Select、Insert、Update這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個ORM框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/insert-postman.png">
+<meta property="og:image" content="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/insert-dbeaver.png">
+<meta property="og:image" content="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/update-postman.png">
+<meta property="og:image" content="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/update-dbeaver.png">
+<meta property="article:published_time" content="2021-11-15T05:03:43.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:31:52.290Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="dotnetcore">
+<meta property="article:tag" content="sqlsugar">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/insert-postman.png">
+
+<link rel="canonical" href="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧 | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-11-15 13:03:43" itemprop="dateCreated datePublished" datetime="2021-11-15T13:03:43+08:00">2021-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:31:52" itemprop="dateModified" datetime="2023-03-01T00:31:52+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/sqlsugar/" itemprop="url" rel="index"><span itemprop="name">sqlsugar</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>13 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者的慣例，使用<code>ORM</code>框架時，會先找一下可以擴充的點，畢竟<code>Select</code>、<code>Insert</code>、<code>Update</code>這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個<code>ORM</code>框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，因為比較效能的時間單位都是ns級的，基本上不要差太多，是沒什麼感覺的。這篇主要是講解<code>SqlSugar</code>套件，在操作共同欄位，像<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>這種，找到對應的擴充點，做統一處理。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p><code>SqlSugar</code>本身有提供<code>AOP</code>機制，透過相關事件，很方便地紀錄執行過程的Log，筆者在<a href="/2021/11/12/orm-series-sqlsugar-interceptor/" title="[DotnetCore]ORM系列-SqlSugar:AOP篇">[DotnetCore]ORM系列-SqlSugar:AOP篇</a>有詳細說明，<code>SqlSugar</code>另有提供<code>DataExecuting</code>事件，讓我們可以很方便地去修改其對應的Model值，以筆者實作過<code>SqlSugar</code>的<code>AOP</code>機制，覺得也可以使用<code>OnExecutingChangeSql</code>事件中變更其<code>parameter</code>的值，但就沒這麼方便，<code>SqlSugar</code>於<code>5.0.3.5</code>版本開始提供其<code>DataExecuting</code>事件，更方便地撰寫統一處裡的欄位值</p>
+<h2 id="資料過濾器"><a href="#資料過濾器" class="headerlink" title="資料過濾器"></a>資料過濾器</h2><p>跟著筆者實際動手寫吧，先看一下結構語法</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">db.Aop.DataExecuting = (oldValue, entityInfo) =&gt;</span><br><span class="line"> &#123;</span><br><span class="line">    <span class="comment">// 寫操作邏輯   </span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>撰寫程式前，需釐清一下其邏輯，以筆者的情境來說<code>CreatedAt</code>、<code>CreatedBy</code>、<code>UpdatedAt</code>、<code>UpdatedBy</code>這四個欄位，依照操作Type為<code>Insert</code>或<code>Update</code>而設定欄位不一樣</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">db.Aop.DataExecuting = (oldValue, entityInfo) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 寫操作邏輯   </span></span><br><span class="line">    <span class="keyword">switch</span> (entityInfo.OperationType)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> DataFilterType.InsertByObject:</span><br><span class="line">            <span class="keyword">switch</span> (entityInfo.PropertyName)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;CreatedAt&quot;</span>:</span><br><span class="line">                    entityInfo.SetValue(DateTime.Now);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;CreatedBy&quot;</span>:</span><br><span class="line">                    <span class="comment">// 取得登入使用者</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedAt&quot;</span>:</span><br><span class="line">                    entityInfo.SetValue(DateTime.Now);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedBy&quot;</span>:</span><br><span class="line">                    <span class="comment">// 取得登入使用者</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> DataFilterType.UpdateByObject:</span><br><span class="line">            <span class="keyword">switch</span> (entityInfo.PropertyName)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedAt&quot;</span>:</span><br><span class="line">                    entityInfo.SetValue(DateTime.Now);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;UpdatedBy&quot;</span>:</span><br><span class="line">                    <span class="comment">// 取得登入使用者</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="實際執行"><a href="#實際執行" class="headerlink" title="實際執行"></a>實際執行</h2><h3 id="建立資料表"><a href="#建立資料表" class="headerlink" title="建立資料表"></a>建立資料表</h3><p>為實作，必須將筆者使用的MySql範例資料庫：classicmodels，加一個含有這些共同欄位的資料表，就索性命名為demo資料表吧，結構如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span><span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span><span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">[<span class="meta">SugarTable(<span class="string">&quot;demo&quot;</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">demo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">demo</span>()</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:False</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    [<span class="meta">SugarColumn(IsPrimaryKey=true,IsIdentity=true)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">long</span> Id &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:False</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:False</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> DateTime CreatedAt &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:True</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> CreatedBy &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:True</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> DateTime? UpdatedAt &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Desc:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Default:</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Nullable:True</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span>           </span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> UpdatedBy &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="安裝測試套件"><a href="#安裝測試套件" class="headerlink" title="安裝測試套件"></a>安裝測試套件</h3><p>筆者這邊為方便，安裝一套可以隨機產生名字的套件，以利demo</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet add package RandomNameGeneratorLibrary</span><br></pre></td></tr></table></figure>
+
+<p>語法就照套件github上的教學照刻即可</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _personGenerator = <span class="keyword">new</span> PersonNameGenerator();</span><br><span class="line"><span class="keyword">var</span> name = _personGenerator.GenerateRandomFirstAndLastName();</span><br></pre></td></tr></table></figure>
+
+<h3 id="實作新增作業"><a href="#實作新增作業" class="headerlink" title="實作新增作業"></a>實作新增作業</h3><ul>
+<li>撰寫Action</li>
+</ul>
+<p>筆者為示範成功更新Created、Updated相關欄位，使用<code>Insert</code>語法，筆者會另外寫一篇介紹<code>SqlSugar</code>的<code>Insert</code>、<code>Update</code>語法，目前就先將就看一下</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 新增一筆demo資料</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">ProducesResponseType(typeof(string), StatusCodes.Status200OK)</span>]</span><br><span class="line">[<span class="meta">HttpPost(<span class="string">&quot;insert&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">InsertDemo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> _personGenerator = <span class="keyword">new</span> PersonNameGenerator();</span><br><span class="line">    <span class="keyword">var</span> name = _personGenerator.GenerateRandomFirstAndLastName();</span><br><span class="line">    _db.Insertable&lt;Sugar.demo&gt;(<span class="keyword">new</span> Sugar.demo()</span><br><span class="line">    &#123;</span><br><span class="line">        Name = name</span><br><span class="line">    &#125;).ExecuteCommand();</span><br><span class="line">    <span class="keyword">return</span> Ok(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>程式碼前兩行就是用套件產生隨機取得的名字，將取得的名字當作<code>demo.Name</code>的值塞進<code>demo</code>資料表，以<code>SqlSugar</code>來說要執行Insert語法時，呼叫<code>ExecuteCommand</code>，其實另外還有不同的<code>Execute</code>方法，留給另一篇說明，最後回傳隨機產生的名字。</p>
+<ul>
+<li>Postman測試</li>
+</ul>
+<p>寫完Action相關語法後，跟著筆者使用Postman做一下測試吧</p>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/insert-postman.png" class="" title="[Postman-新增作業]">
+
+<ul>
+<li>資料庫結果</li>
+</ul>
+<p>看一下資料庫中的結果</p>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/insert-dbeaver.png" class="" title="[Dbeaver-新增資料]">
+
+<p>筆者這邊使用<code>DBeaver</code>的介面當作結果呈現一部份，可以看到Insert語法中筆者只塞了一個Name屬性值，<code>CreatedAt</code>和<code>UpdatedAt</code>的值由AOP中的資料過濾器做掉了，有寫入成功。</p>
+<h3 id="實作更新作業"><a href="#實作更新作業" class="headerlink" title="實作更新作業"></a>實作更新作業</h3><ul>
+<li>撰寫Action</li>
+</ul>
+<p>筆者為示範Updated相關欄位更新，實作一組Update作業</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 更新客戶名稱</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;id&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">[<span class="meta">ProducesResponseType(typeof(string), StatusCodes.Status200OK)</span>]</span><br><span class="line">[<span class="meta">HttpPost(<span class="string">&quot;update/&#123;id&#125;&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> IActionResult <span class="title">UpdateDemo</span>(<span class="params"><span class="built_in">long</span> id</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> _personGenerator = <span class="keyword">new</span> PersonNameGenerator();</span><br><span class="line">    <span class="keyword">var</span> name = _personGenerator.GenerateRandomFirstAndLastName();</span><br><span class="line">    <span class="keyword">var</span> demoModel = _db.Queryable&lt;Sugar.demo&gt;().First(x =&gt; x.Id == id);</span><br><span class="line">    demoModel.Name = name;</span><br><span class="line">    _db.Updateable(demoModel).ExecuteCommand();</span><br><span class="line">    <span class="keyword">return</span> Ok(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大概邏輯就是先依照Id值找到對應的資料，將<code>Name</code>屬性值使用新的隨機產生名字取代，使用<code>SqlSugar</code>的<code>Update</code>語法做更新，觀察一下<code>UpdatedAt</code>欄位是否被更新。首先再確認一下新增成功後的欄位值</p>
+<blockquote>
+<p>Insert成功欄位值</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>欄位名稱</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Id</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Nga Prager</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>2021-11-15 10:05:43</td>
+</tr>
+<tr>
+<td>UpdatedAt</td>
+<td>2021-11-15 10:05:43</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Postman測試</li>
+</ul>
+<p>上述新增成功的資料Id值為3，使用的Url為<a target="_blank" rel="noopener" href="http://localhost:5000/api/Customer/update/3">http://localhost:5000/api/Customer/update/3</a></p>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/update-postman.png" class="" title="[Postman-更新作業]">
+
+<ul>
+<li>資料庫結果</li>
+</ul>
+<img src="/2021/11/15/orm-series-sqlsugar-audit-columns/update-dbeaver.png" class="" title="[Dbeaver-更新資料]">
+
+<p>檢視一下新增，更新欄位值對照表</p>
+<blockquote>
+<p>Insert、Update成功欄位值</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>欄位名稱</th>
+<th>新增值</th>
+<th>更新值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Id</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Name</td>
+<td>Nga Prager</td>
+<td>TonyYazdani</td>
+</tr>
+<tr>
+<td>CreatedAt</td>
+<td>2021-11-15 10:05:43</td>
+<td>2021-11-15 10:05:43</td>
+</tr>
+<tr>
+<td>UpdatedAt</td>
+<td>2021-11-15 10:05:43</td>
+<td>2021-11-15 10:16:39</td>
+</tr>
+</tbody></table>
+<p>有成功更新其<code>UpdatedAt</code>欄位值，表示筆者宣告的<code>AOP</code>資料過濾器是有效的。</p>
+<h3 id="SqlSugar的AOP-生命週期檢視"><a href="#SqlSugar的AOP-生命週期檢視" class="headerlink" title="SqlSugar的AOP 生命週期檢視"></a>SqlSugar的AOP 生命週期檢視</h3><p>筆者這邊想要花點時間實驗一下，以<a href="/2021/11/12/orm-series-sqlsugar-interceptor/" title="[DotnetCore]ORM系列-SqlSugar:AOP篇">[DotnetCore]ORM系列-SqlSugar:AOP篇</a>的那些事件以及此主題中使用到的資料過濾器的執行先後順序，所謂知己知彼，百戰百勝，花點時間理解一下期執行順序，才不會撰寫的與執行的結果不符而造成錯誤的結果，筆者在<code>DataExecuting</code>事件的最上面加以下這行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_logger.Info(<span class="string">$@&quot;[DataExecuting:OperateType]:<span class="subst">&#123;entityInfo.OperationType.ToString()&#125;</span>;</span></span><br><span class="line"><span class="string">                            [DataExecuting:PropertyName]:<span class="subst">&#123;entityInfo.PropertyName&#125;</span>&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>筆者這邊使用Update作業當作觀察的依據，使用Postman重複打update url，觀看一下執行順序吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// Select作業</span><br><span class="line">2021-11-15 10:31:01.5895 INFO [OnExecutingChangeSql]SELECT `Id`,`Name`,`CreatedAt`,`CreatedBy`,`UpdatedAt`,`UpdatedBy` FROM `demo`   WHERE ( `Id` = @Id0 )  ORDER BY NOW()  LIMIT 0,1</span><br><span class="line">2021-11-15 10:31:01.5936 INFO [OnExecutingChangeSql]@Id0:3</span><br><span class="line">2021-11-15 10:31:01.5936 INFO [OnLogExecuting]Executing SQL: SELECT `Id`,`Name`,`CreatedAt`,`CreatedBy`,`UpdatedAt`,`UpdatedBy` FROM `demo`   WHERE ( `Id` = @Id0 )  ORDER BY NOW()  LIMIT 0,1</span><br><span class="line">2021-11-15 10:31:01.6522 INFO [OnLogExecuted]Executed Time:00:00:00.0581930</span><br><span class="line">// Update作業</span><br><span class="line">2021-11-15 10:31:01.6553 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:Id</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:Name</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:CreatedAt</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:CreatedBy</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:UpdatedAt</span><br><span class="line">2021-11-15 10:31:01.6555 INFO [DataExecuting:OperateType]:UpdateByObject;</span><br><span class="line">                            [DataExecuting:PropertyName]:UpdatedBy</span><br><span class="line">2021-11-15 10:31:01.6588 INFO [OnExecutingChangeSql]UPDATE `demo`  SET</span><br><span class="line">           `Name`=@Name,`CreatedAt`=@CreatedAt,`CreatedBy`=@CreatedBy,`UpdatedAt`=@UpdatedAt,`UpdatedBy`=@UpdatedBy  WHERE `Id`=@Id</span><br><span class="line">2021-11-15 10:31:01.6588 INFO [OnExecutingChangeSql]@Id:3</span><br><span class="line">2021-11-15 10:31:01.6588 INFO [OnExecutingChangeSql]@Name:Sachiko Ellery</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@CreatedAt:11/15/2021 10:05:43</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@CreatedBy:</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@UpdatedAt:11/15/2021 10:31:01</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnExecutingChangeSql]@UpdatedBy:</span><br><span class="line">2021-11-15 10:31:01.6594 INFO [OnLogExecuting]Executing SQL: UPDATE `demo`  SET</span><br><span class="line">           `Name`=@Name,`CreatedAt`=@CreatedAt,`CreatedBy`=@CreatedBy,`UpdatedAt`=@UpdatedAt,`UpdatedBy`=@UpdatedBy  WHERE `Id`=@Id</span><br><span class="line">2021-11-15 10:31:01.6631 INFO [OnLogExecuted]Executed Time:00:00:00.0033790</span><br></pre></td></tr></table></figure>
+
+<p>由<code>Select</code>及<code>Update</code>作業綜合來看，可以整理出以下重點</p>
+<ul>
+<li><code>Select</code>作業時不會經過<code>DataExecuting</code>事件</li>
+<li><code>Update</code>作業的事件順序為<ul>
+<li><code>DataExecuting</code></li>
+<li><code>OnExecutingChangeSql</code></li>
+<li><code>OnLogExecuting</code></li>
+<li><code>OnLogExecuted</code></li>
+</ul>
+</li>
+</ul>
+<p>以結果來看，算滿符合預期的結果，這樣大概就知道若要做什麼事情，找到對的事件做實作邏輯的宣告，才不會亂了套。</p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者經由實驗，以編輯共同欄位時，透過<code>DataExecuting</code>事件是綽綽有餘的，除了筆者此主題中實驗的<code>Created</code>、<code>Updated</code>相關欄位之外，或許可能有其他應用，筆者若有新的應用也會再放上來。另，SqlSugar教學文件中提供<code>Repository Pattern</code>的教學，筆者再找時間利用<code>Repository Pattern</code>重做一次此篇主題，看看其差異。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.donet5.com/Home/Doc?typeId=1204">https://www.donet5.com/Home/Doc?typeId=1204</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/05/16/orm-series-sqlsugar-advanced-model-generator/" rel="bookmark">[DotnetCore]ORM系列-SqlSugar:實體產生器-進階</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/12/orm-series-sqlsugar-interceptor/" rel="bookmark">[DotnetCore]ORM系列-SqlSugar:AOP篇</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/11/orm-series-sqlsugar-model-generator/" rel="bookmark">[DotnetCore]ORM系列-SqlSugar:實體產生器</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/02/orm-series-sqlsugar-query/" rel="bookmark">[DotnetCore]ORM系列-SqlSugar:查詢篇1</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/01/orm-series-sqlsugar-entry/" rel="bookmark">[DotnetCore]ORM系列-SqlSugar:入門篇</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/" title="[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧">https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/dotnetcore/" rel="tag"><i class="fa fa-tag"></i> dotnetcore</a>
+              <a href="/tags/sqlsugar/" rel="tag"><i class="fa fa-tag"></i> sqlsugar</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/12/orm-series-sqlsugar-interceptor/" rel="prev" title="[DotnetCore]ORM系列-SqlSugar:AOP篇">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]ORM系列-SqlSugar:AOP篇
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/16/rust-series-hello-world/" rel="next" title="[Rust]教學系列-Hello World">
+      [Rust]教學系列-Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B3%87%E6%96%99%E9%81%8E%E6%BF%BE%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">資料過濾器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%A6%E9%9A%9B%E5%9F%B7%E8%A1%8C"><span class="nav-number">2.2.</span> <span class="nav-text">實際執行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B%E8%B3%87%E6%96%99%E8%A1%A8"><span class="nav-number">2.2.1.</span> <span class="nav-text">建立資料表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%9D%E6%B8%AC%E8%A9%A6%E5%A5%97%E4%BB%B6"><span class="nav-number">2.2.2.</span> <span class="nav-text">安裝測試套件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%A6%E4%BD%9C%E6%96%B0%E5%A2%9E%E4%BD%9C%E6%A5%AD"><span class="nav-number">2.2.3.</span> <span class="nav-text">實作新增作業</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%A6%E4%BD%9C%E6%9B%B4%E6%96%B0%E4%BD%9C%E6%A5%AD"><span class="nav-number">2.2.4.</span> <span class="nav-text">實作更新作業</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SqlSugar%E7%9A%84AOP-%E7%94%9F%E5%91%BD%E9%80%B1%E6%9C%9F%E6%AA%A2%E8%A6%96"><span class="nav-number">2.2.5.</span> <span class="nav-text">SqlSugar的AOP 生命週期檢視</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/",
+      identifier: "2021/11/15/orm-series-sqlsugar-audit-columns/",
+      title     : "[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

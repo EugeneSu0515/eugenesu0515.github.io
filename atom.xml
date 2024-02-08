@@ -1,0 +1,2178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Eugene&#39;s Blog</title>
+  <icon>https://eugenesu.me/icon.png</icon>
+  
+  <link href="https://eugenesu.me/atom.xml" rel="self"/>
+  
+  <link href="https://eugenesu.me/"/>
+  <updated>2023-11-26T17:28:06.525Z</updated>
+  <id>https://eugenesu.me/</id>
+  
+  <author>
+    <name>Eugene Su</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>[DotnetCore]ModelBindingMiddleware</title>
+    <link href="https://eugenesu.me/2023/11/27/dotnetcore-model-binding-middleware/"/>
+    <id>https://eugenesu.me/2023/11/27/dotnetcore-model-binding-middleware/</id>
+    <published>2023-11-26T17:25:38.000Z</published>
+    <updated>2023-11-26T17:28:06.525Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;延續&lt;a href=&quot;/2023/11/27/dotnetcore-refit-api-gateway/&quot; title=&quot;[DotnetCore]Refit:類ApiGateway實作&quot;&gt;[DotnetCore]Refit:類ApiGateway實作&lt;/a&gt;文章，筆者在開發前台，後台這種隔離架構時，還會有一個需求是，比較正式的API規格，會有一些客製化的&lt;code&gt;Header&lt;/code&gt;值必須要辨別，不外乎就是&lt;code&gt;AcesssToken&lt;/code&gt;，或者必要的&lt;code&gt;Client&lt;/code&gt;資訊，及封包簽章等資訊，以前台轉發到後台這段來說，猶如上一篇提到透過&lt;code&gt;Refit&lt;/code&gt;完成。&lt;/p&gt;
+&lt;p&gt;筆者的思路是這樣，驗證這些&lt;code&gt;Client Request&lt;/code&gt;資訊的職責來說，止於前台，不需要再原封不動將客製化的&lt;code&gt;Header&lt;/code&gt;資訊送到後台，因為後台商業邏輯處理來說也不需要這些資訊，因此某些Header的值必須下放到&lt;code&gt;Model&lt;/code&gt;層級，讓後台收到的&lt;code&gt;Request&lt;/code&gt;中已經含有商業邏輯處理的必要資訊。&lt;/p&gt;
+&lt;p&gt;再則前台這一層必須要驗證&lt;code&gt;Request&lt;/code&gt;的合理性，一定會讀取&lt;code&gt;Header&lt;/code&gt;資訊，若要把這些&lt;code&gt;Header&lt;/code&gt;資訊原封不動的送到後台，反而還要額外動工，第一是要製作成Refit的參數，第二是後台還要再拆解一次Header資訊，完全是做了很多不需要的步驟，於是乎，這篇就誕生啦。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Refit:類ApiGateway實作</title>
+    <link href="https://eugenesu.me/2023/11/27/dotnetcore-refit-api-gateway/"/>
+    <id>https://eugenesu.me/2023/11/27/dotnetcore-refit-api-gateway/</id>
+    <published>2023-11-26T17:21:31.000Z</published>
+    <updated>2023-11-26T17:22:47.221Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在公司環境開發系統，依照公司規定有一些&lt;code&gt;Secrurity Policy&lt;/code&gt;要遵守，尤其是對外站台(前台)，因為是對外開放的站台，按照資安規定，需要完全是一個乾淨的站台，不連資料庫，不做商業邏輯處理，只接收將客戶端傳來的&lt;code&gt;HttpRequest&lt;/code&gt;，轉發到商業邏輯處理站台(後台)，因此筆者才在此篇的標題上打上&lt;code&gt;類APIGateway&lt;/code&gt;的字言，因為沒有完全符合&lt;code&gt;ApiGateway&lt;/code&gt;該有的功能，類似像&lt;code&gt;LoadBalancing&lt;/code&gt;、&lt;code&gt;Caching&lt;/code&gt;、&lt;code&gt;Retry Policy&lt;/code&gt;等重要指標，&lt;code&gt;ApiGateway&lt;/code&gt;完整功能可參考&lt;a href=&quot;https://github.com/ThreeMammals/Ocelot%E7%9A%84Features%E6%B8%85%E5%96%AE%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%95%A5%E7%9F%A5%E4%B8%80%E4%BA%8C%E3%80%82&quot;&gt;https://github.com/ThreeMammals/Ocelot的Features清單就可以略知一二。&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/categories/dotnetcore/refit/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/tags/refit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]FluentValidation再續前緣</title>
+    <link href="https://eugenesu.me/2023/11/27/fluent-validation-new/"/>
+    <id>https://eugenesu.me/2023/11/27/fluent-validation-new/</id>
+    <published>2023-11-26T17:15:51.000Z</published>
+    <updated>2023-11-26T17:19:20.393Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者最近在公司負責開發一個全新的&lt;code&gt;API&lt;/code&gt;對外系統，因沒有舊系統包袱，可以設計統一&lt;code&gt;Response&lt;/code&gt;，統一的&lt;code&gt;ExceptionHandlerMiddleware&lt;/code&gt;，只多不嫌少的各種&lt;code&gt;CustomizeException&lt;/code&gt;等等，然而接受客戶端的&lt;code&gt;Request&lt;/code&gt;時，勢必要進行&lt;code&gt;Validation&lt;/code&gt;作業，可以重捨&lt;code&gt;FluentValidation&lt;/code&gt;的懷抱了，此篇就以筆者遇到的情境及解法介紹為主，讓我們看下去吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="fluent-validation" scheme="https://eugenesu.me/categories/dotnetcore/fluent-validation/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="fluent-validation" scheme="https://eugenesu.me/tags/fluent-validation/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Refit:Polly應用</title>
+    <link href="https://eugenesu.me/2023/11/27/dotnetcore-refit-polly/"/>
+    <id>https://eugenesu.me/2023/11/27/dotnetcore-refit-polly/</id>
+    <published>2023-11-26T17:11:15.000Z</published>
+    <updated>2023-11-26T17:13:44.715Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在公司負責的系統是跟第三方串接有關的系統，因此經常要串接第三方的&lt;code&gt;API&lt;/code&gt;，&lt;code&gt;WebServie&lt;/code&gt;，&lt;code&gt;Dll&lt;/code&gt;等串接方式，若是&lt;code&gt;API(Http Request)&lt;/code&gt;串接則，筆者這邊都全面改用&lt;code&gt;Refit&lt;/code&gt;來串接，好處就不再贅述了，即便透過&lt;code&gt;Refit&lt;/code&gt;來發&lt;code&gt;Http Request&lt;/code&gt;，原本的&lt;code&gt;DotnetCore&lt;/code&gt;預設的&lt;code&gt;HttpClient&lt;/code&gt;相關的延伸應用，皆可延續使用，以此篇主題來說，筆者這邊想使用&lt;code&gt;Polly&lt;/code&gt;做&lt;code&gt;Retry&lt;/code&gt;的機制，讓我們繼續看下去。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/categories/dotnetcore/refit/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/tags/refit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Refit:HttpMessageHandler應用</title>
+    <link href="https://eugenesu.me/2023/11/27/dotnetcore-refit-http-handler/"/>
+    <id>https://eugenesu.me/2023/11/27/dotnetcore-refit-http-handler/</id>
+    <published>2023-11-26T16:52:37.000Z</published>
+    <updated>2023-11-26T17:07:53.999Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在 &lt;a href=&quot;/2023/07/06/dotnetcore-refit-intro/&quot; title=&quot;[DotnetCore]Refit初體驗&quot;&gt;[DotnetCore]Refit初體驗&lt;/a&gt;那篇中有說到，選擇的&lt;code&gt;Refit&lt;/code&gt;的原因有其中一項是可以繼續沿用自定義&lt;code&gt;HttpMessageHandler&lt;/code&gt;，此篇就以&lt;code&gt;Refit&lt;/code&gt;註冊的同時也掛上自定義&lt;code&gt;HttpMessageHandler&lt;/code&gt;的教學。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/categories/dotnetcore/refit/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/tags/refit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Refit:API介紹及應用</title>
+    <link href="https://eugenesu.me/2023/07/08/dotnetcore-refit-api-intro/"/>
+    <id>https://eugenesu.me/2023/07/08/dotnetcore-refit-api-intro/</id>
+    <published>2023-07-07T17:44:33.000Z</published>
+    <updated>2023-07-07T17:51:13.220Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇就繼續來介紹&lt;code&gt;Refit&lt;/code&gt;的各種用法，依照篇幅會再拆成數篇，筆者會參考官方&lt;code&gt;Document&lt;/code&gt;的脈絡，加上筆者已經在工作場合上用到的一些技巧，詳細介紹其用法，好的套件會帶你飛，真的不是說說而已，&lt;code&gt;Refit&lt;/code&gt;的API，完全足夠克服於工作場合中遇到的各種挑戰，讓你輕鬆完成&lt;code&gt;Http Request&lt;/code&gt;的請求。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/categories/dotnetcore/refit/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/tags/refit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Refit:DotnetCore專案套用</title>
+    <link href="https://eugenesu.me/2023/07/06/dotnetcore-refit-webapi/"/>
+    <id>https://eugenesu.me/2023/07/06/dotnetcore-refit-webapi/</id>
+    <published>2023-07-05T16:22:09.000Z</published>
+    <updated>2023-07-05T16:43:38.150Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在上一篇: &lt;a href=&quot;/2023/07/06/dotnetcore-refit-intro/&quot; title=&quot;[DotnetCore]Refit初體驗&quot;&gt;[DotnetCore]Refit初體驗&lt;/a&gt; ，簡單介紹Refit的使用方式，因上篇中要簡單的呈現，因而透過&lt;code&gt;Linqpad&lt;/code&gt;來完成示範，這篇則建立&lt;code&gt;Dotnet Core&lt;/code&gt;完整專案，並將&lt;code&gt;Refit&lt;/code&gt;套上使用。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/categories/dotnetcore/refit/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/tags/refit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Refit初體驗</title>
+    <link href="https://eugenesu.me/2023/07/06/dotnetcore-refit-intro/"/>
+    <id>https://eugenesu.me/2023/07/06/dotnetcore-refit-intro/</id>
+    <published>2023-07-05T16:21:59.000Z</published>
+    <updated>2023-07-07T17:50:42.770Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在公司負責的專案，大多數都跟其他廠商串接有關，串接方式百百種，最多就是&lt;code&gt;Http Request&lt;/code&gt;了，因新專案已都使用&lt;code&gt;dotnet 6&lt;/code&gt;來開發，透過&lt;code&gt;AddHttpClient&lt;/code&gt;註冊，注入&lt;code&gt;HttpClient&lt;/code&gt;，再將&lt;code&gt;HttpRequest&lt;/code&gt;的實作封裝成&lt;code&gt;HttpClientRepository&lt;/code&gt;，確實都滿順利的，但光&lt;code&gt;HttpClient&lt;/code&gt;串接也是有百百種，有的廠商要&lt;code&gt;FormPost&lt;/code&gt;方式送出&lt;code&gt;RequestContent&lt;/code&gt;，有的廠商則一般常見的將&lt;code&gt;RequestContent&lt;/code&gt;放在&lt;code&gt;Body&lt;/code&gt;，格式方面有些則&lt;code&gt;json&lt;/code&gt;格式，有些則&lt;code&gt;xml&lt;/code&gt;等等，組合也是挺可怕的多，要一直調整其底層共用程式&lt;code&gt;HttpClientRepository&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;再則筆者在實作中遇到一個滿常見的問題，&lt;code&gt;Header&lt;/code&gt;重複設定的錯誤，因&lt;code&gt;Http&lt;/code&gt;連線成本確實不低，因此透過&lt;code&gt;AddHttpClient&lt;/code&gt;使用&lt;code&gt;HttpClient&lt;/code&gt;，希望由&lt;code&gt;dotnet&lt;/code&gt;底層管理連線，降低其連線成本，以常見的&lt;code&gt;Header&lt;/code&gt;設定來說，就屬&lt;code&gt;Authorization&lt;/code&gt;了，筆者這邊為了加速往廠商端的查詢，會透過&lt;code&gt;Parallel&lt;/code&gt;的方式併發出&lt;code&gt;Request&lt;/code&gt;，全部&lt;code&gt;Response&lt;/code&gt;都回來後才做商業邏輯處理，因此第一次連線後&lt;code&gt;Header&lt;/code&gt;尚未設定的情況下，有一定的機率兩組執行緒碰撞一次，也有一定的機率兩組同時進到判斷式，要新增&lt;code&gt;Header&lt;/code&gt;的值，搞得筆者連&lt;code&gt;Lock&lt;/code&gt;機制都用上了，目前尚未找到更好的解，只能先這樣暴力解了。最後筆者自己本身在&lt;code&gt;Linqpad&lt;/code&gt;上先行測試時會使用&lt;code&gt;HttpRequest&lt;/code&gt;相關套件，例:&lt;a href=&quot;https://restsharp.dev/&quot;&gt;RestSharp&lt;/a&gt;，心血來潮認真看了下其&lt;code&gt;API&lt;/code&gt;，看到有&lt;code&gt;Headers&lt;/code&gt;章節中的&lt;code&gt;API&lt;/code&gt;: &lt;code&gt;AddOrUpdateHeader&lt;/code&gt;，覺得完全是解決筆者的痛點，突然有一種&lt;code&gt;HttpRequest&lt;/code&gt;應該是一個基礎建設，若能有一個套件幫忙實作完成，就可以專心地將所有精力投入在商業邏輯層面就好，進而縮短開發時間，然而某天在&lt;code&gt;LinkedIn&lt;/code&gt;貼文上看到一個套件叫&lt;code&gt;[Refit](https://github.com/reactiveui/refit)&lt;/code&gt;，不查還好，查完後覺得就它了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/categories/dotnetcore/refit/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="refit" scheme="https://eugenesu.me/tags/refit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]AOP初體驗</title>
+    <link href="https://eugenesu.me/2023/03/15/dotnetcore-aop-logging/"/>
+    <id>https://eugenesu.me/2023/03/15/dotnetcore-aop-logging/</id>
+    <published>2023-03-14T16:42:44.000Z</published>
+    <updated>2023-03-15T15:39:45.260Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者負責的專案，是那種到處要跟第三方串接那種，第三方不管是內部或多個外部，串接方式不外乎就是&lt;code&gt;WebService&lt;/code&gt;或是&lt;code&gt;Restful API&lt;/code&gt;，或者提供&lt;code&gt;dll&lt;/code&gt;檔案，多種形式見怪不怪，串接這時候釐清問題是最重要的，因此必須要確保我方系統上保有&lt;code&gt;Request&lt;/code&gt;及&lt;code&gt;Response&lt;/code&gt;以釐清問題，也是自保的一種概念，因為你無法保證串接的&lt;code&gt;Method&lt;/code&gt;跟金額無關，這時候唯有留下系統軌跡才能保證你的清白(被害妄想症上身中)，筆者相信留下紀錄這件事，不管事不是跟別的系統串接，仍是很重要的課題。&lt;/p&gt;
+&lt;p&gt;然而對於&lt;code&gt;Restful API&lt;/code&gt;這種串接方式，最方便留下紀錄了，只要共用一個&lt;code&gt;HttpClientRepository&lt;/code&gt;，將發出&lt;code&gt;HttpRequest&lt;/code&gt;集中在某一個&lt;code&gt;Method&lt;/code&gt;中，方便事後增加其往來紀錄的相關程式碼，當然我方系統是被呼叫方的話，也是可以透過&lt;code&gt;DotnetCore&lt;/code&gt;內建的&lt;code&gt;Middleware&lt;/code&gt;能搞定。至於呼叫&lt;code&gt;WebService&lt;/code&gt;或者&lt;code&gt;dll&lt;/code&gt;檔案中的&lt;code&gt;Method&lt;/code&gt;則比較傷腦筋一點，動用到今天的主角，&lt;code&gt;AOP Logging&lt;/code&gt;，能夠輕鬆地不留痕跡地做到留下紀錄。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="aop" scheme="https://eugenesu.me/tags/aop/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[雜記]ChatGPT初體驗</title>
+    <link href="https://eugenesu.me/2023/02/23/chatgpt-bootstrap-datepicker/"/>
+    <id>https://eugenesu.me/2023/02/23/chatgpt-bootstrap-datepicker/</id>
+    <published>2023-02-23T15:27:38.000Z</published>
+    <updated>2023-02-28T16:26:22.420Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在公司寫後台系統，重回&lt;code&gt;dotnet core MVC&lt;/code&gt;的懷抱，不免俗的要搭配&lt;code&gt;jquery&lt;/code&gt;來完成前端效果，離筆者好遙遠阿，畢竟在前公司寫&lt;code&gt;angular&lt;/code&gt;寫了多年，被&lt;code&gt;model binding&lt;/code&gt;的框架養胖了(誤，現在要重頭來蒐集&lt;code&gt;jquery&lt;/code&gt;各種套件(武器)的時候了，畢竟筆者要獨力完成一個後台系統，雖然有別的系統可參考，還是個一大挑戰阿。筆者公司的後台系統使用&lt;code&gt;Admin LTE 3&lt;/code&gt;的版本當作底層框架，雖然盡量使用裏頭整合好的&lt;code&gt;jquery&lt;/code&gt;套件，這篇就假設預設框架未提供&lt;code&gt;datepicker&lt;/code&gt;相關套件，跟著筆者一起來看看怎麼跟&lt;code&gt;ChatGPT&lt;/code&gt;互動寫出&lt;code&gt;datepicker&lt;/code&gt;的效果吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="chatgpt" scheme="https://eugenesu.me/categories/chatgpt/"/>
+    
+    
+    <category term="chatgpt" scheme="https://eugenesu.me/tags/chatgpt/"/>
+    
+    <category term="jquery" scheme="https://eugenesu.me/tags/jquery/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]gRPC101:Postman發出gRPC Request</title>
+    <link href="https://eugenesu.me/2023/02/10/dotnet-series-grpc101-postman-request/"/>
+    <id>https://eugenesu.me/2023/02/10/dotnet-series-grpc101-postman-request/</id>
+    <published>2023-02-09T18:31:24.000Z</published>
+    <updated>2023-03-28T05:56:39.510Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;平常寫的&lt;code&gt;Restful API&lt;/code&gt;的測試工具有百百種，筆者這邊所說的測試並非&lt;code&gt;QA&lt;/code&gt;寫的那種測試，而是確認自己寫好的&lt;code&gt;API&lt;/code&gt;是否如期執行，確認運作狀況，畢竟&lt;code&gt;Restful API&lt;/code&gt;大多使用在前後端分離的開發方式中，身為後端工程師，寫完&lt;code&gt;API&lt;/code&gt;，第一件事是打開&lt;code&gt;Postman&lt;/code&gt;工具，輸入&lt;code&gt;API Url&lt;/code&gt;，發出&lt;code&gt;Request&lt;/code&gt;，看是否正常運行，更甚者，會製作&lt;code&gt;Postman Collection&lt;/code&gt;並匯出給前端工程師使用，回到&lt;code&gt;gRPC&lt;/code&gt;服務，是否也可以透過&lt;code&gt;Postman&lt;/code&gt;來測試呢，跟著筆者一起看下去吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="gRPC" scheme="https://eugenesu.me/categories/dotnetcore/gRPC/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="gRPC" scheme="https://eugenesu.me/tags/gRPC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]gRPC101: Greeting專案:Client篇</title>
+    <link href="https://eugenesu.me/2023/02/08/dotnet-series-grpc101-greeting-client/"/>
+    <id>https://eugenesu.me/2023/02/08/dotnet-series-grpc101-greeting-client/</id>
+    <published>2023-02-08T15:15:50.000Z</published>
+    <updated>2023-03-28T05:56:23.470Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者於&lt;a href=&quot;/2023/02/07/dotnet-series-grpc101-greeting-server/&quot; title=&quot;[DotnetCore]gRPC101: Gretting專案-Server篇&quot;&gt;[DotnetCore]gRPC101: Gretting專案-Server篇&lt;/a&gt;中詳細交代產生該系列文之原因了，因篇幅太長，決定分為Server篇及Client篇，簡述一下Client端的作法，還記得Server篇中提到以及宣告好的&lt;code&gt;proto&lt;/code&gt;檔案嗎，對於&lt;code&gt;Client&lt;/code&gt;端來說，只要拿&lt;code&gt;Server&lt;/code&gt;端產生的&lt;code&gt;proto&lt;/code&gt;檔案拿來用即可，因為也是要產生編譯後的cs檔案，&lt;code&gt;namespace&lt;/code&gt;要改成&lt;code&gt;Client&lt;/code&gt;端專案名稱即可，一切就水到渠成了，接下來就拿&lt;code&gt;proto&lt;/code&gt;檔中的方法呼叫下去就萬事ok了，跟著筆者看下去吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="gRPC" scheme="https://eugenesu.me/categories/dotnetcore/gRPC/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="gRPC" scheme="https://eugenesu.me/tags/gRPC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]gRPC101: Gretting專案-Server篇</title>
+    <link href="https://eugenesu.me/2023/02/07/dotnet-series-grpc101-greeting-server/"/>
+    <id>https://eugenesu.me/2023/02/07/dotnet-series-grpc101-greeting-server/</id>
+    <published>2023-02-07T15:31:25.000Z</published>
+    <updated>2023-02-28T16:26:53.350Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者因公司內部系統規劃，會有一個中台系統，負責共用的一些寄電子信件，寄簡訊，或其他共用服務，這種微服務概念而個別建立的系統，與其他系統最直觀的串接方式為&lt;code&gt;Restful API&lt;/code&gt;， 當然還有一個&lt;code&gt;GraphQL&lt;/code&gt;這個選擇，其特色為由前端決定回傳的資料結構，但筆者熟悉的&lt;code&gt;dotnet&lt;/code&gt;生態圈一直沒有紅起來的感覺(或許是筆者見識淺薄)，&lt;code&gt;gRPC&lt;/code&gt;尚未出現前，這兩種都是上等之選，&lt;code&gt;gRPC&lt;/code&gt;問世後，有一種橫空出世的感覺，因尚未支援瀏覽器端，以微服務(後端)之間串接來說，已經是一時之選。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="gRPC" scheme="https://eugenesu.me/categories/dotnetcore/gRPC/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="gRPC" scheme="https://eugenesu.me/tags/gRPC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ConsoleApp擁有Configuration及ServiceCollection機制</title>
+    <link href="https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/"/>
+    <id>https://eugenesu.me/2022/12/22/dotnetcore-console-with-configuration-di/</id>
+    <published>2022-12-22T07:00:07.000Z</published>
+    <updated>2023-02-28T16:27:13.390Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者收到主管的指示，要來寫一個執行檔(&lt;code&gt;exe&lt;/code&gt;)程式，筆者離這種&lt;code&gt;exe&lt;/code&gt;程式好久遠了，自從轉換到&lt;code&gt;Web&lt;/code&gt;領域後幾乎都是寫API為主，一開始從&lt;code&gt;.net MVC5&lt;/code&gt;開始進入&lt;code&gt;Web&lt;/code&gt;領域，寫了幾年的&lt;code&gt;Razor View&lt;/code&gt;後，前一份工作剛好前後端分離，前幾年都在寫&lt;code&gt;dotnet core web api&lt;/code&gt;及&lt;code&gt;angular&lt;/code&gt;為主，&lt;code&gt;Console Application&lt;/code&gt;離我好遙遠阿，但筆者已經被&lt;code&gt;dotnet core&lt;/code&gt;的內建&lt;code&gt;DI&lt;/code&gt;機制及&lt;code&gt;AppSettings&lt;/code&gt;當&lt;code&gt;Config&lt;/code&gt;已經習以為常，對於&lt;code&gt;Console Application&lt;/code&gt;來說這些都是要自己實作上去的，不妨藉由這次機會來實作看看。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[macos]好物系列-鍵盤&amp;滑鼠設定</title>
+    <link href="https://eugenesu.me/2022/10/07/macos-recommend-software/"/>
+    <id>https://eugenesu.me/2022/10/07/macos-recommend-software/</id>
+    <published>2022-10-06T17:01:29.000Z</published>
+    <updated>2023-02-28T16:31:09.250Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者自從四年前開始買第一把機械式鍵盤後，深深著迷，雖然第一把鍵盤為茶軸，打過Cherry原廠鍵盤&lt;code&gt;G80-3494&lt;/code&gt;後，完全回不去了，覺得直上直下超好打字，瘋狂買各家廠牌的紅軸。因為筆者吃飯用開發程式語言C#在mac上開發還是不友善，Mac還是淪為娛樂機，但自從dotnet core推出後，完全就是造福mac使用者啊，就會比較多時間在mac上面做研究及開發。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="macos" scheme="https://eugenesu.me/categories/macos/"/>
+    
+    
+    <category term="macos" scheme="https://eugenesu.me/tags/macos/"/>
+    
+    <category term="software" scheme="https://eugenesu.me/tags/software/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Flutter讀書會]Dart101:Functions方法</title>
+    <link href="https://eugenesu.me/2022/08/27/flutter-series-dart101-function/"/>
+    <id>https://eugenesu.me/2022/08/27/flutter-series-dart101-function/</id>
+    <published>2022-08-27T15:10:46.000Z</published>
+    <updated>2023-02-28T16:30:03.990Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;說說&lt;code&gt;Dart&lt;/code&gt;程式語言，原本是來實作&lt;code&gt;Angular&lt;/code&gt;前端框架而存在，早期&lt;code&gt;Angular&lt;/code&gt;框架還有分兩派，&lt;code&gt;Typescript&lt;/code&gt;及&lt;code&gt;Dart&lt;/code&gt;，但發展到後面，完全被&lt;code&gt;Typescript&lt;/code&gt;取代。時間線移回現在，&lt;code&gt;Dart&lt;/code&gt;程式語言從&lt;code&gt;Flutter&lt;/code&gt;於&lt;code&gt;2017&lt;/code&gt;年中發佈開始，又重回戰場。筆者在看&lt;code&gt;Function&lt;/code&gt;這個章節時，不禁讓筆者想到這些歷史背景，原本&lt;code&gt;Dart&lt;/code&gt;程式語言是為了開發&lt;code&gt;Web&lt;/code&gt;應用程式的阿，因此某些特性上跟&lt;code&gt;Javascript&lt;/code&gt;特性相符也不是沒有道理的，例如: &lt;code&gt;Lexical Scope語彙範疇&lt;/code&gt;。每個程式語言都要有的&lt;code&gt;Function&lt;/code&gt;方法，Dart語言的世界裡&lt;code&gt;Function&lt;/code&gt;方法會是甚麼樣子呢，趕緊跟著筆者的腳步來看看吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/categories/flutter/"/>
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/tags/flutter/"/>
+    
+    <category term="dart" scheme="https://eugenesu.me/tags/dart/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Flutter讀書會]Dart101:Build-inTypes資料型別-Symbol</title>
+    <link href="https://eugenesu.me/2022/08/10/flutter-series-dart101-symbol/"/>
+    <id>https://eugenesu.me/2022/08/10/flutter-series-dart101-symbol/</id>
+    <published>2022-08-10T10:55:45.000Z</published>
+    <updated>2023-02-28T16:30:26.010Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Dart&lt;/code&gt;程式語言的資料型別介紹來到最後一篇啦，前面三篇滿滿的內容，筆者都寫到頭昏腦脹，主要是希望趕上讀書會的進度，希望在這週完成&lt;code&gt;Dart&lt;/code&gt;程式語言的了解。筆者尚未完成很重要的&lt;code&gt;Function&lt;/code&gt;方法、&lt;code&gt;Operators&lt;/code&gt;運算子、&lt;code&gt;Control Flow&lt;/code&gt;及最重要的&lt;code&gt;Class&lt;/code&gt;概念，把這些都釐清楚後，我想進入到&lt;code&gt;Flutter&lt;/code&gt;的世界，只要學好&lt;code&gt;xml&lt;/code&gt;格式的&lt;code&gt;UI Control&lt;/code&gt;配置，我想應該是可以開發一些Demo應用程式了，好興奮阿，就跟著筆者繼續學習這篇的主角&lt;code&gt;Symbol&lt;/code&gt;吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/categories/flutter/"/>
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/tags/flutter/"/>
+    
+    <category term="dart" scheme="https://eugenesu.me/tags/dart/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Flutter讀書會]Dart101:Build-inTypes資料型別-Booleans,Lists,Sets,Maps</title>
+    <link href="https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/"/>
+    <id>https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/</id>
+    <published>2022-08-10T10:55:20.000Z</published>
+    <updated>2023-02-28T16:30:12.670Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;上一篇介紹完&lt;code&gt;Strings&lt;/code&gt;之後，這篇來到&lt;code&gt;Booleans&lt;/code&gt;、&lt;code&gt;Lists&lt;/code&gt;、&lt;code&gt;Sets&lt;/code&gt;、&lt;code&gt;Maps&lt;/code&gt;了，因為Booleans就比較沒甚麼好解說的，就是&lt;code&gt;true&lt;/code&gt;跟&lt;code&gt;false&lt;/code&gt;，因此把另外三個也納進來一起解說，以免篇幅太少，基本上&lt;code&gt;Lists&lt;/code&gt;、&lt;code&gt;Sets&lt;/code&gt;、&lt;code&gt;Maps&lt;/code&gt;也滿好理解的，這些資料型別是其他程式語言常見到的，只要搞清楚三者的差異以及適用時機，基本上就是駕輕就熟了，跟著筆者一起學習吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/categories/flutter/"/>
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/tags/flutter/"/>
+    
+    <category term="dart" scheme="https://eugenesu.me/tags/dart/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Flutter讀書會]Dart101:Built-inTypes資料型別-Strings</title>
+    <link href="https://eugenesu.me/2022/08/10/flutter-series-dart101-strings/"/>
+    <id>https://eugenesu.me/2022/08/10/flutter-series-dart101-strings/</id>
+    <published>2022-08-10T10:55:01.000Z</published>
+    <updated>2023-02-28T16:30:22.280Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;上篇介紹完資料型別-&lt;code&gt;Numbers&lt;/code&gt;後，這篇來到&lt;code&gt;Strings&lt;/code&gt;的篇幅，筆者這邊也是採用官方文件及相關連結做一個簡述及驗證，跟著筆者一起學習吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/categories/flutter/"/>
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/tags/flutter/"/>
+    
+    <category term="dart" scheme="https://eugenesu.me/tags/dart/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Flutter讀書會]Dart101:Built-inTypes資料型別-Numbers</title>
+    <link href="https://eugenesu.me/2022/08/10/flutter-series-dart101-numbers/"/>
+    <id>https://eugenesu.me/2022/08/10/flutter-series-dart101-numbers/</id>
+    <published>2022-08-10T10:54:51.000Z</published>
+    <updated>2023-02-28T16:30:18.320Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;上篇介紹完&lt;code&gt;Dart&lt;/code&gt;語言開發環境與第一支Hello World程式後，這篇要來介紹資料型別與變數，筆者就以官方&lt;code&gt;Dcoument&lt;/code&gt;文件中的&lt;code&gt;Language&amp;gt;Tour&lt;/code&gt;為主，參考其介紹方式，解釋各個資料型別，此篇主要介紹&lt;code&gt;Numbers&lt;/code&gt;這個資料型別。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/categories/flutter/"/>
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/tags/flutter/"/>
+    
+    <category term="dart" scheme="https://eugenesu.me/tags/dart/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Flutter讀書會]Dart101:HelloWorld</title>
+    <link href="https://eugenesu.me/2022/08/10/flutter-series-dart101-hello-world/"/>
+    <id>https://eugenesu.me/2022/08/10/flutter-series-dart101-hello-world/</id>
+    <published>2022-08-10T10:54:39.000Z</published>
+    <updated>2023-02-28T16:30:09.150Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者因公司正打算將公司產品App改用Flutter實作，希望能當先鋒隊，因此自己私下參加讀書會，藉此熟悉一下&lt;code&gt;Flutter&lt;/code&gt;的開發方式，屆時公司需要實作時，就可以直接上場大戰啦。&lt;/p&gt;
+&lt;p&gt;大概在幾年前因同事閒聊聊到&lt;code&gt;Flutter&lt;/code&gt;，那時好奇有寫過一篇介紹文，因那時屬自己私底下研究性質，很容易就半途而廢，當然學習下場不是很好，大概兩週就放棄了，這一次藉由讀書會，找到一群熱愛技術的同好督促，才會學得久，學得好。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/categories/flutter/"/>
+    
+    
+    <category term="flutter" scheme="https://eugenesu.me/tags/flutter/"/>
+    
+    <category term="dart" scheme="https://eugenesu.me/tags/dart/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Typescript101]Typescript教學系列:設定Typescript專案</title>
+    <link href="https://eugenesu.me/2022/05/18/typescript-series-ts-project/"/>
+    <id>https://eugenesu.me/2022/05/18/typescript-series-ts-project/</id>
+    <published>2022-05-18T10:29:41.000Z</published>
+    <updated>2023-02-28T16:33:08.290Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者的系列文章:&lt;code&gt;Typescript101&lt;/code&gt;，上一篇介紹文中提到的簡單地&lt;code&gt;hello.ts&lt;/code&gt;檔案，透過&lt;code&gt;tsc&lt;/code&gt;指令將其編譯成&lt;code&gt;javascript&lt;/code&gt;檔案，算滿簡單易懂的，這次則建立&lt;code&gt;typescript&lt;/code&gt;專案，真正在撰寫應用程式時透過這種方式居多，不妨跟著筆者實作看看吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="typescript" scheme="https://eugenesu.me/categories/typescript/"/>
+    
+    
+    <category term="typescript" scheme="https://eugenesu.me/tags/typescript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Typescript101]Typescript教學系列:介紹</title>
+    <link href="https://eugenesu.me/2022/05/18/typescript-series-introduce/"/>
+    <id>https://eugenesu.me/2022/05/18/typescript-series-introduce/</id>
+    <published>2022-05-18T03:59:37.000Z</published>
+    <updated>2023-02-28T16:33:04.630Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者公司使用&lt;code&gt;Angular&lt;/code&gt;開發應用系統，使用了也已經有兩三年了，雖兩三年的&lt;code&gt;Angular&lt;/code&gt;撰寫經驗，但筆者自認為只能算是一個半個前端，因開發的是內部系統，比較沒有艱深的功能要實現，且筆者公司買現成的&lt;code&gt;Template&lt;/code&gt;版型來套用，滿習慣且熟悉&lt;code&gt;Template&lt;/code&gt;版型提供的撰寫結構及相關套件，趁這一次轉換工作空檔，就先把&lt;code&gt;Typescript&lt;/code&gt;底子打好吧。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Typescipt&lt;/code&gt;本身是&lt;code&gt;Javascript&lt;/code&gt;的超集，完全相容&lt;code&gt;Javascript&lt;/code&gt;現有語法，加上&lt;code&gt;型別系統&lt;/code&gt;，前端程式寫起來，猶如寫後端程式一樣，加上&lt;code&gt;Angular2&lt;/code&gt;開始，透過&lt;code&gt;DI&lt;/code&gt;取得所有服務，筆者平常後端使用&lt;code&gt;Dotnet Core&lt;/code&gt;，因&lt;code&gt;Dotnet Core&lt;/code&gt;框架也是內建DI機制，因此對筆者來說特別熟悉感。：&lt;/p&gt;
+&lt;p&gt;筆者這邊會參考&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.typescriptlang.org/&quot;&gt;https://www.typescriptlang.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/learn/paths/build-javascript-applications-typescript/&quot;&gt;https://docs.microsoft.com/zh-tw/learn/paths/build-javascript-applications-typescript/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://willh.gitbook.io/typescript-tutorial/&quot;&gt;https://willh.gitbook.io/typescript-tutorial/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;統整上述網站內容，整理成自己理解的版本。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="typescript" scheme="https://eugenesu.me/categories/typescript/"/>
+    
+    
+    <category term="typescript" scheme="https://eugenesu.me/tags/typescript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]NLog-依照Environment使用Nlog.Config檔案</title>
+    <link href="https://eugenesu.me/2022/05/17/nlog-environment-config/"/>
+    <id>https://eugenesu.me/2022/05/17/nlog-environment-config/</id>
+    <published>2022-05-17T08:07:17.000Z</published>
+    <updated>2023-02-28T16:31:20.550Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者公司使用&lt;code&gt;NLog&lt;/code&gt;當作&lt;code&gt;Log&lt;/code&gt;工具，相當簡單易用，但用到現在會有一個困擾，畢竟為方便測試，到處埋&lt;code&gt;Info&lt;/code&gt;等級的&lt;code&gt;Log&lt;/code&gt;於程式中，為方便偵錯及追蹤，可能連傳入的資料都會記錄於文字檔中，變成正式環境也會有同樣的效果，因為這個&lt;code&gt;Nlog.Config&lt;/code&gt;又加入於版控中，要嘛就是在&lt;code&gt;release&lt;/code&gt;分支那邊將&lt;code&gt;Nlog.config&lt;/code&gt;調整成正式環境符合的設定，也是頗麻煩。&lt;/p&gt;
+&lt;p&gt;筆者這篇主要是解決上述問題，解決方式也頗簡單，將&lt;code&gt;Nlog.config&lt;/code&gt;製作多個帶有&lt;code&gt;Environment&lt;/code&gt;的檔名，&lt;code&gt;NLogBuilder&lt;/code&gt;註冊時套用不同的&lt;code&gt;NLog.Config&lt;/code&gt;檔案即可解決。基本上若為預設的&lt;code&gt;NLog.config&lt;/code&gt;則不需特別註冊也有效，因要針對不同環境，套用不同的&lt;code&gt;config&lt;/code&gt;檔案，必須宣告&lt;code&gt;NLogBuilder&lt;/code&gt;註冊。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu.me/categories/dotnetcore/nlog/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu.me/tags/nlog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:實體產生器-進階</title>
+    <link href="https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/"/>
+    <id>https://eugenesu.me/2022/05/16/orm-series-sqlsugar-advanced-model-generator/</id>
+    <published>2022-05-16T06:51:11.000Z</published>
+    <updated>2023-02-28T16:31:48.800Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是想寫實體產生器的進階版本，怎麼會說是進階版本呢，若有用過EFCore的&lt;code&gt;dotnet ef dbcontext scaffold&lt;/code&gt;指令會知道，預設會是符合&lt;code&gt;C#&lt;/code&gt;命名規則，即&lt;code&gt;Pascal Case&lt;/code&gt;，每個英文單字連在一起，每個單字的第一個字為大寫。&lt;code&gt;scaffold&lt;/code&gt;指令還特別開放&lt;code&gt;options:-use-database-names&lt;/code&gt;，即可保留其資料庫中的命名。&lt;/p&gt;
+&lt;p&gt;筆者當初也沒有特別注意這些細節，因為是有踩過一些雷，例:製作前端使用&lt;code&gt;ViewModel&lt;/code&gt;時，從上述&lt;code&gt;scaffold&lt;/code&gt;指令產出的&lt;code&gt;Entities&lt;/code&gt;複製其對應的屬性宣告，再補一些額外的屬性，然後透過&lt;code&gt;Dapper&lt;/code&gt;套件Binding屬性時發現，怎麼有些屬性明明資料庫就有回傳，怎麼沒有binding成功，仔細一看，資料庫端是使用下底線，到C#端時&lt;code&gt;scaffold&lt;/code&gt;會把下底線去掉，因此直接從&lt;code&gt;Entities&lt;/code&gt;中複製貼上則會是不一樣的屬性名稱，自從那一次後，就注意到該細節。&lt;/p&gt;
+&lt;p&gt;講到此篇主題，剛好手邊新專案，資料庫使用&lt;code&gt;MySQL&lt;/code&gt;，筆者想保持資料庫命名規則，主要是有兩點&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;小寫為主&lt;/li&gt;
+&lt;li&gt;每個單字透過下底線連結&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另一方面，筆者透過&lt;code&gt;SqlSugarCore&lt;/code&gt;提供的實體產生相關API產生相關實體時，又想保持C#命名規則，最好是跟EFCore scaffold一樣可以保有複數機制，這為此篇主要解決目的。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]CleanArchitecture手做系列-實作API</title>
+    <link href="https://eugenesu.me/2022/05/10/clean-architecture-api/"/>
+    <id>https://eugenesu.me/2022/05/10/clean-architecture-api/</id>
+    <published>2022-05-10T12:47:56.000Z</published>
+    <updated>2023-02-28T16:26:27.570Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;以上篇&lt;a href=&quot;/2022/05/10/clean-architecture-new/&quot; title=&quot;[DotnetCore]CleanArchitecture手做系列-建立專案&quot;&gt;[DotnetCore]CleanArchitecture手做系列-建立專案&lt;/a&gt;實作完成後，得到一個有整潔架構的方案，筆者在這篇以&lt;code&gt;webapi template&lt;/code&gt;所產生的&lt;code&gt;WeatherForecast API&lt;/code&gt;查詢作業轉成&lt;code&gt;MediatR&lt;/code&gt;風格的架構，筆者主要參考&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture&quot;&gt;https://github.com/jasontaylordev/CleanArchitecture&lt;/a&gt;專案預設範本所產生的撰寫風格，擷取筆者要的部份，&lt;code&gt;ORM&lt;/code&gt;部份則改用&lt;code&gt;SqlSugarCore&lt;/code&gt;實作資料庫操作行為，此篇以&lt;code&gt;webapi template&lt;/code&gt;所產生的&lt;code&gt;WeatherForecastController&lt;/code&gt;改寫成&lt;code&gt;Clean Architecture&lt;/code&gt;撰寫風格。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/categories/dotnetcore/clean-architecture/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/tags/clean-architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-Pdf檔案:iTextSharp</title>
+    <link href="https://eugenesu.me/2022/05/10/reader-series-pdf-itextsharp/"/>
+    <id>https://eugenesu.me/2022/05/10/reader-series-pdf-itextsharp/</id>
+    <published>2022-05-10T12:44:54.000Z</published>
+    <updated>2023-02-28T16:32:24.780Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這邊有一個需求是，&lt;code&gt;pdf&lt;/code&gt;檔案在上傳時就判斷好是否有加密，避免後面流程中需要解析pdf檔案時，遇到解密的問題，因此為避免後面流程複雜去防呆，直接於上傳檔案時築一道防線擋掉，是最佳解。筆者在搜尋了一下&lt;code&gt;c# detect password protected pdf&lt;/code&gt;的關鍵字時，基本上會跳出使用&lt;code&gt;iTextSharp&lt;/code&gt;的解法，筆者就參考此解法寫一個&lt;code&gt;Extension&lt;/code&gt;，主要都是參考&lt;code&gt;StackOverFlow&lt;/code&gt;的解法，程式碼本身沒甚麼變動，此篇以解釋為準。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu.me/categories/dotnetcore/reader/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="itextsharp" scheme="https://eugenesu.me/tags/itextsharp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]CleanArchitecture手做系列-建立專案</title>
+    <link href="https://eugenesu.me/2022/05/10/clean-architecture-new/"/>
+    <id>https://eugenesu.me/2022/05/10/clean-architecture-new/</id>
+    <published>2022-05-10T12:36:20.000Z</published>
+    <updated>2023-02-28T16:26:31.730Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是以&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture%E7%9A%84%60template%60%E6%9E%B6%E6%A7%8B%EF%BC%8C%E5%9B%A0%60template%60%E7%94%A2%E5%87%BA%E4%B9%8B%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E5%8C%85%E5%90%AB%60Identity&quot;&gt;https://github.com/jasontaylordev/CleanArchitecture的`template`架構，因`template`產出之專案結構包含`Identity&lt;/a&gt; Server&lt;code&gt;，還有前端頁面等不需要的專案，因此筆者想要仿照該&lt;/code&gt;template&lt;code&gt;架構，自己手動建立純&lt;/code&gt;API&lt;code&gt;架構，順便熟悉一下其&lt;/code&gt;Clean Architecture`的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/categories/dotnetcore/clean-architecture/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="clean-architecture" scheme="https://eugenesu.me/tags/clean-architecture/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-Toast:toastify-js</title>
+    <link href="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/"/>
+    <id>https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/</id>
+    <published>2022-03-07T08:03:32.000Z</published>
+    <updated>2023-02-28T16:28:19.020Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;一個應用程式，尤其是前端少不了&lt;code&gt;alert&lt;/code&gt;訊息啦，網頁系統，基本上就可以使用alert方法可以跳出提示訊息，純網頁應該是不會有違合感，但想像一下以&lt;code&gt;PC App&lt;/code&gt;的形式來說，直接跳網頁的那種&lt;code&gt;alert&lt;/code&gt;訊息，似乎不太搭，通常一個系統一定會搭配一套&lt;code&gt;toastr&lt;/code&gt;的套件，將成功、失敗訊息顯示於&lt;code&gt;左上、右上、左下、右下角&lt;/code&gt;，清楚地告訴使用者，他的操作是否成功或失敗。&lt;/p&gt;
+&lt;p&gt;筆者認為&lt;code&gt;toastr&lt;/code&gt;的基本要素就是至少要有&lt;code&gt;成功&lt;/code&gt;或&lt;code&gt;失敗&lt;/code&gt;的&lt;code&gt;樣式&lt;/code&gt;可以選擇，以及剛提到的訊息置於&lt;code&gt;左上、右上、左下、右下角&lt;/code&gt;等選項，再則進階一點就是訊息內容本身要支援，&lt;code&gt;html格式訊息&lt;/code&gt;或&lt;code&gt;一般文字訊息&lt;/code&gt;，才可以靈活運用。這篇的前提條件跟前幾篇一樣，筆者想要找到一個&lt;code&gt;Vanilla js&lt;/code&gt;的&lt;code&gt;Toastr&lt;/code&gt;套件，這篇主要是要介紹筆者挑到在使用的&lt;a href=&quot;https://apvarun.github.io/toastify-js/&quot;&gt;https://apvarun.github.io/toastify-js/&lt;/a&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
+    
+    <category term="toastifyjs" scheme="https://eugenesu.me/tags/toastifyjs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-EML檔案</title>
+    <link href="https://eugenesu.me/2022/03/07/reader-series-eml/"/>
+    <id>https://eugenesu.me/2022/03/07/reader-series-eml/</id>
+    <published>2022-03-07T07:59:40.000Z</published>
+    <updated>2023-02-28T16:32:21.670Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者公司其他同仁負責的專案有一個需求是，主動幫使用者的信件內容讀取，依照附件檔案中的檔案內容做不同的事情，而不用人工的方式到系統中上傳該附件檔案。這時候就該使出&lt;code&gt;Reader系列文章&lt;/code&gt;的時候了，前置作業可能要靠其他&lt;code&gt;Infra&lt;/code&gt;同仁設定好後將信件自動轉成EML檔案格式，放置於網路空間上，由&lt;code&gt;EML Reader&lt;/code&gt;會去讀取該路經中的&lt;code&gt;EML&lt;/code&gt;檔案，並做對應的事，該篇就以讀取&lt;code&gt;EML&lt;/code&gt;檔案格式內容為主作呈現。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu.me/categories/dotnetcore/reader/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="eml" scheme="https://eugenesu.me/tags/eml/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Hexo]Github Page:設定Domain Name</title>
+    <link href="https://eugenesu.me/2022/03/07/github-page-custom-domain/"/>
+    <id>https://eugenesu.me/2022/03/07/github-page-custom-domain/</id>
+    <published>2022-03-07T07:52:20.000Z</published>
+    <updated>2023-02-28T16:30:36.790Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者寫&lt;code&gt;Blog&lt;/code&gt;有一段時間了，去年買了自己的名字域名後，一直沒空去設定它，一直都使用&lt;code&gt;github io&lt;/code&gt;預設的域名，上週終於有空來設定了。筆者買很夯的&lt;code&gt;.me&lt;/code&gt;結尾的域名，剛好歐洲的一個小國家的代碼為me，筆者這邊買的自然就是&lt;a href=&quot;https://eugenesu.me/&quot;&gt;https://eugenesu.me&lt;/a&gt;了。筆者這篇以整個設定到生效的過程一一介紹，若以筆者一樣使用hexo當blog生產工具，且想要將自己的github page掛上域名的，可以參考使用。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="hexo" scheme="https://eugenesu.me/categories/hexo/"/>
+    
+    
+    <category term="hexo" scheme="https://eugenesu.me/tags/hexo/"/>
+    
+    <category term="github-page" scheme="https://eugenesu.me/tags/github-page/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-注入篇</title>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-DI/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-DI/</id>
+    <published>2022-01-14T03:41:50.000Z</published>
+    <updated>2023-02-28T16:27:24.470Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前提情要請參考&lt;a href=&quot;/2022/01/14/dotnetcore-generic-series-model/&quot; title=&quot;[DotnetCore]泛型運用系列-Model設計篇&quot;&gt;[DotnetCore]泛型運用系列-Model設計篇&lt;/a&gt;，不過筆者還是在這邊再列一下會用到的技術觀念與套件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個Service中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-商業邏輯實作篇</title>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-domain/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-domain/</id>
+    <published>2022-01-14T03:41:36.000Z</published>
+    <updated>2023-02-28T16:27:27.420Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前提情要請參考&lt;a href=&quot;/2022/01/14/dotnetcore-generic-series-model/&quot; title=&quot;[DotnetCore]泛型運用系列-Model設計篇&quot;&gt;[DotnetCore]泛型運用系列-Model設計篇&lt;/a&gt;，不過筆者還是在這邊再列一下會用到的技術觀念與套件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個Service中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-Attribute設計篇</title>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-attribute/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-attribute/</id>
+    <published>2022-01-14T03:41:22.000Z</published>
+    <updated>2023-02-28T16:27:20.300Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前提情要請參考&lt;a href=&quot;/2022/01/14/dotnetcore-generic-series-model/&quot; title=&quot;[DotnetCore]泛型運用系列-Model設計篇&quot;&gt;[DotnetCore]泛型運用系列-Model設計篇&lt;/a&gt;，不過筆者還是在這邊再列一下會用到的技術觀念與套件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個Service中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]泛型運用系列-Model設計篇</title>
+    <link href="https://eugenesu.me/2022/01/14/dotnetcore-generic-series-model/"/>
+    <id>https://eugenesu.me/2022/01/14/dotnetcore-generic-series-model/</id>
+    <published>2022-01-14T03:41:08.000Z</published>
+    <updated>2023-02-28T16:27:30.580Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者日前工作環境中要實作，從某個&lt;code&gt;FTP&lt;/code&gt;位置下載檔案，下載到檔案後將檔案內容轉成物件清單，存進資料庫中，接著這些檔案依照屬性不同，拆成四分檔案，有共同欄位，也有各自的欄位，資料表則依照最大化原則，將所有檔案欄位最大化後設計成對應的欄位，當然設計一個識別欄位:&lt;code&gt;EventType&lt;/code&gt;，識別是哪個檔案的資料。最後這個檔案內容轉換成資料表中的資料，要掛在排程上面做運作，筆者簡單列一下此一系列的實作需要用到的概念與套件如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://automapper.org/&quot;&gt;AutoMapper&lt;/a&gt;:運用於將檔案內容對應的物件轉成&lt;code&gt;EFCore&lt;/code&gt;的物件時&lt;/li&gt;
+&lt;li&gt;Generic Class/Method: 不想寫多個&lt;code&gt;Service&lt;/code&gt;去處理多個檔案，設計成泛型形式以符合各種檔案類型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attribute&lt;/code&gt;: 透過&lt;code&gt;Description Attribute&lt;/code&gt;，註記其對應的&lt;code&gt;Comlumn&lt;/code&gt;欄位順序&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;:透過該套件，將寫好的&lt;code&gt;Service&lt;/code&gt;掛成排程任務&lt;/li&gt;
+&lt;li&gt;Extension Method:有一些通用的&lt;code&gt;Method&lt;/code&gt;，不要落落等塞在一個&lt;code&gt;Service&lt;/code&gt;中，因此轉換成可以共用的&lt;code&gt;Extension Method&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/zh-tw/ef/core/&quot;&gt;EFCore&lt;/a&gt;:資料存取用開發套件&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="generic" scheme="https://eugenesu.me/tags/generic/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]教學系列-指定sdk版本建立專案</title>
+    <link href="https://eugenesu.me/2021/12/01/dotnetcore-specify-sdk/"/>
+    <id>https://eugenesu.me/2021/12/01/dotnetcore-specify-sdk/</id>
+    <published>2021-12-01T06:12:09.000Z</published>
+    <updated>2023-02-28T16:28:01.050Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這邊遇到的問題是電腦環境中有多個&lt;code&gt;sdk&lt;/code&gt;版本，需要指定比較舊的&lt;code&gt;sdk&lt;/code&gt;版本來建立專案，筆者之前剛幫公司用基礎專案時遇到&lt;code&gt;3.1LTS&lt;/code&gt;版本，因此有跟著升級，&lt;code&gt;dotnet 5&lt;/code&gt;因不是LTS版本就沒有跟著升，就坐著等&lt;code&gt;dotnet 6&lt;/code&gt;了。&lt;/p&gt;
+&lt;p&gt;依上述，筆者公司開發環境停留在&lt;code&gt;3.1&lt;/code&gt;，但因前一陣子重灌電腦，重新安裝&lt;code&gt;Visual Studio 2019&lt;/code&gt;後，預設安裝&lt;code&gt;dotnet 5&lt;/code&gt;，筆者還特地下載&lt;code&gt;dotnet core 3.1 sdk&lt;/code&gt;來安裝，因此環境中有兩個版本，但若沒有特別指定時，會以最新的&lt;code&gt;sdk&lt;/code&gt;版本對應的範本產生，最後列出筆者電腦環境的&lt;code&gt;sdk&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;dotnet --list-sdks&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# 輸出內容&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3.1.415 [C:&#92;Program Files&#92;dotnet&#92;sdk]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5.0.403 [C:&#92;Program Files&#92;dotnet&#92;sdk]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-Modal:modal-vanilla</title>
+    <link href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-modal/"/>
+    <id>https://eugenesu.me/2021/11/23/electron-series-vanillajs-modal/</id>
+    <published>2021-11-23T10:30:13.000Z</published>
+    <updated>2023-02-28T16:28:12.310Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者工作環境中前端使用&lt;code&gt;angular&lt;/code&gt;框架撰寫，&lt;code&gt;model binding&lt;/code&gt;根本無敵阿，且&lt;code&gt;typescript&lt;/code&gt;語言，對於筆者這種後端人員來說，上手速度是頗快的，扯遠了，筆者要強調的是能用&lt;code&gt;angular&lt;/code&gt;或其他兩大框架寫前端根本就是一等公民，來到&lt;code&gt;Electron&lt;/code&gt;專案，是有神者有做&lt;code&gt;angular-electron&lt;/code&gt;或&lt;code&gt;vue-electron&lt;/code&gt;的版本，但筆者覺得自己前端實力不夠，怕handle不了，還是乖乖用純js撰寫其專案，根本就變回二等公民，這篇主要介紹其中需要&lt;code&gt;modal&lt;/code&gt;功能時，挑選只有&lt;code&gt;vanilla js&lt;/code&gt;的&lt;code&gt;modal&lt;/code&gt;套件來實作。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
+    
+    <category term="vanilla-js" scheme="https://eugenesu.me/tags/vanilla-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-Loading效果</title>
+    <link href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-loading/"/>
+    <id>https://eugenesu.me/2021/11/23/electron-series-vanillajs-loading/</id>
+    <published>2021-11-23T10:25:06.000Z</published>
+    <updated>2023-02-28T16:28:08.890Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這邊的主要遇到的情境是，因為要抓攝影鏡頭的視訊&lt;code&gt;streaming&lt;/code&gt;到畫面中的&lt;code&gt;Video tag&lt;/code&gt;上，但初始化需要一點時間，導致使用者尚未初始化完成前就去按下截圖按鈕，導致程式邏輯錯亂，筆者第一想到的就是加上&lt;code&gt;loading&lt;/code&gt;效果，就如同前面幾篇講到的，&lt;code&gt;electron&lt;/code&gt;環境，筆者這邊希望使用&lt;code&gt;Vanilla js&lt;/code&gt;的解法，幸好有找到解法，此篇就以介紹這個解法為主，跟著筆者一起套上&lt;code&gt;loading&lt;/code&gt;效果吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
+    
+    <category term="vanilla-js" scheme="https://eugenesu.me/tags/vanilla-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Electron]vanilla js套件系列-listjs</title>
+    <link href="https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/"/>
+    <id>https://eugenesu.me/2021/11/23/electron-series-vanillajs-listjs/</id>
+    <published>2021-11-23T10:24:26.000Z</published>
+    <updated>2023-02-28T16:28:04.860Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者與&lt;code&gt;Electron&lt;/code&gt;淵源非常深，有一次筆者在上工之前的空檔，有認識的人介紹了一個硬體介接的軟體專案，要在樹梅派上面執行，當時筆者心目中有兩個選擇，一個是&lt;code&gt;Python&lt;/code&gt;，一個是&lt;code&gt;Electron&lt;/code&gt;，不過&lt;code&gt;Python&lt;/code&gt;則需要再找一些&lt;code&gt;UI framework&lt;/code&gt;來實作畫面部份，那時候對於&lt;code&gt;Electron&lt;/code&gt;也是一份好奇，用&lt;code&gt;html css&lt;/code&gt;就能調出畫面，還可以直接套用&lt;code&gt;bootstrap&lt;/code&gt;，簡直完美，毅然決然決定使用&lt;code&gt;Electron&lt;/code&gt;來開發，但開發過程有很多地方，尤其是硬體介接的部份，卡了很久，眼看上線時間快到，最終放棄作罷，最後使用&lt;code&gt;Python+Tkinter&lt;/code&gt;完成該專案，實為可惜。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/categories/electron/"/>
+    
+    
+    <category term="electron" scheme="https://eugenesu.me/tags/electron/"/>
+    
+    <category term="vanilla-js" scheme="https://eugenesu.me/tags/vanilla-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Angular]技巧系列-BarcodeListener</title>
+    <link href="https://eugenesu.me/2021/11/20/angular-series-barcode-listener/"/>
+    <id>https://eugenesu.me/2021/11/20/angular-series-barcode-listener/</id>
+    <published>2021-11-20T13:13:23.000Z</published>
+    <updated>2023-02-28T16:25:59.400Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在工作環境中，有一個小週邊系統是給分行人員使用，其中有一段是需要透過&lt;code&gt;Barcode Scanner&lt;/code&gt;掃描其帳單中的條碼，作為&lt;code&gt;Form&lt;/code&gt;表單送出時的一個欄位，筆者看同事一開始的做法是在畫面上放一個&lt;code&gt;Input&lt;/code&gt;，其游標須&lt;code&gt;Focus&lt;/code&gt;在該&lt;code&gt;Input&lt;/code&gt;上，然後按下&lt;code&gt;Barcode Scanner&lt;/code&gt;去掃描條碼。&lt;/p&gt;
+&lt;p&gt;上述情境會延伸一些問題，使用者將游標移至其他表單元件或者系統上會有&lt;code&gt;Toast&lt;/code&gt;訊息，使用者可能會點擊其&lt;code&gt;Toast&lt;/code&gt;訊息關閉，上述零零總總情境後，若要掃描條碼，必須得將游標自動&lt;code&gt;Focus&lt;/code&gt;回條碼所屬的&lt;code&gt;Input&lt;/code&gt;上，極為困難，要寫很多code去做到；若沒有自動將游標&lt;code&gt;Focus&lt;/code&gt;回對應的&lt;code&gt;Input&lt;/code&gt;上，使用者會覺得困擾，每次掃描前都要移動滑鼠，將游標移回條碼所屬的&lt;code&gt;Input&lt;/code&gt;上，此篇內容就是要解決上述遇到的問題。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="angular" scheme="https://eugenesu.me/categories/angular/"/>
+    
+    
+    <category term="angular" scheme="https://eugenesu.me/tags/angular/"/>
+    
+    <category term="barcodelistener" scheme="https://eugenesu.me/tags/barcodelistener/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列:Windows疑難雜症解決</title>
+    <link href="https://eugenesu.me/2021/11/20/rust-series-windows-execute/"/>
+    <id>https://eugenesu.me/2021/11/20/rust-series-windows-execute/</id>
+    <published>2021-11-20T13:12:52.000Z</published>
+    <updated>2023-02-28T16:32:57.130Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這邊主要在Windows環境中安裝好&lt;code&gt;Rust&lt;/code&gt;開發環境後，可以透過&lt;code&gt;rustc —version&lt;/code&gt;，可以順利顯示出&lt;code&gt;Rust&lt;/code&gt;版本號，&lt;code&gt;cargo new&lt;/code&gt;也沒問題，但&lt;code&gt;cargo run&lt;/code&gt;時，會出現錯誤訊息:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;linking with &lt;code&gt;link.exe&lt;/code&gt; failed: exit code: 1181&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;找了一下，是少安裝&lt;code&gt;C++ build tools&lt;/code&gt;，其實&lt;code&gt;Rust&lt;/code&gt;官方網站上的Install頁面就有提醒，除了安裝檔之外，也要記得安裝&lt;code&gt;C++build tools&lt;/code&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Windows]技巧系列-透過Proxy下載設定</title>
+    <link href="https://eugenesu.me/2021/11/20/windows-series-problem-proxy/"/>
+    <id>https://eugenesu.me/2021/11/20/windows-series-problem-proxy/</id>
+    <published>2021-11-20T13:12:29.000Z</published>
+    <updated>2023-02-28T16:33:35.390Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這邊想要在工作環境中安裝Rust開發環境，以利撰寫部落格會使用到的&lt;code&gt;Demo Project&lt;/code&gt;，因此想要在工作環境&lt;code&gt;Windows&lt;/code&gt;環境中安裝其開發環境，以&lt;code&gt;Rust&lt;/code&gt;官方網站上面的教學，基本上只要下載好&lt;code&gt;Install&lt;/code&gt;的&lt;code&gt;exe&lt;/code&gt;檔案，應該就會搞定。&lt;/p&gt;
+&lt;p&gt;但由於筆者環境有防火牆設定，需要透過&lt;code&gt;Proxy&lt;/code&gt;才能往外連線並下載，就像筆者跟同事們都會設定&lt;code&gt;.npmrc&lt;/code&gt;或者&lt;code&gt;vscode&lt;/code&gt;中的&lt;code&gt;proxy&lt;/code&gt;設定以及&lt;code&gt;.gitconfig&lt;/code&gt;皆會設定其&lt;code&gt;http_proxy&lt;/code&gt;的連結，但這種按下&lt;code&gt;exe&lt;/code&gt;檔案這種安裝方式，筆者還真的第一次遇到，這篇就照著&lt;code&gt;Stackoverflow&lt;/code&gt;的教學，透過&lt;code&gt;Powershell&lt;/code&gt;設定其&lt;code&gt;http_proxy&lt;/code&gt;設定後，從&lt;code&gt;Powershell&lt;/code&gt;中執行其安裝檔。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="windows" scheme="https://eugenesu.me/categories/windows/"/>
+    
+    <category term="problemsolving" scheme="https://eugenesu.me/categories/windows/problemsolving/"/>
+    
+    
+    <category term="windows" scheme="https://eugenesu.me/tags/windows/"/>
+    
+    <category term="problemsolving" scheme="https://eugenesu.me/tags/problemsolving/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列-猜謎遊戲:最終篇</title>
+    <link href="https://eugenesu.me/2021/11/20/rust-series-guessing-game-full/"/>
+    <id>https://eugenesu.me/2021/11/20/rust-series-guessing-game-full/</id>
+    <published>2021-11-20T13:12:14.000Z</published>
+    <updated>2023-02-28T16:32:38.050Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;來到「猜謎遊戲」的最終篇章了，前面兩篇&lt;a href=&quot;/2021/11/18/rust-series-guessing-game-stdin/&quot; title=&quot;[Rust]教學系列-猜謎遊戲:取得使用者輸入值&quot;&gt;[Rust]教學系列-猜謎遊戲:取得使用者輸入值&lt;/a&gt;、&lt;a href=&quot;/2021/11/19/rust-series-guessing-game-rand/&quot; title=&quot;[Rust]教學系列-猜謎遊戲:取亂數&quot;&gt;[Rust]教學系列-猜謎遊戲:取亂數&lt;/a&gt;，我們已經把前置作業該做的都做完了，最終篇就是重頭戲中的重頭戲，將取得的使用者輸入值與隨機產生的亂數做一個比較，若一樣則比賽結束，若不一致則可以讓使用者繼續猜，跟著筆者一起實作吧。&lt;/p&gt;
+&lt;p&gt;筆者先預告一下此篇主要是會使用到&lt;code&gt;Rust&lt;/code&gt;的重要方法&lt;code&gt;match&lt;/code&gt;以及若使用者輸入值與神秘數字不一樣時，可以讓使用者一直猜下去的&lt;code&gt;loop&lt;/code&gt;技巧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列-猜謎遊戲:取亂數</title>
+    <link href="https://eugenesu.me/2021/11/19/rust-series-guessing-game-rand/"/>
+    <id>https://eugenesu.me/2021/11/19/rust-series-guessing-game-rand/</id>
+    <published>2021-11-18T17:10:02.000Z</published>
+    <updated>2023-02-28T16:32:41.760Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;/2021/11/19/rust-series-guessing-game-rand/Untitled-4.png&quot; class=&quot;&quot; title=&quot;[rand crate技術文件]&quot;&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列-猜謎遊戲:取得使用者輸入值</title>
+    <link href="https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/"/>
+    <id>https://eugenesu.me/2021/11/18/rust-series-guessing-game-stdin/</id>
+    <published>2021-11-18T06:12:03.000Z</published>
+    <updated>2023-02-28T16:32:45.100Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者就照著官方教學文件，繼續往下走了，來到撰寫猜謎遊戲的環節，主要是做一個&lt;code&gt;command line&lt;/code&gt;互動遊戲，因為尚未講解到語法、資料型別等，因此這個猜謎遊戲就當作初試&lt;code&gt;Rust&lt;/code&gt;的撰寫體驗，不了解的部份，由後面章節會繼續介紹其語法、資料型別等。官方文件的策略是先由一個簡單的小遊戲，來入門&lt;code&gt;Rust&lt;/code&gt;的程式語法、思考邏輯、&lt;code&gt;Coding Style&lt;/code&gt;等。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列-Hello Cargo</title>
+    <link href="https://eugenesu.me/2021/11/16/rust-series-hello-cargo/"/>
+    <id>https://eugenesu.me/2021/11/16/rust-series-hello-cargo/</id>
+    <published>2021-11-16T06:07:10.000Z</published>
+    <updated>2023-02-28T16:32:48.680Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;上篇介紹到&lt;code&gt;Rust&lt;/code&gt;的特色之一：生產力部份，每個程式語言都要有一個套件管理工具，方便管理相依套件，這篇的主角：&lt;code&gt;Cargo&lt;/code&gt;，如同&lt;code&gt;npm&lt;/code&gt;對於&lt;code&gt;nodejs&lt;/code&gt;，&lt;code&gt;nuget&lt;/code&gt;對於&lt;code&gt;.net&lt;/code&gt;等等，上篇安裝開發環境:&lt;code&gt;rustup&lt;/code&gt;時已經安裝好&lt;code&gt;Cargo&lt;/code&gt;了，只要使用它即可，上篇介紹&lt;code&gt;Hello World&lt;/code&gt;部份是手動的方式建立檔案，透過&lt;code&gt;Cargo&lt;/code&gt;可以建立專案，管理相依性套件，跟著筆者實作了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Rust]教學系列-Hello World</title>
+    <link href="https://eugenesu.me/2021/11/16/rust-series-hello-world/"/>
+    <id>https://eugenesu.me/2021/11/16/rust-series-hello-world/</id>
+    <published>2021-11-16T02:50:39.000Z</published>
+    <updated>2023-02-28T16:32:52.180Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Rust&lt;/code&gt;程式語言的介紹&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;讓每個人都能打造出可靠又高效軟體的程式語言&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;足夠吸引人了吧，筆者打算花下班與假日時間，持續半年，執行學會一種新的程式語言挑戰，就挑最近火紅的&lt;code&gt;Rust&lt;/code&gt;程式語言作為挑戰的對象，Rust程式語言特色如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;高效能：編譯型程式語言，有好的不執行的函式庫及垃圾回收機制&lt;/li&gt;
+&lt;li&gt;可靠性：完整且嚴謹的型別系統，在編譯時期就能找到錯誤並改善&lt;/li&gt;
+&lt;li&gt;生產力：有完整的生態系，如教學文件、套件管理、建置工具等&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/categories/rust/"/>
+    
+    
+    <category term="rust" scheme="https://eugenesu.me/tags/rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:共同欄位新增、編輯技巧</title>
+    <link href="https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/"/>
+    <id>https://eugenesu.me/2021/11/15/orm-series-sqlsugar-audit-columns/</id>
+    <published>2021-11-15T05:03:43.000Z</published>
+    <updated>2023-02-28T16:31:52.290Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者的慣例，使用&lt;code&gt;ORM&lt;/code&gt;框架時，會先找一下可以擴充的點，畢竟&lt;code&gt;Select&lt;/code&gt;、&lt;code&gt;Insert&lt;/code&gt;、&lt;code&gt;Update&lt;/code&gt;這種用到時，查看一下官方文件是可以馬上得到答案的，且用法都大同小異，擴充點好不好，適不適合自己的使用情境，對筆者來說選擇要不要使用這個&lt;code&gt;ORM&lt;/code&gt;框架的主要考量原因之一，當然會看一下網路上大神們的文章，效能比較表，筆者會因為語法簡單好用，擴充點又符合自己的使用情境，犧牲一下效能，對筆者來說是ok的，因為比較效能的時間單位都是ns級的，基本上不要差太多，是沒什麼感覺的。這篇主要是講解&lt;code&gt;SqlSugar&lt;/code&gt;套件，在操作共同欄位，像&lt;code&gt;CreatedAt&lt;/code&gt;、&lt;code&gt;CreatedBy&lt;/code&gt;、&lt;code&gt;UpdatedAt&lt;/code&gt;、&lt;code&gt;UpdatedBy&lt;/code&gt;這種，找到對應的擴充點，做統一處理。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:AOP篇</title>
+    <link href="https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/"/>
+    <id>https://eugenesu.me/2021/11/12/orm-series-sqlsugar-interceptor/</id>
+    <published>2021-11-12T02:54:51.000Z</published>
+    <updated>2023-02-28T16:31:58.760Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前幾篇介紹完&lt;code&gt;SqlSugar&lt;/code&gt;的應用後，這篇筆者要來實作&lt;code&gt;SqlSugar&lt;/code&gt;的&lt;code&gt;AOP&lt;/code&gt;機制了，基本上就是Sql執行前後，或者發生Error後的事件，應有盡有，剛好符合筆者公司的要求，每個執行的作業出錯時要記錄下來，尤其是出錯時，最好能記錄到完整的SQL指令，釐清問題上更加有幫助，筆者介紹的幾個ORM框架通常都有類似的解決方案，表示這是大家都需要的功能&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[EFCore Interceptor]待補&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/2021/09/07/orm-series-chloe-interceptor/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:Interceptor篇&quot;&gt;[DotnetCore]ORM系列-Chloe:Interceptor篇&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:實體產生器</title>
+    <link href="https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/"/>
+    <id>https://eugenesu.me/2021/11/11/orm-series-sqlsugar-model-generator/</id>
+    <published>2021-11-10T18:28:53.000Z</published>
+    <updated>2023-02-28T16:32:02.420Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這邊已經寫了幾篇&lt;code&gt;SqlSugar&lt;/code&gt;的介紹文章，筆者一開始就形容&lt;code&gt;SqlSugar&lt;/code&gt;是&lt;code&gt;EFCore&lt;/code&gt;跟&lt;code&gt;Dapper&lt;/code&gt;的完美融合體，結合兩個套件有的優點並極大化其效用，就像這篇的主題，&lt;code&gt;SqlSugar&lt;/code&gt;有提供產生實體的相關API，筆者目標是加以包裝變成是一個&lt;code&gt;dotnet tool&lt;/code&gt;，可以透過下指令的方式完成產生實體作業。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:共同欄位新增、編輯技巧</title>
+    <link href="https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/"/>
+    <id>https://eugenesu.me/2021/11/04/orm-series-chloe-audit-columns/</id>
+    <published>2021-11-04T12:14:16.000Z</published>
+    <updated>2023-02-28T16:31:30.970Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;有在觀看筆者的ORM系列文就知道，其中&lt;code&gt;EFCore&lt;/code&gt;就這麼一篇出現過，即使用&lt;code&gt;override&lt;/code&gt; &lt;code&gt;SaveChanges&lt;/code&gt;方法來達到針對共同欄位的新增、編輯功能，什麼叫&lt;code&gt;共同欄位&lt;/code&gt;，筆者常設計的就是&lt;code&gt;CreatedAt&lt;/code&gt;、&lt;code&gt;CreatedBy&lt;/code&gt;、&lt;code&gt;UpdatedAt&lt;/code&gt;、&lt;code&gt;UpdatedBy&lt;/code&gt;等，這因開發環境不同，習慣的命名方式可能不一樣，但一樣的是，要紀錄該筆資料列的新增、編輯的時間及使用者，原因就這麼單純。&lt;br&gt;若以&lt;code&gt;Dapper&lt;/code&gt;或&lt;code&gt;ADO.Net&lt;/code&gt;以純SQL的方式製作，會在&lt;code&gt;Insert&lt;/code&gt;、&lt;code&gt;Update&lt;/code&gt;語法上多組這些相關欄位上去，也不是不行，但以一個大型系統來說，若偏後台管理平台來說，這些欄位都是極重要，且每張資料表皆必須要有，這時每段Service都要填上，也是會累死人，&lt;a href=&quot;/2021/09/05/orm-series-efcore-override-savechanges/&quot; title=&quot;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&quot;&gt;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&lt;/a&gt;就是於&lt;code&gt;EFCore&lt;/code&gt;世界中的解決方式，筆者今天想要來聊聊&lt;code&gt;Chloe&lt;/code&gt;的解決方式。&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:查詢篇1</title>
+    <link href="https://eugenesu.me/2021/11/02/orm-series-sqlsugar-query/"/>
+    <id>https://eugenesu.me/2021/11/02/orm-series-sqlsugar-query/</id>
+    <published>2021-11-02T14:56:44.000Z</published>
+    <updated>2023-02-28T16:32:05.830Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;昨日介紹完&lt;code&gt;SqlSugar&lt;/code&gt;後，是否被他的簡單易用吸引了呢，筆者今天就介紹它的查詢實作，就會漸漸發現其功能之強大，今天就照&lt;a href=&quot;https://www.donet5.com/Home/Doc?typeId=1187&quot;&gt;https://www.donet5.com/Home/Doc?typeId=1187&lt;/a&gt;操作一遍吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-SqlSugar:入門篇</title>
+    <link href="https://eugenesu.me/2021/11/01/orm-series-sqlsugar-entry/"/>
+    <id>https://eugenesu.me/2021/11/01/orm-series-sqlsugar-entry/</id>
+    <published>2021-11-01T12:38:25.000Z</published>
+    <updated>2023-02-28T16:31:55.610Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;又來到介紹ORM框架的時候到了，筆者之前就介紹過類似的&lt;a href=&quot;/2021/09/04/orm-series-chloe-entry/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:入門篇&quot;&gt;[DotnetCore]ORM系列-Chloe:入門篇&lt;/a&gt;，總覺得差一點，類似像&lt;code&gt;Interceptor&lt;/code&gt;, Chloe部份是DataBag的概念，可以於&lt;code&gt;Interceptor&lt;/code&gt;事件間傳遞物件，筆者寫過一篇&lt;a href=&quot;/2021/09/05/orm-series-efcore-override-savechanges/&quot; title=&quot;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&quot;&gt;[DotnetCore]ORM系列-EFCore:資料表共同欄位設定&lt;/a&gt;，其中針對每個表中共同擁有的欄位做更新時著實方便。&lt;br&gt;&lt;code&gt;Chloe&lt;/code&gt;也不是做不到，因&lt;code&gt;Interceptor&lt;/code&gt;中可存取到&lt;code&gt;IDBCommand&lt;/code&gt;，必須自己加以實作，不像&lt;code&gt;EFCore&lt;/code&gt;、&lt;code&gt;SqlSugar&lt;/code&gt;那樣有包好的事件可使用。筆者於公司開發專案環境中使用&lt;code&gt;EFCore&lt;/code&gt;、&lt;code&gt;Dapper&lt;/code&gt;，由於&lt;code&gt;Dapper&lt;/code&gt;必須得撰寫sql，Insert、Update時&lt;code&gt;EFCore&lt;/code&gt;方便些，由於筆者對於&lt;code&gt;EFCore&lt;/code&gt;也不是非常熟捻，因此於&lt;code&gt;Hangfire&lt;/code&gt;併發Job時吃了一點苦，高併發會導致連線錯亂，直接噴無法連線資料庫等各種不可控的錯誤，心念一轉，何不直接導入此主題要介紹的ORM框架-&lt;code&gt;SqlSugar&lt;/code&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/categories/dotnetcore/sqlsugar/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sqlsugar" scheme="https://eugenesu.me/tags/sqlsugar/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動台排程篇4</title>
+    <link href="https://eugenesu.me/2021/09/11/hangfire-dynamic4/"/>
+    <id>https://eugenesu.me/2021/09/11/hangfire-dynamic4/</id>
+    <published>2021-09-11T13:48:02.000Z</published>
+    <updated>2023-02-28T16:30:56.740Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/dashboard.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動態排程篇3</title>
+    <link href="https://eugenesu.me/2021/09/11/hangfire-dynamic3/"/>
+    <id>https://eugenesu.me/2021/09/11/hangfire-dynamic3/</id>
+    <published>2021-09-11T13:47:56.000Z</published>
+    <updated>2023-02-28T16:30:53.340Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/retries.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動態排程篇2</title>
+    <link href="https://eugenesu.me/2021/09/10/hangfire-dynamic2/"/>
+    <id>https://eugenesu.me/2021/09/10/hangfire-dynamic2/</id>
+    <published>2021-09-10T12:20:13.000Z</published>
+    <updated>2023-02-28T16:30:49.910Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/recurring-jobs.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]GlobalErrorHandler</title>
+    <link href="https://eugenesu.me/2021/09/09/dotnetcore-global-error-handler/"/>
+    <id>https://eugenesu.me/2021/09/09/dotnetcore-global-error-handler/</id>
+    <published>2021-09-09T15:37:29.000Z</published>
+    <updated>2023-02-28T16:27:35.010Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇就講一點輕鬆的話題，筆者慣用的設計，就是不喜歡在到處放&lt;code&gt;try catch&lt;/code&gt;，希望在一個地方統一&lt;code&gt;try catch&lt;/code&gt;就好，這樣若要改變&lt;code&gt;Exception&lt;/code&gt;處理行為，就改一個地方即可，當然有時你為了要配合某種情境，碰到&lt;code&gt;Exception&lt;/code&gt;，要將某一些處理狀態要壓成&lt;code&gt;F&lt;/code&gt;等等，無論如何，筆者都會先設計一個&lt;code&gt;GlobalErrorHandler&lt;/code&gt;做統一抓取&lt;code&gt;Exception&lt;/code&gt;並處理。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="global-error-handler" scheme="https://eugenesu.me/tags/global-error-handler/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:動態排程篇1</title>
+    <link href="https://eugenesu.me/2021/09/08/hangfire-dynamic1/"/>
+    <id>https://eugenesu.me/2021/09/08/hangfire-dynamic1/</id>
+    <published>2021-09-08T07:44:18.000Z</published>
+    <updated>2023-02-28T16:30:45.880Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;https://www.hangfire.io/img/ui/queues.png&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:Interceptor篇</title>
+    <link href="https://eugenesu.me/2021/09/07/orm-series-chloe-interceptor/"/>
+    <id>https://eugenesu.me/2021/09/07/orm-series-chloe-interceptor/</id>
+    <published>2021-09-07T05:35:18.000Z</published>
+    <updated>2023-02-28T16:31:38.750Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者前篇介紹Select相關的method&lt;a href=&quot;/2021/09/07/orm-series-chloe-select/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:Select篇&quot;&gt;[DotnetCore]ORM系列-Chloe:Select篇&lt;/a&gt;，這次要來寫interceptor，觀察看看那些select method對應的sql語法，才會知道Chloe都幫我們轉成什麼語法，才不會誤用造成錯誤，筆者覺得是值得投資的。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu.me/categories/dotnetcore/chloe/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu.me/tags/chloe/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:Select篇</title>
+    <link href="https://eugenesu.me/2021/09/07/orm-series-chloe-select/"/>
+    <id>https://eugenesu.me/2021/09/07/orm-series-chloe-select/</id>
+    <published>2021-09-07T05:29:18.000Z</published>
+    <updated>2023-02-28T16:31:42.390Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;上篇&lt;a href=&quot;/2021/09/04/orm-series-chloe-entry/&quot; title=&quot;[DotnetCore]ORM系列-Chloe:入門篇&quot;&gt;[DotnetCore]ORM系列-Chloe:入門篇&lt;/a&gt;介紹&lt;code&gt;Chloe&lt;/code&gt;的使用方式，這篇主要繼續探討，&lt;code&gt;Chloe&lt;/code&gt;提供哪些Select相關的Method，跟著筆者一起看下去。跟著Chloe github的wiki針對筆者之前建立的範例資料庫做一個應用吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu.me/categories/dotnetcore/chloe/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu.me/tags/chloe/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-EFCore:資料表共同欄位設定</title>
+    <link href="https://eugenesu.me/2021/09/05/orm-series-efcore-override-savechanges/"/>
+    <id>https://eugenesu.me/2021/09/05/orm-series-efcore-override-savechanges/</id>
+    <published>2021-09-05T15:53:05.000Z</published>
+    <updated>2023-02-28T16:31:45.510Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者工作環境中開發&lt;code&gt;ASP.NET CORE Web API&lt;/code&gt;，資料庫存取部份，會交叉使用&lt;code&gt;EF Core&lt;/code&gt;以及&lt;code&gt;Dapper&lt;/code&gt;，筆者單位共同認知的切分方式為若單個資料表的CRUD操作，就使用&lt;code&gt;EF Core&lt;/code&gt;，若複雜的查詢，或者呼叫Store Procedure等會使用Dapper完成操作。單個資料表的&lt;code&gt;CRUD&lt;/code&gt;，基本上透過&lt;code&gt;EF Core&lt;/code&gt;可以說是輕而易舉，會遇到一個問題是資料表共同欄位，類似於&lt;code&gt;CreatedDate, CreatedBy, UpdatedDate, UpdatedBy&lt;/code&gt;這種紀錄變更者及變更時間部份，若寫在每一個&lt;code&gt;Service&lt;/code&gt;中會顯得有點多餘，且沒有效率，擴充性也不好，假設現在要改變&lt;code&gt;CreatedDate, UpdatedDate&lt;/code&gt;的時間原本由&lt;code&gt;Local Time&lt;/code&gt;改為&lt;code&gt;UTC  Time&lt;/code&gt;，其不就是要在每個Service中做修正。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="efcore" scheme="https://eugenesu.me/categories/dotnetcore/efcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="efcore" scheme="https://eugenesu.me/tags/efcore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ORM系列-Chloe:入門篇</title>
+    <link href="https://eugenesu.me/2021/09/04/orm-series-chloe-entry/"/>
+    <id>https://eugenesu.me/2021/09/04/orm-series-chloe-entry/</id>
+    <published>2021-09-04T14:00:33.000Z</published>
+    <updated>2023-02-28T16:31:34.480Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者被朋友推薦使用&lt;a href=&quot;https://github.com/shuxinqin/Chloe/wiki&quot;&gt;Chloe&lt;/a&gt;，查了一下也看到&lt;a href=&quot;https://blog.csdn.net/qq_40600379/article/details/101680870&quot;&gt;ORM框架效能&lt;/a&gt;比較文章，效能是真的很棒，使用上也是透過linq實現所有事情，這篇主要介紹&lt;code&gt;Chloe ORM&lt;/code&gt;套件的使用，搭配筆者之前建立的MySQL範例資料庫，做一些簡單的Select查詢示範，之後會再慢慢介紹整個應用。前置作業參考&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;/2021/08/23/mysql-install/&quot; title=&quot;[MySQL]安裝與設定&quot;&gt;[MySQL]安裝與設定&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/2021/08/23/mysql-sample-db/&quot; title=&quot;[MySQL]範例資料庫設定&quot;&gt;[MySQL]範例資料庫設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu.me/categories/dotnetcore/chloe/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="chloe" scheme="https://eugenesu.me/tags/chloe/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-Pdf檔案</title>
+    <link href="https://eugenesu.me/2021/09/03/reader-series-pdf/"/>
+    <id>https://eugenesu.me/2021/09/03/reader-series-pdf/</id>
+    <published>2021-09-03T07:02:42.000Z</published>
+    <updated>2023-02-28T16:32:29.410Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;Reader系列來到pdf格式檔案了，筆者這邊使用&lt;a href=&quot;https://pdfbox.apache.org/&quot;&gt;Pdfbox&lt;/a&gt;移植的C# Library:&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;，讀取部份，看github的readme的教學基本上就滿簡單的，只有讀取一個pdf檔案會很無趣，想了一下應用點，筆者公司銀行有規定新人要考過一些金融業基礎的證照考試取得證照，例: &lt;a href=&quot;https://examweb.sfi.org.tw/regexam/exam.aspx?EXAMCERT=%E9%87%91%E8%9E%8D&amp;EXAMMID=2&quot;&gt;金融市場常識與職業道德&lt;/a&gt;，想到一個有趣的應用，基本上都有考古題下載下來做練習，可以利用&lt;a href=&quot;https://github.com/UglyToad/PdfPig&quot;&gt;PdfPig&lt;/a&gt;套件讀取pdf檔案後解析題目與選項及答案，一旦取得這些資料，利用擅長的前端架構做一個頁面，後端則利用這些資料做一個隨機出題的API，就可以完成考古題測驗Application了，筆者這篇主要做到讀取及解析的作業及取得有結構化的資料。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu.me/categories/dotnetcore/reader/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="pdf" scheme="https://eugenesu.me/tags/pdf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore](S)FTP-ServiceResolver</title>
+    <link href="https://eugenesu.me/2021/09/02/ftp-sftp-resolver/"/>
+    <id>https://eugenesu.me/2021/09/02/ftp-sftp-resolver/</id>
+    <published>2021-09-01T23:49:32.000Z</published>
+    <updated>2023-02-28T16:30:33.080Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;由前兩篇的議題延續下去，參考&lt;a href=&quot;/2021/08/31/ftp-download/&quot; title=&quot;[DotnetCore]FTP-下載上傳&quot;&gt;[DotnetCore]FTP-下載上傳&lt;/a&gt;、&lt;a href=&quot;/2021/09/01/sftp-download/&quot; title=&quot;[DotnetCore]SFTP-下載上傳&quot;&gt;[DotnetCore]SFTP-下載上傳&lt;/a&gt;，因為同樣都是實作&lt;code&gt;IFtpService&lt;/code&gt;，同一個專案皆有使用到Ftp及SFtp則會面臨到此篇要解決的問題，該如何分辨要採用哪種實作的下載、上傳，有哪些方法可以解決，由筆者我來細說吧，主要參考 &lt;a href=&quot;https://devkimchi.com/2020/07/01/5-ways-injecting-multiple-instances-of-same-interface-on-aspnet-core/&quot;&gt;國外文章&lt;/a&gt; :佛心的整理了五種不同的解決方式。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="ftp" scheme="https://eugenesu.me/tags/ftp/"/>
+    
+    <category term="sftp" scheme="https://eugenesu.me/tags/sftp/"/>
+    
+    <category term="resolver" scheme="https://eugenesu.me/tags/resolver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]SFTP-下載上傳</title>
+    <link href="https://eugenesu.me/2021/09/01/sftp-download/"/>
+    <id>https://eugenesu.me/2021/09/01/sftp-download/</id>
+    <published>2021-09-01T05:29:43.000Z</published>
+    <updated>2023-02-28T16:33:00.280Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;code&gt;FTP&lt;/code&gt;下載上傳後，另一個挑戰來了，有些系統指定使用&lt;code&gt;SFTP&lt;/code&gt;協定來做交換(上傳、下載)，剛好&lt;code&gt;FluentFTP&lt;/code&gt;尚未支援SFTP協定，因此要轉戰其他套件了，筆者找到一套名為&lt;a href=&quot;http://ssh.net/&quot;&gt;SSH.NET&lt;/a&gt;，這篇以主要介紹透過該套件實作&lt;code&gt;SFTP&lt;/code&gt;協定的下載及上傳作業。&lt;code&gt;IFtpService&lt;/code&gt;則延續使用上篇的定義，這邊多了一組&lt;code&gt;SFtpService&lt;/code&gt;的實作來完成任務。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="sftp" scheme="https://eugenesu.me/tags/sftp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>DotnetCore系列文章目錄</title>
+    <link href="https://eugenesu.me/2021/09/01/dotnetcore-series/"/>
+    <id>https://eugenesu.me/2021/09/01/dotnetcore-series/</id>
+    <published>2021-09-01T00:57:17.000Z</published>
+    <updated>2023-07-05T16:50:57.250Z</updated>
+    
+    
+    <summary type="html">&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-socket-analyze/&quot; title=&quot;[DotnetCore]Socket程式實作-解析封包&quot;&gt;[DotnetCore]Socket程式實作-解析封包&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-socket-slicing/&quot; title=&quot;[DotnetCore]Socket程式實作-切割封包&quot;&gt;[DotnetCore]Socket程式實作-切割封包&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-smtp/&quot; title=&quot;[DotnetCore]SMTP寄信服務設計&quot;&gt;[DotnetCore]SMTP寄信服務設計&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-batch/&quot; title=&quot;[DotnetCore]Batch檔案執行及追縱&quot;&gt;[DotnetCore]Batch檔案執行及追縱&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/21/dotnetcore-cap/&quot; title=&quot;[DotnetCore]EventBus套件CAP:以RabbitMQ為例&quot;&gt;[DotnetCore]EventBus套件CAP:以RabbitMQ為例&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/20/dotnetcore-actionfilter/&quot; title=&quot;[DotnetCore]ActionFilter實作&quot;&gt;[DotnetCore]ActionFilter實作&lt;/a&gt;
+&lt;br&gt;
+&lt;a href=&quot;/2021/08/24/fluent-validation/&quot; title=&quot;[DotnetCore]後端驗證神器:Fluent Validation&quot;&gt;[DotnetCore]後端驗證神器:Fluent Validation&lt;/a&gt;
+&lt;br&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]FTP-下載上傳</title>
+    <link href="https://eugenesu.me/2021/08/31/ftp-download/"/>
+    <id>https://eugenesu.me/2021/08/31/ftp-download/</id>
+    <published>2021-08-31T10:33:52.000Z</published>
+    <updated>2023-02-28T16:30:29.370Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者所處環境為金融業，所在的科別屬寫週邊的應用系統，開發的每個系統多多少少都需要與別的系統串接，常見的有&lt;code&gt;核心&lt;/code&gt;、&lt;code&gt;外匯&lt;/code&gt;、&lt;code&gt;通路科&lt;/code&gt;等等。如&lt;a href=&quot;/2021/08/21/dotnetcore-socket/&quot; title=&quot;[DotnetCore]Socket程式實作&quot;&gt;[DotnetCore]Socket程式實作&lt;/a&gt;那篇所提，因為通常&lt;code&gt;核心系統&lt;/code&gt;環境比較特殊，相對應的串接方式，偏Socket或者交換檔案這類的傳統型居多。這篇主要以&lt;code&gt;FTP&lt;/code&gt;交換檔案為主介紹其作法，筆者會再寫兩篇相關的文章，請拭目以待。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="fluentftp" scheme="https://eugenesu.me/tags/fluentftp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-Excel檔案</title>
+    <link href="https://eugenesu.me/2021/08/30/excel-reader/"/>
+    <id>https://eugenesu.me/2021/08/30/excel-reader/</id>
+    <published>2021-08-30T09:49:07.000Z</published>
+    <updated>2023-02-28T16:29:49.510Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇就延續Reader系列，這次介紹Excel檔案讀取的實作，Excel讀寫套件百百種，有名的就那幾個，&lt;a href=&quot;https://github.com/hughbe/excel-mapper&quot;&gt;ExcelDataReader&lt;/a&gt;、&lt;a href=&quot;https://github.com/nissl-lab/npoi&quot;&gt;NPOI&lt;/a&gt;、&lt;a href=&quot;https://github.com/ClosedXML/ClosedXML&quot;&gt;CloseXML&lt;/a&gt;等等。筆者這篇主要使用ExcelDataReader上面再包一層的&lt;a href=&quot;https://github.com/hughbe/excel-mapper&quot;&gt;ExcelMapper&lt;/a&gt;，主要是簡單易用，有強型別的Binding，一般讀取來說已足夠。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu.me/categories/dotnetcore/reader/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="excel" scheme="https://eugenesu.me/tags/excel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Exception攔截神器-Elmah</title>
+    <link href="https://eugenesu.me/2021/08/29/exception-elmah/"/>
+    <id>https://eugenesu.me/2021/08/29/exception-elmah/</id>
+    <published>2021-08-29T14:17:51.000Z</published>
+    <updated>2023-02-28T16:29:53.970Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;我們撰寫程式後，追縱執行狀況或Error會使用logging完成，基本上筆者平常使用&lt;code&gt;Nlog&lt;/code&gt;來追縱執行狀況。基本上依照Log Level來區分是否使用文字檔案或資料庫形式來存放。最近遇到的情況是因為筆者目前在金融業就職，因有主管機關單位在管理，進而系統上線有一套標準，基本上開發單位不得接觸正式資料庫，文字檔案則需要申請後才能進入正式環境觀看，使得追縱實際問題，變得困難。這時候，曙光出現了：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://elmah.github.io/&quot;&gt;ELMAH-Home&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;官方並沒有升級到&lt;code&gt;dotnet core&lt;/code&gt;版本，還好強者貢獻&lt;code&gt;dotnet core&lt;/code&gt;版本，參考&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/ElmahCore/ElmahCore&quot;&gt;ElmahCore/ElmahCore&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="exception" scheme="https://eugenesu.me/tags/exception/"/>
+    
+    <category term="elmah" scheme="https://eugenesu.me/tags/elmah/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Reader系列-CSV檔案</title>
+    <link href="https://eugenesu.me/2021/08/28/reader-series-csv/"/>
+    <id>https://eugenesu.me/2021/08/28/reader-series-csv/</id>
+    <published>2021-08-28T13:18:45.000Z</published>
+    <updated>2023-02-28T16:32:33.970Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在公司擔任R&amp;amp;D角色一陣子，主要是幫忙製作底層框架，制定分層結構，規範coding style，或者幫忙撰寫底層套件，底層套件部份，大部分都是不同格式的檔案讀取以及寫入；包含&lt;code&gt;CSV&lt;/code&gt;檔案，&lt;code&gt;Excel&lt;/code&gt;檔案，&lt;code&gt;pdf&lt;/code&gt;檔案等主流的，讓筆者有靈感要來寫一下Reader系列，示範一下各式各樣的格式的讀取及寫入吧，這篇就以介紹CSV檔案格式為主。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="reader" scheme="https://eugenesu.me/categories/dotnetcore/reader/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="csv" scheme="https://eugenesu.me/tags/csv/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:進階篇1</title>
+    <link href="https://eugenesu.me/2021/08/27/hangfire-advanced1/"/>
+    <id>https://eugenesu.me/2021/08/27/hangfire-advanced1/</id>
+    <published>2021-08-27T14:13:27.000Z</published>
+    <updated>2023-02-28T16:30:40.740Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;/2021/08/27/hangfire-advanced1/Untitled.png&quot; class=&quot;&quot; title=&quot;[HangfireDashboard]&quot;&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程神器-Hangfire:入門篇</title>
+    <link href="https://eugenesu.me/2021/08/27/hangfire-entry/"/>
+    <id>https://eugenesu.me/2021/08/27/hangfire-entry/</id>
+    <published>2021-08-27T14:10:13.000Z</published>
+    <updated>2023-02-28T16:31:02.600Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在上篇已介紹&lt;code&gt;Coravel&lt;/code&gt;短小精幹的排程利器，固定週期排程部份皆使用&lt;code&gt;Coravel&lt;/code&gt;套件完成，然而使用者需求越來越清楚的狀況下，意識到無法滿足所以使用者需求，事情是這樣的，使用者的某些作業需要從畫面操作，並將該項作業排進排程中，且是一次性作業，例如：使用者透過介面去設定日結作業的需求，我們會由介面呼叫API，於API中設定好某個時間點去執行該「日結作業」服務。&lt;/p&gt;
+&lt;p&gt;以上述的需求，在Coravel套件是無法做到的，Coravel是有Queue的機制，不過無法設定特定時間，筆者最近是時不時看&lt;a href=&quot;https://github.com/MoienTajik/AspNetCore-Developer-Roadmap&quot;&gt;Asp.Net Core RoadMap&lt;/a&gt;上所列之相關技術及推薦套件，對於上面推薦的套件，都會想要來試看看，畢竟大神們整理過的，肯定有其厲害之處，剛好於Task Scheduling作業中有推薦三套相關套件，筆者已經使用過Coravel，試試看其他，廢話不多說，趕緊來介紹今天的主角&lt;code&gt;HangFire&lt;/code&gt;吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/categories/dotnetcore/hangfire/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="hangfire" scheme="https://eugenesu.me/tags/hangfire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[IIS]排程及背景服務站台-保持啟動設定</title>
+    <link href="https://eugenesu.me/2021/08/26/iis-always-run-setting/"/>
+    <id>https://eugenesu.me/2021/08/26/iis-always-run-setting/</id>
+    <published>2021-08-26T01:07:25.000Z</published>
+    <updated>2023-02-28T16:31:05.730Z</updated>
+    
+    
+    <summary type="html">&lt;img src=&quot;/2021/08/26/iis-always-run-setting/Untitled.png&quot; class=&quot;&quot; title=&quot;[IHostedServiceArchitecture]&quot;&gt;</summary>
+    
+    
+    
+    <category term="iis" scheme="https://eugenesu.me/categories/iis/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="iis" scheme="https://eugenesu.me/tags/iis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程利器-Coravel:Queue篇</title>
+    <link href="https://eugenesu.me/2021/08/25/coravel-queue/"/>
+    <id>https://eugenesu.me/2021/08/25/coravel-queue/</id>
+    <published>2021-08-25T02:58:11.000Z</published>
+    <updated>2023-02-28T16:26:36.260Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完&lt;a href=&quot;https://docs.coravel.net/&quot;&gt;Coravel&lt;/a&gt;的&lt;code&gt;Scheduler&lt;/code&gt;功能後，這篇要來實作&lt;code&gt;Queue&lt;/code&gt;的功能了，筆者敘述一下工作上用到的情境，最近因大系統要上線，必須實作&lt;code&gt;Data Migration&lt;/code&gt;，為方便，不防做一個前端頁面，才可以有介面去點擊執行&lt;code&gt;Data Migration&lt;/code&gt;作業，想當然爾，作業時間一定無法在一個&lt;code&gt;Request&lt;/code&gt;時間內完成，一定會噴&lt;code&gt;Timeout Error&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;再則為這點小功能，不想透過&lt;a href=&quot;https://www.hangfire.io/&quot;&gt;Hangfire&lt;/a&gt;的&lt;code&gt;BackgroundJob.Enqueue&lt;/code&gt;來實作，這時想到&lt;code&gt;Coravel&lt;/code&gt;也有提供&lt;code&gt;Queue&lt;/code&gt;功能，API站台的action收到Data Migration的request後，塞入一則&lt;code&gt;Coravel&lt;/code&gt;的&lt;code&gt;Queue&lt;/code&gt;，由&lt;code&gt;Queue&lt;/code&gt;對應的Service去往下執行對應的作業，是個完美的方案吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu.me/categories/dotnetcore/coravel/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu.me/tags/coravel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]排程利器-Coravel:Scheduler篇</title>
+    <link href="https://eugenesu.me/2021/08/25/coravel-scheduler/"/>
+    <id>https://eugenesu.me/2021/08/25/coravel-scheduler/</id>
+    <published>2021-08-25T02:48:46.000Z</published>
+    <updated>2023-02-28T16:26:40.740Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者因工作有需求要實作排程，以傳統做法來說，最簡單的方式是撰寫一支獨立的console或其他可以產生執行檔的專案，由&lt;code&gt;Windows排程&lt;/code&gt;去設定，於某一個特定時間執行某一個自己撰寫的程式執行檔案，但是壞處是我得獨立一個專案，如果以簡易的排程來說太麻煩，本身有API站台要發佈，排程若有更新則需要再發佈一個排程的執行擋。&lt;/p&gt;
+&lt;p&gt;筆者期初的想法是能找到一個套件依附於API站台專案中，因筆者針對測試環境，有設定WebDeploy的功能，因此很容易發佈更新版本，不需要手動發佈執行檔檔案並調整Windows排程。筆者有在關注&lt;a href=&quot;https://github.com/MoienTajik/AspNetCore-Developer-Roadmap&quot;&gt;ASP.NET CORE Developer Roadmap&lt;/a&gt;，不時會在上面找好料，&lt;a href=&quot;https://github.com/jamesmh/coravel&quot;&gt;Coravel&lt;/a&gt;本身也是從其中的TaskScheduling區塊中找到，就試著用用看吧&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu.me/categories/dotnetcore/coravel/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="coravel" scheme="https://eugenesu.me/tags/coravel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]後端驗證神器:Fluent Validation</title>
+    <link href="https://eugenesu.me/2021/08/24/fluent-validation/"/>
+    <id>https://eugenesu.me/2021/08/24/fluent-validation/</id>
+    <published>2021-08-24T07:50:13.000Z</published>
+    <updated>2023-11-26T17:18:12.893Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;現在開發網頁幾乎都切換成前後端分離的開發方式，前端採用 &lt;code&gt;Angular&lt;/code&gt;, &lt;code&gt;Vue&lt;/code&gt;, &lt;code&gt;React&lt;/code&gt;三大框架之一，後端則只要撰寫API服務即可，一來職責分離，前端適合處理畫面的互動效果，後端搭配資料庫處理商業邏輯的運算，使用&lt;code&gt;json&lt;/code&gt;格式傳送結果至前端，多完美的協作阿。&lt;/p&gt;
+&lt;p&gt;通常簡單驗證邏輯會放在前端做處理，畢竟不用花費傳送成本，例如必填、長度等簡單邏輯驗證，直接在前端實作即可，但畢竟後端需要將資料儲存至資料庫，若沒有再做進一步驗證則資料儲存失敗的風險，以及日後資料運算使用時的困難。又或者系統本身需要透過&lt;code&gt;http&lt;/code&gt;與其他系統介接，其他系統直接打我方API，這種情境就不需多說，需要在後端做驗證，連必填、長度等簡單邏輯驗證也必須做在後端。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="fluent-validation" scheme="https://eugenesu.me/categories/dotnetcore/fluent-validation/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="fluent-validation" scheme="https://eugenesu.me/tags/fluent-validation/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]NLog-ILoggerManager設計</title>
+    <link href="https://eugenesu.me/2021/08/23/nlog-loggermanager/"/>
+    <id>https://eugenesu.me/2021/08/23/nlog-loggermanager/</id>
+    <published>2021-08-23T08:50:56.000Z</published>
+    <updated>2023-02-28T16:31:23.790Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者有幸參與到科內負責的大系統，不能單靠一個API站台就解決所有的需求，必須搭配&lt;code&gt;Scheduler&lt;/code&gt;、&lt;code&gt;WindowsService&lt;/code&gt;等服務，介接技術上，可能會用&lt;code&gt;Socket&lt;/code&gt;或是&lt;code&gt;HttpClient&lt;/code&gt;介接，再加上自己系統本身，分散多個專案，中間使用&lt;code&gt;Message Queue&lt;/code&gt;技術串聯起來，算是一個滿有挑戰性的系統了，挑戰主要是在串連服務的難度上，而非高流量。因此追蹤問題上，需要靠Loggin機制，由於各式各樣的服務，不能單靠底層Logging套件:NLog預設的紀錄欄位，針對不同種類的服務，做一個客製化屬性欄位的擴充才行。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu.me/tags/nlog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]NLog使用</title>
+    <link href="https://eugenesu.me/2021/08/23/nlog/"/>
+    <id>https://eugenesu.me/2021/08/23/nlog/</id>
+    <published>2021-08-23T08:49:43.000Z</published>
+    <updated>2023-02-28T16:31:27.370Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者因處在比較嚴格的金融業中，撰寫的資訊系統上線後，追蹤系統作業面，只能靠強而有力的Log機制來追縱問題，以利快速找出問題所在，包含&lt;code&gt;sql log&lt;/code&gt;、&lt;code&gt;ap log&lt;/code&gt;以及&lt;code&gt;error log&lt;/code&gt;，最好發生Error時寄信的方式通知。筆者本身推崇不重新造輪子，基本上訪間已經有很多很成熟的&lt;code&gt;logging框架&lt;/code&gt;，&lt;code&gt;dotnet core&lt;/code&gt;中也不乏候選套件:&lt;code&gt;NLog&lt;/code&gt;、&lt;code&gt;SeriLog&lt;/code&gt;、&lt;code&gt;Log4net&lt;/code&gt;等等，筆者選擇NLog當作主要Logging機制的底層框架。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="nlog" scheme="https://eugenesu.me/tags/nlog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[MySQL]範例資料庫設定</title>
+    <link href="https://eugenesu.me/2021/08/23/mysql-sample-db/"/>
+    <id>https://eugenesu.me/2021/08/23/mysql-sample-db/</id>
+    <published>2021-08-23T02:06:01.000Z</published>
+    <updated>2023-02-28T16:31:17.390Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者上篇介紹完MySQL安裝與設定後，這篇則是紀錄安裝範例資料，筆者使用&lt;a href=&quot;https://www.mysqltutorial.org/&quot;&gt;MySQL Tutorial&lt;/a&gt;所使用的範例資料，安裝範例資料庫也是參考該網站上面的兩篇文章，詳細資料庫中的相關資料表內容，可以觀看參考中兩篇文章的詳細內容。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="mysql" scheme="https://eugenesu.me/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://eugenesu.me/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[MySQL]安裝與設定</title>
+    <link href="https://eugenesu.me/2021/08/23/mysql-install/"/>
+    <id>https://eugenesu.me/2021/08/23/mysql-install/</id>
+    <published>2021-08-23T01:17:17.000Z</published>
+    <updated>2023-02-28T16:31:12.820Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者想要將所學技術紀錄於部落格中，若撰寫資料庫相關套件介紹文章時，因牽扯到公司機密性，需要用自己建立的範例資料庫，筆者這邊環境是Windows跟Mac都有，但一般平常帶出去都是Mac，畢竟電量樂勝，因此也常有機會使用Mac撰寫部落格文章，撰寫相關的demo code時需要連線至實際資料庫，最好是Windows、Mac環境通用的資料庫，筆者選擇MySQL，因此這篇要來介紹在Mac環境中MySQL安裝與設定。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="mysql" scheme="https://eugenesu.me/categories/mysql/"/>
+    
+    
+    <category term="mysql" scheme="https://eugenesu.me/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[RabbitMQ]安裝及設定</title>
+    <link href="https://eugenesu.me/2021/08/21/rabbitmq-install/"/>
+    <id>https://eugenesu.me/2021/08/21/rabbitmq-install/</id>
+    <published>2021-08-21T05:12:02.000Z</published>
+    <updated>2023-02-28T16:32:13.430Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;RabbitMQ&lt;/code&gt;是實現&lt;code&gt;AMQP(Advanced Message Queuing Protocol)&lt;/code&gt;的伺服器，使用&lt;code&gt;Er lang&lt;/code&gt;撰寫而成，且提供&lt;code&gt;HA&lt;/code&gt;及分散式架構的設定，官網就提供大量不同程式語言的連線及操作範例程式，入門門檻瞬間變低，若要進階設定HA則需要在花比較多時間研究及實戰經驗，這篇主要以安裝及設定方面著墨安裝步驟。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="message queue" scheme="https://eugenesu.me/categories/message-queue/"/>
+    
+    
+    <category term="rabbitmq" scheme="https://eugenesu.me/tags/rabbitmq/"/>
+    
+    <category term="message queue" scheme="https://eugenesu.me/tags/message-queue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Batch檔案執行及追縱</title>
+    <link href="https://eugenesu.me/2021/08/21/dotnetcore-batch/"/>
+    <id>https://eugenesu.me/2021/08/21/dotnetcore-batch/</id>
+    <published>2021-08-21T04:59:16.000Z</published>
+    <updated>2023-02-28T16:27:05.940Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者因為工作環境需要跟多個系統做串接，因最近參與的大系統，必須在某一塊作業使用外部廠商系統，需要透過各種介接方式做資料上的串接，例如﹔需要與廠商平台上面撰寫外掛程式，呼叫我們寫好的API，做為資料同步，這不在這篇的講的內容就不往下深入討論，另一種可能是我們在某些情境下，某個時段，需要驅動廠商系統進行其作業，廠商系統也有開放&lt;code&gt;batch file&lt;/code&gt;，讓我們方便去執行。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="bat" scheme="https://eugenesu.me/tags/bat/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Socket程式實作-切割封包</title>
+    <link href="https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/"/>
+    <id>https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/</id>
+    <published>2021-08-20T18:53:57.000Z</published>
+    <updated>2023-02-28T16:27:51.870Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發&lt;code&gt;OnReceive&lt;/code&gt;事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出&lt;code&gt;offset&lt;/code&gt;及&lt;code&gt;size&lt;/code&gt;，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu.me/categories/dotnetcore/socket/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu.me/tags/socket/"/>
+    
+    <category term="netcoreserver" scheme="https://eugenesu.me/tags/netcoreserver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Socket程式實作-解析封包</title>
+    <link href="https://eugenesu.me/2021/08/21/dotnetcore-socket-analyze/"/>
+    <id>https://eugenesu.me/2021/08/21/dotnetcore-socket-analyze/</id>
+    <published>2021-08-20T18:49:20.000Z</published>
+    <updated>2023-02-28T16:27:48.200Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在上篇把該有的&lt;code&gt;Socket&lt;/code&gt;底層元件相關的程式碼依照分類貼出，筆者分幾個筆記來詳細解釋相關設計概念，此篇以最上層Client端解析封包作業為例，解釋筆者的設計概念。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu.me/categories/dotnetcore/socket/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu.me/tags/socket/"/>
+    
+    <category term="netcoreserver" scheme="https://eugenesu.me/tags/netcoreserver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]Socket程式實作</title>
+    <link href="https://eugenesu.me/2021/08/21/dotnetcore-socket/"/>
+    <id>https://eugenesu.me/2021/08/21/dotnetcore-socket/</id>
+    <published>2021-08-20T18:38:24.000Z</published>
+    <updated>2023-02-28T16:27:55.760Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者目前於金融業資訊部門就職，如大家所知，核心系統大都維持使用&lt;code&gt;cobol&lt;/code&gt;程式語言開發，我們這種寫&lt;code&gt;C#&lt;/code&gt;程式語言的，只能攻外圍系統，但不免俗的需要與各核心相關系統做打交道，不管是取得資料或者是更新資料等，比較舊型的架構都是透過&lt;code&gt;TCP/IP&lt;/code&gt;交換資料，也就是透過&lt;code&gt;socket&lt;/code&gt;程式交換資料。界於此，筆者需要實作socket程式基礎框架適應各種Client程式的開發需求，今天就來寫一支&lt;code&gt;socket core&lt;/code&gt;程式吧。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu.me/categories/dotnetcore/socket/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="socket" scheme="https://eugenesu.me/tags/socket/"/>
+    
+    <category term="netcoreserver" scheme="https://eugenesu.me/tags/netcoreserver/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]EventBus套件CAP:以RabbitMQ為例</title>
+    <link href="https://eugenesu.me/2021/08/21/dotnetcore-cap/"/>
+    <id>https://eugenesu.me/2021/08/21/dotnetcore-cap/</id>
+    <published>2021-08-20T18:26:03.000Z</published>
+    <updated>2023-02-28T16:27:09.040Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者公司有需求是系統跟系統串接，前人是使用資料庫交換的方式進行，簡單來講就是系統A有需求要請系統B做事情，簡單作法就是系統A於共同資料庫中的資料表中寫一筆資料，系統B則&lt;code&gt;Database Pooling&lt;/code&gt;的方式進行監聽，若有撈出一筆&lt;code&gt;Status = N&lt;/code&gt;的資料則進行邏輯處裡，進行完成後壓回&lt;code&gt;Status = Y 或 N&lt;/code&gt;的註記方式來完成該次的串接需求，當然途中也會壓&lt;code&gt;Status = P&lt;/code&gt;作為下次&lt;code&gt;Pooling&lt;/code&gt;會撈到的防呆，大概就是這麼簡單的技術完成串接的需求。&lt;/p&gt;
+&lt;p&gt;筆者因前一份公司有接觸過Message Queue，主要是&lt;a href=&quot;https://www.rabbitmq.com/&quot;&gt;Rabbit MQ&lt;/a&gt;，覺得使用Message Queue當作中間交換資訊平台，確實有其發展性，不論是之後需求變大時可以做分散式的處理，系統間也間接解偶了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="cap" scheme="https://eugenesu.me/tags/cap/"/>
+    
+    <category term="rabbitmq" scheme="https://eugenesu.me/tags/rabbitmq/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]SMTP寄信服務設計</title>
+    <link href="https://eugenesu.me/2021/08/21/dotnetcore-smtp/"/>
+    <id>https://eugenesu.me/2021/08/21/dotnetcore-smtp/</id>
+    <published>2021-08-20T18:19:36.000Z</published>
+    <updated>2023-02-28T16:27:43.570Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;這篇的誕生是因為筆者在工作上專案時有寄信的需求，且會有各式各樣的服務皆可能需要寄信服務，各式各樣服務包含應用程式端、資料庫端像Store Procedure運算完需寄信通知，目標要讓不同服務都有相同的接口去對應。&lt;/p&gt;
+&lt;p&gt;我們的想法是設計一個資料表，有寄信需求則往該資料表新增一筆資料，再由一個專門pooling的排程服務依照Status，一一的把信件寄出去，由於因為是靠Status在運作，更新Status變成是一個很重要的任務。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+    <category term="smtp" scheme="https://eugenesu.me/tags/smtp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[DotnetCore]ActionFilter實作</title>
+    <link href="https://eugenesu.me/2021/08/20/dotnetcore-actionfilter/"/>
+    <id>https://eugenesu.me/2021/08/20/dotnetcore-actionfilter/</id>
+    <published>2021-08-20T15:58:31.000Z</published>
+    <updated>2023-02-28T16:27:02.690Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者公司因為需要符合資安要求，系統規劃中需要設計留下使用者足跡，筆者這邊第一個想到就是用ActionFilter設計，將Htpp Request對應的相關資訊，存到對應的紀錄表中。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/categories/dotnetcore/"/>
+    
+    
+    <category term="dotnetcore" scheme="https://eugenesu.me/tags/dotnetcore/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Vue]Vue套件介紹：axios</title>
+    <link href="https://eugenesu.me/2018/06/25/vue-axios/"/>
+    <id>https://eugenesu.me/2018/06/25/vue-axios/</id>
+    <published>2018-06-25T09:58:30.000Z</published>
+    <updated>2023-02-28T16:33:11.870Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者在公司的專案開發上選擇vue作為前端開發framework，不外呼就是開發應用程式，當然免不了基本的CRUD功能，此時需要一個強而有力的呼叫API套件，之所以選擇&lt;code&gt;axios&lt;/code&gt;，沒有爾外的原因，因為是vue作者推薦使用，這樣不需有任何的疑慮，用下去就對了，此篇就以&lt;code&gt;axios&lt;/code&gt;來探討其用法介紹及經驗分享。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+    <category term="axios" scheme="https://eugenesu.me/tags/axios/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Vue]Vue套件介紹:vee-validate</title>
+    <link href="https://eugenesu.me/2018/06/25/vue-vee-validate/"/>
+    <id>https://eugenesu.me/2018/06/25/vue-vee-validate/</id>
+    <published>2018-06-25T09:58:17.000Z</published>
+    <updated>2023-02-28T16:33:28.030Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;&lt;code&gt;Vue.js&lt;/code&gt;專案開發，一般應用程式都會遇到表單送出功能，然而前後端分離架構下，前後端必須採用不同階段的驗證，筆者認為基本的資料驗證必須得在前端完成，後端API接收到的資料，應該只剩資料重複性檢查等複雜驗證，這才是筆者認為的健康的資料流。&lt;code&gt;Vue.js&lt;/code&gt;驗證相關套件中，筆者選擇&lt;a href=&quot;https://baianat.github.io/vee-validate/&quot;&gt;vee-validate&lt;/a&gt;，此篇就以該套件說明使用方式。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+    <category term="vee-validate" scheme="https://eugenesu.me/tags/vee-validate/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue系列文章五：Vue Instance與Component</title>
+    <link href="https://eugenesu.me/2018/06/25/vue-instance-component/"/>
+    <id>https://eugenesu.me/2018/06/25/vue-instance-component/</id>
+    <published>2018-06-25T08:55:30.000Z</published>
+    <updated>2023-02-28T16:33:21.630Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前面兩篇講了vue相關的語法，是不是覺得少了點什麼，這篇是重頭戲，介紹Vue Instance宣告時有哪些options可設定，有什麼樣的相關技巧以及Component的應用，筆者就以自身開發角度分享實戰經驗。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Vue]Vue Directive</title>
+    <link href="https://eugenesu.me/2018/06/22/vue-directive/"/>
+    <id>https://eugenesu.me/2018/06/22/vue-directive/</id>
+    <published>2018-06-22T05:44:15.000Z</published>
+    <updated>2023-02-28T16:33:15.020Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前一篇已介紹了Vue基本語法，筆者相信應該是有辦法撰寫簡單的邏輯，接下來這一篇介紹&lt;code&gt;v開頭directive&lt;/code&gt;相關技巧及知識，筆者使用工具及環境參考上一篇&lt;a href=&quot;/2018/05/24/vue-guide/&quot; title=&quot;[Vue]Vue基本語法&quot;&gt;[Vue]Vue基本語法&lt;/a&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Vue]Vue基本語法</title>
+    <link href="https://eugenesu.me/2018/05/24/vue-guide/"/>
+    <id>https://eugenesu.me/2018/05/24/vue-guide/</id>
+    <published>2018-05-24T11:12:29.000Z</published>
+    <updated>2023-02-28T16:33:18.350Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;前兩篇的基本設置教學，筆者相信大家已學會基本設定並撰寫vue application，此篇介紹基本語法及應用並說明。&lt;/p&gt;
+&lt;p&gt;此篇雖然想以&lt;a href=&quot;https://vuejs.org/v2/guide/&quot;&gt;Vue官網教學&lt;/a&gt;順序做介紹，但筆者認為已學會某種技術，應該是要以自己角度分類並介紹，且要加上經驗分享，還可藉由驗證自己的不足，因此若不習慣內容編排方式，多加見諒。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Vue]VueWepackTemplate檔案結構介紹</title>
+    <link href="https://eugenesu.me/2018/04/25/vue-webpack/"/>
+    <id>https://eugenesu.me/2018/04/25/vue-webpack/</id>
+    <published>2018-04-25T05:09:37.000Z</published>
+    <updated>2023-02-28T16:33:31.610Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;上一篇介紹到&lt;code&gt;vue-cli&lt;/code&gt;建立vue application，其中筆者示範選擇以&lt;code&gt;webpack template&lt;/code&gt;作為預設專案結構。這一篇就來簡單介紹一下專案中的檔案結構以及經驗分享。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+    <category term="webpack" scheme="https://eugenesu.me/tags/webpack/"/>
+    
+    <category term="vue-cli" scheme="https://eugenesu.me/tags/vue-cli/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[Vue]Vue簡介</title>
+    <link href="https://eugenesu.me/2018/04/23/vue-intro/"/>
+    <id>https://eugenesu.me/2018/04/23/vue-intro/</id>
+    <published>2018-04-23T10:56:34.000Z</published>
+    <updated>2023-02-28T16:33:24.860Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;目前公司開發產品選擇&lt;a href=&quot;https://vuefe.cn/v2/guide/&quot;&gt;vue.js&lt;/a&gt;作為前端開發框架，選擇原因不外呼是&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;容易上手&lt;/li&gt;
+&lt;li&gt;考量到產品之後會由大陸團隊接手&lt;/li&gt;
+&lt;li&gt;Virtual Dom設計，效能方面不需要擔心&lt;/li&gt;
+&lt;/ul&gt;</summary>
+    
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/categories/vue/"/>
+    
+    
+    <category term="vue" scheme="https://eugenesu.me/tags/vue/"/>
+    
+  </entry>
+  
+</feed>

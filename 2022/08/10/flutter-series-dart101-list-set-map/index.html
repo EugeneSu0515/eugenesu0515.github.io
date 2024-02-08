@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要上一篇介紹完Strings之後，這篇來到Booleans、Lists、Sets、Maps了，因為Booleans就比較沒甚麼好解說的，就是true跟false，因此把另外三個也納進來一起解說，以免篇幅太少，基本上Lists、Sets、Maps也滿好理解的，這些資料型別是其他程式語言常見到的，只要搞清楚三者的差異以及適用時機，基本上就是駕輕就熟了，跟著筆者一起學習吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Flutter讀書會]Dart101:Build-inTypes資料型別-Booleans,Lists,Sets,Maps">
+<meta property="og:url" content="https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要上一篇介紹完Strings之後，這篇來到Booleans、Lists、Sets、Maps了，因為Booleans就比較沒甚麼好解說的，就是true跟false，因此把另外三個也納進來一起解說，以免篇幅太少，基本上Lists、Sets、Maps也滿好理解的，這些資料型別是其他程式語言常見到的，只要搞清楚三者的差異以及適用時機，基本上就是駕輕就熟了，跟著筆者一起學習吧。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2022-08-10T10:55:20.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:30:12.670Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="flutter">
+<meta property="article:tag" content="dart">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[Flutter讀書會]Dart101:Build-inTypes資料型別-Booleans,Lists,Sets,Maps | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Flutter讀書會]Dart101:Build-inTypes資料型別-Booleans,Lists,Sets,Maps
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2022-08-10 18:55:20" itemprop="dateCreated datePublished" datetime="2022-08-10T18:55:20+08:00">2022-08-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:30:12" itemprop="dateModified" datetime="2023-03-01T00:30:12+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/flutter/" itemprop="url" rel="index"><span itemprop="name">flutter</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>10 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>上一篇介紹完<code>Strings</code>之後，這篇來到<code>Booleans</code>、<code>Lists</code>、<code>Sets</code>、<code>Maps</code>了，因為Booleans就比較沒甚麼好解說的，就是<code>true</code>跟<code>false</code>，因此把另外三個也納進來一起解說，以免篇幅太少，基本上<code>Lists</code>、<code>Sets</code>、<code>Maps</code>也滿好理解的，這些資料型別是其他程式語言常見到的，只要搞清楚三者的差異以及適用時機，基本上就是駕輕就熟了，跟著筆者一起學習吧。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者這邊還是簡單列一下筆者這邊的開發環境</p>
+<ul>
+<li>作業系統:Mac OS</li>
+<li>Dart版本:<code>2.17.6</code></li>
+<li>編輯器:Visual Studio Code</li>
+</ul>
+<h2 id="Booleans"><a href="#Booleans" class="headerlink" title="Booleans"></a>Booleans</h2><p>這就沒甚麼好解釋的了，<code>true</code>、<code>false</code>二擇一</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Check for an empty string.</span></span><br><span class="line"><span class="keyword">var</span> fullName = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="keyword">assert</span>(fullName.isEmpty);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Check for zero.</span></span><br><span class="line"><span class="keyword">var</span> hitPoints = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">assert</span>(hitPoints &lt;= <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Check for null.</span></span><br><span class="line"><span class="keyword">var</span> unicorn;</span><br><span class="line"><span class="keyword">assert</span>(unicorn == <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Check for NaN.</span></span><br><span class="line"><span class="keyword">var</span> iMeantToDoThis = <span class="number">0</span> / <span class="number">0</span>;</span><br><span class="line"><span class="keyword">assert</span>(iMeantToDoThis.isNaN);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h2><p>泛型集合<code>List&lt;T&gt;</code>，亦即可以示<code>List&lt;int&gt;</code>，也可以是<code>List&lt;string&gt;</code>，但不能將不同資料型別混著放，<code>Dart</code>程式語言是<code>Type Safety</code>的語言，因此編譯時就會噴錯。不意外地，Dart語言中，<code>List</code>使用<code>zero-based indexing</code>，這個東西平常看似沒甚麼，但是遇到時心裡就會很OOXX，筆者絕對不是在說JS中的getMonth()，因為常常遇到月份比較時，很自然地忘記它也是<code>zero-based indexing</code>，因此常常鬼打牆的在偵錯。</p>
+<h3 id="宣告方式"><a href="#宣告方式" class="headerlink" title="宣告方式"></a>宣告方式</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> list = [</span><br><span class="line">  <span class="string">&#x27;Car&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;Boat&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;Plane&#x27;</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h3 id="Spread-Operator"><a href="#Spread-Operator" class="headerlink" title="Spread Operator"></a>Spread Operator</h3><p>滿特別的一個，筆者在撰寫Angular時特別愛用，畢竟<code>JS</code>世界裡一切都是物件，因此若想要達到<code>Deep Copy深層複製</code>時，筆者愛用簡單解法，透過<code>Spread Operator</code>把每個元素都展開，並指派給新的變數，藉由達到<code>Deep Copy深層複製</code>的效果，竟然在<code>Dart</code>程式語言中再次遇見。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> list2 = [<span class="number">0</span>, ...list];</span><br><span class="line"><span class="keyword">assert</span>(list2.length == <span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Collection-If"><a href="#Collection-If" class="headerlink" title="Collection If"></a>Collection If</h3><p>很特別的一個<code>feature</code>，在初始化塞值時，可以透過if判斷式，決定要不要塞該元素</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 依照promoActive的值為true或false來決定是否增加&#x27;Outlet&#x27;這個元素</span></span><br><span class="line"><span class="keyword">var</span> nav = [<span class="string">&#x27;Home&#x27;</span>, <span class="string">&#x27;Furniture&#x27;</span>, <span class="string">&#x27;Plants&#x27;</span>, <span class="keyword">if</span> (promoActive) <span class="string">&#x27;Outlet&#x27;</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="Collection-For"><a href="#Collection-For" class="headerlink" title="Collection For"></a>Collection For</h3><p>這也是跟上述<code>feature</code>一樣，比較少在其他語言看到的特性，可以透過for迴圈，塞有規則性的多個元素</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> listOfInts = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="comment">// 配合動態組合字串$&#123;expression&#125;，組出#1, #2, #3，並將這三個元素加入至listOfStrings陣列中</span></span><br><span class="line"><span class="keyword">var</span> listOfStrings = [<span class="string">&#x27;#0&#x27;</span>, <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> listOfInts) <span class="string">&#x27;#<span class="subst">$i</span>&#x27;</span>];</span><br><span class="line"><span class="keyword">assert</span>(listOfStrings[<span class="number">1</span>] == <span class="string">&#x27;#1&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="相關操作API"><a href="#相關操作API" class="headerlink" title="相關操作API"></a>相關操作API</h3><ul>
+<li><code>isEmpty:</code>判斷是否為空集合</li>
+<li><code>add:</code>新增一筆元素</li>
+<li><code>addAll:</code>新增多個元素</li>
+<li><code>length:</code>取得集合大小</li>
+<li><code>removeAt:</code>透過指定元素位置刪除(搭配<code>indexOf</code>找到元素所在位置)</li>
+<li><code>clear:</code>清空集合</li>
+<li><code>filled:</code>透過List提供的<code>Constructor</code>新增指定元素並且依照指定次數增加</li>
+<li><code>sort</code>:排序，可搭配使用<code>compareTo</code>使用自己指定的比較方法排序</li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create an empty list of strings.</span></span><br><span class="line"><span class="keyword">var</span> grains = &lt;<span class="built_in">String</span>&gt;[];</span><br><span class="line"><span class="keyword">assert</span>(grains.isEmpty);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a list using a list literal.</span></span><br><span class="line"><span class="keyword">var</span> fruits = [<span class="string">&#x27;apples&#x27;</span>, <span class="string">&#x27;oranges&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add to a list.</span></span><br><span class="line"><span class="comment">// 增加完成後，fruits為[&#x27;apples&#x27;, &#x27;oranges&#x27;, &#x27;kiwis&#x27;]</span></span><br><span class="line">fruits.add(<span class="string">&#x27;kiwis&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Add multiple items to a list.</span></span><br><span class="line"><span class="comment">// 增加完成後，fruits為[&#x27;apples&#x27;, &#x27;oranges&#x27;, &#x27;kiwis&#x27;, &#x27;grapes&#x27;, &#x27;bananas&#x27;]</span></span><br><span class="line">fruits.addAll([<span class="string">&#x27;grapes&#x27;</span>, <span class="string">&#x27;bananas&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get the list length.</span></span><br><span class="line"><span class="comment">// 執行到這邊，fruits這個List長度為5</span></span><br><span class="line"><span class="keyword">assert</span>(fruits.length == <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove a single item.</span></span><br><span class="line"><span class="comment">// 先找到&#x27;apples&#x27;這個元素所在位置</span></span><br><span class="line"><span class="keyword">var</span> appleIndex = fruits.indexOf(<span class="string">&#x27;apples&#x27;</span>);</span><br><span class="line"><span class="comment">// 透過指定元素位置方式刪除元素</span></span><br><span class="line">fruits.removeAt(appleIndex);</span><br><span class="line"><span class="comment">// 執行到這邊，fruits這個List長度為4</span></span><br><span class="line"><span class="keyword">assert</span>(fruits.length == <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove all elements from a list.</span></span><br><span class="line"><span class="comment">// 將fruits這個List清空</span></span><br><span class="line">fruits.clear();</span><br><span class="line"><span class="comment">// 判斷是否為空集合，結果是true</span></span><br><span class="line"><span class="keyword">assert</span>(fruits.isEmpty);</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can also create a List using one of the constructors.</span></span><br><span class="line"><span class="comment">// 第一個參數為增加次數</span></span><br><span class="line"><span class="comment">// 第二個參數為欲新增之元素</span></span><br><span class="line"><span class="comment">// 作用為拿第二個參數新增至List，次數為第一個參數指定之</span></span><br><span class="line"><span class="comment">// 因此vegetables這個List裡頭有99個元素，每個元素皆為&#x27;broccoli&#x27;</span></span><br><span class="line"><span class="keyword">var</span> vegetables = <span class="built_in">List</span>.filled(<span class="number">99</span>, <span class="string">&#x27;broccoli&#x27;</span>);</span><br><span class="line"><span class="keyword">assert</span>(vegetables.every((v) =&gt; v == <span class="string">&#x27;broccoli&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fruits = [<span class="string">&#x27;bananas&#x27;</span>, <span class="string">&#x27;apples&#x27;</span>, <span class="string">&#x27;oranges&#x27;</span>];</span><br><span class="line"><span class="built_in">print</span>(fruits);</span><br><span class="line">fruits.sort();</span><br><span class="line"><span class="built_in">print</span>(fruits);</span><br><span class="line"><span class="comment">// [bananas, apples, oranges]</span></span><br><span class="line"><span class="comment">// [apples, bananas, oranges]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 透過compareTo來實作逆排</span></span><br><span class="line">fruits.sort((a, b) =&gt; -a.compareTo(b));</span><br><span class="line"><span class="built_in">print</span>(fruits);</span><br><span class="line"><span class="comment">// [oranges, bananas, apples]</span></span><br></pre></td></tr></table></figure>
+
+<p>完整<code>API</code>資訊，請參考</p>
+<p><a target="_blank" rel="noopener" href="https://api.dart.dev/stable/2.17.6/dart-core/List-class.html">https://api.dart.dev/stable/2.17.6/dart-core/List-class.html</a></p>
+<h2 id="Sets"><a href="#Sets" class="headerlink" title="Sets"></a>Sets</h2><p>泛型集合，與<code>List</code>不一樣的地方在於，<code>Set</code>每個元素都是唯一的，不能重複出現</p>
+<blockquote>
+<p>A collection of objects in which each object can occur only once.</p>
+</blockquote>
+<h3 id="宣告方式-1"><a href="#宣告方式-1" class="headerlink" title="宣告方式"></a>宣告方式</h3><p>還記得<code>List</code>的宣告方式吧，<code>[1, 2, 3]</code>的方式，Set則是<code>&#123; 1, 2, 3&#125;</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> halogens = &#123;<span class="string">&#x27;fluorine&#x27;</span>, <span class="string">&#x27;chlorine&#x27;</span>, <span class="string">&#x27;bromine&#x27;</span>, <span class="string">&#x27;iodine&#x27;</span>, <span class="string">&#x27;astatine&#x27;</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>空集合的宣告方式則</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 讓Dart編譯器知道是Set&lt;string&gt;</span></span><br><span class="line"><span class="keyword">var</span> names = &lt;<span class="built_in">String</span>&gt;&#123;&#125;;</span><br><span class="line"><span class="comment">// 指定型別的宣告方式也是可以的</span></span><br><span class="line"><span class="comment">// Set&lt;String&gt; names = &#123;&#125;; // This works, too.</span></span><br><span class="line"><span class="comment">// 這是一個反教材，若沒有指定型別的&#123;&#125;則會被認定是Map的初始化，而非Set</span></span><br><span class="line"><span class="comment">// var names = &#123;&#125;; // Creates a map, not a set.</span></span><br></pre></td></tr></table></figure>
+
+<p>相關操作API，就不特別列出，因為大同小異，要特別提醒的是</p>
+<blockquote>
+<p>A set in Dart is an unordered collection of unique items. Because a set is unordered, you can’t get a set’s items by index (position).</p>
+</blockquote>
+<p>其他詳細<code>API</code>參考</p>
+<p><a target="_blank" rel="noopener" href="https://api.dart.dev/stable/2.17.6/dart-core/Set-class.html">https://api.dart.dev/stable/2.17.6/dart-core/Set-class.html</a></p>
+<h2 id="Maps"><a href="#Maps" class="headerlink" title="Maps"></a>Maps</h2><p><code>Maps</code>結構就是<code>Map&lt;Tkey, TValue&gt;(key, value)</code>型式的一種資料型別，簡單點解釋的話，即是<code>Dictionary</code>字典型式的資料型別</p>
+<h3 id="宣告方式-2"><a href="#宣告方式-2" class="headerlink" title="宣告方式"></a>宣告方式</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> gifts = &#123;</span><br><span class="line">  <span class="comment">// Key:    Value</span></span><br><span class="line">  <span class="string">&#x27;first&#x27;</span>: <span class="string">&#x27;partridge&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;second&#x27;</span>: <span class="string">&#x27;turtledoves&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;fifth&#x27;</span>: <span class="string">&#x27;golden rings&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> gifts = <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">String</span>&gt;();</span><br><span class="line">gifts[<span class="string">&#x27;first&#x27;</span>] = <span class="string">&#x27;partridge&#x27;</span>;</span><br><span class="line">gifts[<span class="string">&#x27;second&#x27;</span>] = <span class="string">&#x27;turtledoves&#x27;</span>;</span><br><span class="line">gifts[<span class="string">&#x27;fifth&#x27;</span>] = <span class="string">&#x27;golden rings&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>Map</code>部份，相關操作與<code>Collection</code>其他家族<code>Set</code>、<code>Map</code>大同小異，而筆者想要經驗分享的是，<code>Dictionary</code>顧名思義，<code>key</code>是獨一無二的，因此每次在<code>add</code>時，記得使用<code>containsKey</code>這個<code>API</code>做檢查，讓你少走一點冤望路。</p>
+<p>詳細<code>API</code>參考</p>
+<p><a target="_blank" rel="noopener" href="https://api.dart.dev/stable/2.17.6/dart-core/Map-class.html">https://api.dart.dev/stable/2.17.6/dart-core/Map-class.html</a></p>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>趕緊在結束之前說一下List介紹中提到的</p>
+<ul>
+<li><code>Spread Operator</code></li>
+<li><code>Collection If</code></li>
+<li><code>Collection For</code></li>
+</ul>
+<p>因為<code>List</code>、<code>Set</code>、<code>Map</code>皆屬於Collection大家族，因此皆適用。</p>
+<p><code>List</code>、<code>Set</code>、<code>Map</code>要如何使用呢，一般情況使用<code>List</code>就可以解決大部份的問題，若想要集合的元素不重複時，可以考慮使用<code>Set</code>這個資料結構來存放，但注意<code>Set</code>這個沒有<code>indexOf</code>這個<code>API</code>可以使用，接著那種<code>key、value</code>式的就可以考慮使用<code>Map</code>來操作。</p>
+<p>基本上記得每個資料結構的特性，搭配各自的<code>API</code>文件說明，筆者想應付一般應用程式是綽綽有餘的，筆者還是鼓勵一貫的做法，先理解一下能做到甚麼就好，理解的程度到在遇到問題時腦中有一些keyword浮現即可，然而真正要用到時再去深究它，畢竟腦容量有限，希望這篇文章對大家有幫助。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://dart.dev/guides/language/language-tour#lists">https://dart.dev/guides/language/language-tour#lists</a></li>
+<li><a target="_blank" rel="noopener" href="https://dart.dev/guides/language/language-tour#maps">https://dart.dev/guides/language/language-tour#</a>sets</li>
+<li><a target="_blank" rel="noopener" href="https://dart.dev/guides/language/language-tour#maps">https://dart.dev/guides/language/language-tour#maps</a></li>
+<li><a target="_blank" rel="noopener" href="https://dart.dev/guides/libraries/library-tour#collections">https://dart.dev/guides/libraries/library-tour#collections</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/27897932/sorting-ascending-and-descending-in-dart">https://stackoverflow.com/questions/27897932/sorting-ascending-and-descending-in-dart</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/08/27/flutter-series-dart101-function/" rel="bookmark">[Flutter讀書會]Dart101:Functions方法</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/08/10/flutter-series-dart101-symbol/" rel="bookmark">[Flutter讀書會]Dart101:Build-inTypes資料型別-Symbol</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/08/10/flutter-series-dart101-strings/" rel="bookmark">[Flutter讀書會]Dart101:Built-inTypes資料型別-Strings</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/08/10/flutter-series-dart101-numbers/" rel="bookmark">[Flutter讀書會]Dart101:Built-inTypes資料型別-Numbers</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2022/08/10/flutter-series-dart101-hello-world/" rel="bookmark">[Flutter讀書會]Dart101:HelloWorld</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/" title="[Flutter讀書會]Dart101:Build-inTypes資料型別-Booleans,Lists,Sets,Maps">https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/flutter/" rel="tag"><i class="fa fa-tag"></i> flutter</a>
+              <a href="/tags/dart/" rel="tag"><i class="fa fa-tag"></i> dart</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/10/flutter-series-dart101-strings/" rel="prev" title="[Flutter讀書會]Dart101:Built-inTypes資料型別-Strings">
+      <i class="fa fa-chevron-left"></i> [Flutter讀書會]Dart101:Built-inTypes資料型別-Strings
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/10/flutter-series-dart101-symbol/" rel="next" title="[Flutter讀書會]Dart101:Build-inTypes資料型別-Symbol">
+      [Flutter讀書會]Dart101:Build-inTypes資料型別-Symbol <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Booleans"><span class="nav-number">2.1.</span> <span class="nav-text">Booleans</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lists"><span class="nav-number">2.2.</span> <span class="nav-text">Lists</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A3%E5%91%8A%E6%96%B9%E5%BC%8F"><span class="nav-number">2.2.1.</span> <span class="nav-text">宣告方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spread-Operator"><span class="nav-number">2.2.2.</span> <span class="nav-text">Spread Operator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Collection-If"><span class="nav-number">2.2.3.</span> <span class="nav-text">Collection If</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Collection-For"><span class="nav-number">2.2.4.</span> <span class="nav-text">Collection For</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E9%97%9C%E6%93%8D%E4%BD%9CAPI"><span class="nav-number">2.2.5.</span> <span class="nav-text">相關操作API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sets"><span class="nav-number">2.3.</span> <span class="nav-text">Sets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A3%E5%91%8A%E6%96%B9%E5%BC%8F-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">宣告方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Maps"><span class="nav-number">2.4.</span> <span class="nav-text">Maps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A3%E5%91%8A%E6%96%B9%E5%BC%8F-2"><span class="nav-number">2.4.1.</span> <span class="nav-text">宣告方式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2022/08/10/flutter-series-dart101-list-set-map/",
+      identifier: "2022/08/10/flutter-series-dart101-list-set-map/",
+      title     : "[Flutter讀書會]Dart101:Build-inTypes資料型別-Booleans,Lists,Sets,Maps",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要一個應用程式，尤其是前端少不了alert訊息啦，網頁系統，基本上就可以使用alert方法可以跳出提示訊息，純網頁應該是不會有違合感，但想像一下以PC App的形式來說，直接跳網頁的那種alert訊息，似乎不太搭，通常一個系統一定會搭配一套toastr的套件，將成功、失敗訊息顯示於左上、右上、左下、右下角，清楚地告訴使用者，他的操作是否成功或失敗。 筆者認為toastr的基本要素就是至少要有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Electron]vanilla js套件系列-Toast:toastify-js">
+<meta property="og:url" content="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要一個應用程式，尤其是前端少不了alert訊息啦，網頁系統，基本上就可以使用alert方法可以跳出提示訊息，純網頁應該是不會有違合感，但想像一下以PC App的形式來說，直接跳網頁的那種alert訊息，似乎不太搭，通常一個系統一定會搭配一套toastr的套件，將成功、失敗訊息顯示於左上、右上、左下、右下角，清楚地告訴使用者，他的操作是否成功或失敗。 筆者認為toastr的基本要素就是至少要有">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/Untitled.png">
+<meta property="article:published_time" content="2022-03-07T08:03:32.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:28:19.020Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="electron">
+<meta property="article:tag" content="toastifyjs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/Untitled.png">
+
+<link rel="canonical" href="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[Electron]vanilla js套件系列-Toast:toastify-js | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Electron]vanilla js套件系列-Toast:toastify-js
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2022-03-07 16:03:32" itemprop="dateCreated datePublished" datetime="2022-03-07T16:03:32+08:00">2022-03-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:28:19" itemprop="dateModified" datetime="2023-03-01T00:28:19+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/electron/" itemprop="url" rel="index"><span itemprop="name">electron</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>9 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>一個應用程式，尤其是前端少不了<code>alert</code>訊息啦，網頁系統，基本上就可以使用alert方法可以跳出提示訊息，純網頁應該是不會有違合感，但想像一下以<code>PC App</code>的形式來說，直接跳網頁的那種<code>alert</code>訊息，似乎不太搭，通常一個系統一定會搭配一套<code>toastr</code>的套件，將成功、失敗訊息顯示於<code>左上、右上、左下、右下角</code>，清楚地告訴使用者，他的操作是否成功或失敗。</p>
+<p>筆者認為<code>toastr</code>的基本要素就是至少要有<code>成功</code>或<code>失敗</code>的<code>樣式</code>可以選擇，以及剛提到的訊息置於<code>左上、右上、左下、右下角</code>等選項，再則進階一點就是訊息內容本身要支援，<code>html格式訊息</code>或<code>一般文字訊息</code>，才可以靈活運用。這篇的前提條件跟前幾篇一樣，筆者想要找到一個<code>Vanilla js</code>的<code>Toastr</code>套件，這篇主要是要介紹筆者挑到在使用的<a target="_blank" rel="noopener" href="https://apvarun.github.io/toastify-js/">https://apvarun.github.io/toastify-js/</a>。</p>
+<span id="more"></span>
+
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><h2 id="建立Demo專案"><a href="#建立Demo專案" class="headerlink" title="建立Demo專案"></a>建立Demo專案</h2><p>筆者這邊使用簡單的html檔案，透過連結載入的方式使用toastify.js，為了美觀，筆者這邊套用Bootstrap5，首先</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &#123;targetPath&#125;</span><br><span class="line"><span class="built_in">mkdir</span> demo-toastifyjs</span><br><span class="line"><span class="built_in">cd</span> demo-toastifyjs</span><br><span class="line"><span class="built_in">touch</span> index.html</span><br><span class="line">code .</span><br></pre></td></tr></table></figure>
+
+<h2 id="頁面中載入Bootstrap5及toastify-js"><a href="#頁面中載入Bootstrap5及toastify-js" class="headerlink" title="頁面中載入Bootstrap5及toastify.js"></a>頁面中載入Bootstrap5及toastify.js</h2><p>接著使用VSCode編輯剛建立之index.html檔案，載入bootstrap 5及toastify.js</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;IE=edge&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">integrity</span>=<span class="string">&quot;sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC&quot;</span> <span class="attr">crossorigin</span>=<span class="string">&quot;anonymous&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>ToastrifyJs Demo<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">class</span>=<span class="string">&quot;container-fluid&quot;</span>&gt;</span>    </span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/toastify-js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">integrity</span>=<span class="string">&quot;sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">crossorigin</span>=<span class="string">&quot;anonymous&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="撰寫主要程式內容"><a href="#撰寫主要程式內容" class="headerlink" title="撰寫主要程式內容"></a>撰寫主要程式內容</h2><h3 id="觸發按鈕"><a href="#觸發按鈕" class="headerlink" title="觸發按鈕"></a>觸發按鈕</h3><p>為模擬toastr視窗，筆者就在頁面上簡單放幾個按鈕備用，筆者這編參考<code>bootstrap</code>中的<code>listgroup</code>章節並將內容物置換成<code>button</code>結構，並將它們的<code>id</code>標上不一樣的名稱</p>
+<p><a target="_blank" rel="noopener" href="https://getbootstrap.com/docs/5.0/components/list-group/">https://getbootstrap.com/docs/5.0/components/list-group/</a></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;row justify-content-md-center m-5&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;col-3&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;list-group&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">id</span>=<span class="string">&quot;success-btn&quot;</span> <span class="attr">class</span>=<span class="string">&quot;list-group-item list-group-item-action&quot;</span>&gt;</span>Success<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">id</span>=<span class="string">&quot;error-btn&quot;</span> <span class="attr">class</span>=<span class="string">&quot;list-group-item list-group-item-action&quot;</span>&gt;</span>Error<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> <span class="attr">id</span>=<span class="string">&quot;info-btn&quot;</span> <span class="attr">class</span>=<span class="string">&quot;list-group-item list-group-item-action&quot;</span>&gt;</span>Info<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Button-Click事件-ShowToast"><a href="#Button-Click事件-ShowToast" class="headerlink" title="Button Click事件:ShowToast"></a>Button Click事件:ShowToast</h3><p>接著我們使用<code>vanilla js</code>的方式找到<code>button element</code>物件，並且針對<code>click</code>事件中呼叫<code>toastify.js</code>的<code>showToast</code>方法來跳出<code>toastr</code>視窗</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="keyword">let</span> $successBtn = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#success-btn&#x27;</span>);</span><br><span class="line">    <span class="keyword">let</span> $errorBtn = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#error-btn&#x27;</span>);</span><br><span class="line">    <span class="keyword">let</span> $infoBtn = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#info-btn&#x27;</span>);</span><br><span class="line">    $successBtn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Toastify</span>(&#123;</span><br><span class="line">            <span class="attr">text</span>: <span class="string">&quot;This is a toast&quot;</span>,</span><br><span class="line">            <span class="attr">style</span>: &#123;</span><br><span class="line">                <span class="attr">background</span>: <span class="string">&quot;blue&quot;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).<span class="title function_">showToast</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">    $errorBtn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Toastify</span>(&#123;</span><br><span class="line">            <span class="attr">text</span>: <span class="string">&quot;This is a toast&quot;</span>,</span><br><span class="line">            <span class="attr">style</span>: &#123;</span><br><span class="line">                <span class="attr">background</span>: <span class="string">&quot;red&quot;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).<span class="title function_">showToast</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">    $infoBtn.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Toastify</span>(&#123;</span><br><span class="line">            <span class="attr">text</span>: <span class="string">&quot;This is a toast&quot;</span>,</span><br><span class="line">            <span class="attr">style</span>: &#123;</span><br><span class="line">                <span class="attr">background</span>: <span class="string">&quot;green&quot;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).<span class="title function_">showToast</span>();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="呈現效果"><a href="#呈現效果" class="headerlink" title="呈現效果"></a>呈現效果</h3><p>筆者直接使用background屬性，不同三個按鈕，分別對應三個不同顏色</p>
+<img src="/2022/03/07/electron-series-vanillajs-toastifyjs/Untitled.png" class="" title="[ToastDemo]">
+
+<h2 id="詳細API設定"><a href="#詳細API設定" class="headerlink" title="詳細API設定"></a>詳細API設定</h2><p>參考其教學網站中的<code>API</code>設定，看完覺得滿簡單的，筆者這邊就不再贅述了，不過列一下筆者這次使用到的一些<code>API</code></p>
+<ul>
+<li><code>text</code>:toastr顯示字串</li>
+<li><code>style</code>: toastr的樣式，筆者這邊使用到<code>background</code>屬性，依照不同按鈕改變成不同顏色</li>
+<li><code>gravity</code>:筆者沒有特別設定，預設為「<code>top</code>」上方</li>
+<li><code>position</code>:筆者沒有特別設定，預設為「<code>right</code>」右邊</li>
+</ul>
+<p>因此以上設定來說，<code>toastr</code>會出現在右上方，並且套用筆者這邊設定好的背景顏色，詳細設定如下</p>
+<table>
+<thead>
+<tr>
+<th align="center">Option Key</th>
+<th align="center">type</th>
+<th align="center">Usage</th>
+<th align="center">Defaults</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">text</td>
+<td align="center">string</td>
+<td align="center">Message to be displayed in the toast</td>
+<td align="center">“Hi there!”</td>
+</tr>
+<tr>
+<td align="center">node</td>
+<td align="center">ELEMENT_NODE</td>
+<td align="center">Provide a node to be mounted inside the toast. node takes higher precedence over text</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">duration</td>
+<td align="center">number</td>
+<td align="center">Duration for which the toast should be displayed. -1 for permanent toast</td>
+<td align="center">3000</td>
+</tr>
+<tr>
+<td align="center">selector</td>
+<td align="center">string | ELEMENT_NODE</td>
+<td align="center">ShadowRoot</td>
+<td align="center">CSS Selector or Element Node on which the toast should be added</td>
+</tr>
+<tr>
+<td align="center">destination</td>
+<td align="center">URL string</td>
+<td align="center">URL to which the browser should be navigated on click of the toast</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">newWindow</td>
+<td align="center">boolean</td>
+<td align="center">Decides whether the destination should be opened in a new window or not</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">close</td>
+<td align="center">boolean</td>
+<td align="center">To show the close icon or not</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">gravity</td>
+<td align="center">“top” or “bottom”</td>
+<td align="center">To show the toast from top or bottom</td>
+<td align="center">“top”</td>
+</tr>
+<tr>
+<td align="center">position</td>
+<td align="center">“left” or “right”</td>
+<td align="center">To show the toast on left or right</td>
+<td align="center">“right”</td>
+</tr>
+<tr>
+<td align="center">backgroundColor</td>
+<td align="center">CSS background value</td>
+<td align="center">To be deprecated, use style.background option instead. Sets the background color of the toast</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">avatar</td>
+<td align="center">URL string</td>
+<td align="center">Image/icon to be shown before text</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">className</td>
+<td align="center">string</td>
+<td align="center">Ability to provide custom class name for further customization</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">stopOnFocus</td>
+<td align="center">boolean</td>
+<td align="center">To stop timer when hovered over the toast (Only if duration is set)</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">callback</td>
+<td align="center">Function</td>
+<td align="center">Invoked when the toast is dismissed</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">onClick</td>
+<td align="center">Function</td>
+<td align="center">Invoked when the toast is clicked</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">offset</td>
+<td align="center">Object</td>
+<td align="center">Ability to add some offset to axis</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">escapeMarkup</td>
+<td align="center">boolean</td>
+<td align="center">Toggle the default behavior of escaping HTML markup</td>
+<td align="center">true</td>
+</tr>
+<tr>
+<td align="center">style</td>
+<td align="center">object</td>
+<td align="center">Use the HTML DOM Style properties to add any style directly to toast</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">oldestFirst</td>
+<td align="center">boolean</td>
+<td align="center">Set the order in which toasts are stacked in page</td>
+<td align="center">true</td>
+</tr>
+</tbody></table>
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>藉由簡單的示範，沒有任何副作用的透過<code>vanilla js</code>撰寫方式實作出<code>Toastr</code>視窗彈跳，對筆者來說太感人了，基本上只要透過<code>style</code>中的<code>background</code>去搭配整體網站使用的色彩，就可以分別做出<code>成功</code>及<code>錯誤</code>的<code>Toastr</code>視窗。</p>
+<p>參考</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/apvarun/toastify-js">https://github.com/apvarun/toastify-js</a></li>
+</ul>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/23/electron-series-vanillajs-modal/" rel="bookmark">[Electron]vanilla js套件系列-Modal:modal-vanilla</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/23/electron-series-vanillajs-loading/" rel="bookmark">[Electron]vanilla js套件系列-Loading效果</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/11/23/electron-series-vanillajs-listjs/" rel="bookmark">[Electron]vanilla js套件系列-listjs</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/" title="[Electron]vanilla js套件系列-Toast:toastify-js">https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/electron/" rel="tag"><i class="fa fa-tag"></i> electron</a>
+              <a href="/tags/toastifyjs/" rel="tag"><i class="fa fa-tag"></i> toastifyjs</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/07/reader-series-eml/" rel="prev" title="[DotnetCore]Reader系列-EML檔案">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]Reader系列-EML檔案
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/10/clean-architecture-new/" rel="next" title="[DotnetCore]CleanArchitecture手做系列-建立專案">
+      [DotnetCore]CleanArchitecture手做系列-建立專案 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8BDemo%E5%B0%88%E6%A1%88"><span class="nav-number">2.1.</span> <span class="nav-text">建立Demo專案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A0%81%E9%9D%A2%E4%B8%AD%E8%BC%89%E5%85%A5Bootstrap5%E5%8F%8Atoastify-js"><span class="nav-number">2.2.</span> <span class="nav-text">頁面中載入Bootstrap5及toastify.js</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%92%B0%E5%AF%AB%E4%B8%BB%E8%A6%81%E7%A8%8B%E5%BC%8F%E5%85%A7%E5%AE%B9"><span class="nav-number">2.3.</span> <span class="nav-text">撰寫主要程式內容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%B8%E7%99%BC%E6%8C%89%E9%88%95"><span class="nav-number">2.3.1.</span> <span class="nav-text">觸發按鈕</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Button-Click%E4%BA%8B%E4%BB%B6-ShowToast"><span class="nav-number">2.3.2.</span> <span class="nav-text">Button Click事件:ShowToast</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%88%E7%8F%BE%E6%95%88%E6%9E%9C"><span class="nav-number">2.3.3.</span> <span class="nav-text">呈現效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A9%B3%E7%B4%B0API%E8%A8%AD%E5%AE%9A"><span class="nav-number">2.4.</span> <span class="nav-text">詳細API設定</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2022/03/07/electron-series-vanillajs-toastifyjs/",
+      identifier: "2022/03/07/electron-series-vanillajs-toastifyjs/",
+      title     : "[Electron]vanilla js套件系列-Toast:toastify-js",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>

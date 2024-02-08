@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"eugenesu.me","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"appID":"6HB7WJ937P","apiKey":"156b7b905281f5eb45088c8912199dd8","indexName":"eugenesu.me","hits":{"per_page":10},"labels":{"input_placeholder":"搜尋文章 & 內容","hits_empty":"找不到您輸入的關鍵字: ${query}","hits_stats":"找到了 ${hits} 筆結果，花了 ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4KL23MEF4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T4KL23MEF4');
+</script>
+
+  <meta name="description" content="前情提要為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發OnReceive事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出offset及size，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[DotnetCore]Socket程式實作-切割封包">
+<meta property="og:url" content="https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/index.html">
+<meta property="og:site_name" content="Eugene&#39;s Blog">
+<meta property="og:description" content="前情提要為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發OnReceive事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出offset及size，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-08-20T18:53:57.000Z">
+<meta property="article:modified_time" content="2023-02-28T16:27:51.870Z">
+<meta property="article:author" content="Eugene Su">
+<meta property="article:tag" content="dotnetcore">
+<meta property="article:tag" content="socket">
+<meta property="article:tag" content="netcoreserver">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+<meta name="google-site-verification" content="CMIp0l5IDhmuwH3Xq3YfSQ7ASUsrynXRrXG7HGr-5lw" />
+  <title>[DotnetCore]Socket程式實作-切割封包 | Eugene's Blog</title>
+  
+    <script>
+      function sendPageView() {
+        if (CONFIG.hostname !== location.hostname) return;
+        var uid = localStorage.getItem('uid') || (Math.random() + '.' + Math.random());
+        localStorage.setItem('uid', uid);
+        navigator.sendBeacon('https://www.google-analytics.com/collect', new URLSearchParams({
+          v  : 1,
+          tid: 'G-T4KL23MEF4',
+          cid: uid,
+          t  : 'pageview',
+          dp : encodeURIComponent(location.pathname)
+        }));
+      }
+      document.addEventListener('pjax:complete', sendPageView);
+      sendPageView();
+    </script>
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: 'ca-pub-3989271057955317',
+          enable_page_level_ads: true
+     });
+</script>
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Eugene's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Eugene's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container"></div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="algolia-results">
+  <div id="algolia-stats"></div>
+  <div id="algolia-hits"></div>
+  <div id="algolia-pagination" class="algolia-pagination"></div>
+</div>
+
+      
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/EugeneSu0515" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+      <meta itemprop="name" content="Eugene Su">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Eugene's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [DotnetCore]Socket程式實作-切割封包
+        </h1>
+
+        <div class="post-meta">
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+
+              <time title="創建時間：2021-08-21 02:53:57" itemprop="dateCreated datePublished" datetime="2021-08-21T02:53:57+08:00">2021-08-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新於</span>
+                <time title="修改時間：2023-03-01 00:27:51" itemprop="dateModified" datetime="2023-03-01T00:27:51+08:00">2023-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分類於</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/" itemprop="url" rel="index"><span itemprop="name">dotnetcore</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dotnetcore/socket/" itemprop="url" rel="index"><span itemprop="name">socket</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="閱讀次數">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-users"></i>
+              </span>
+              <span class="post-meta-item-text">閱讀次數：</span>
+              <span class="firestore-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="文章字數">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="所需閱讀時間">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+              <span>8 分鐘</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>為什麼會談到封包切割時做這個議題呢，底層元件基本上會有一個超大buffer去裝載收到的封包，並觸發<code>OnReceive</code>事件，到筆者這邊的底層元件則是最原始的封包，不過該套件也會順便丟出<code>offset</code>及<code>size</code>，讓筆者知道要怎麼取得這次的有意義的封包。接著可以想一個情境，試想你是一個Server，會有多個Client跟你進行連線，連線必會發生封包傳輸，底層元件使用一個超大buffer裝載封包，試想同時收到多個Client端的情求，如何辨別有效的每一段封包，這時封包切割邏輯就顯得重要了。</p>
+<span id="more"></span>
+<h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>以筆者剛出社會時也實作過<code>Socket</code>相關程式，基本上都會將封包設計成知道該<code>byte</code>內容為多少，表示該封包已結束，可以進行處理了，這只是一種方式，有千千萬萬種的設計。筆者目前的公司會設計封包開頭幾個<code>byte</code>位置的內容即整段<code>封包的長度</code>，取得這幾個<code>byte</code>位置的內容，讓筆者有一個切割封包的依據。</p>
+<h2 id="封包切割方法"><a href="#封包切割方法" class="headerlink" title="封包切割方法"></a>封包切割方法</h2><p>筆者就照這樣設計一個封包切割的方法，但是要注意一點是筆者撰寫的底層元件是要給各個需要<code>Socket</code>功能Client端使用，基本上不一應該寫死封包切割方法，這時<code>Func</code>就派上用場了，若外部有傳入<code>Func</code>實作方法就使用該方法，若無則使用底層元件已寫好的切割方法。先貼上底層元件的封包切割方法﹔</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt; CommSlicingByteFunc(List&lt;<span class="built_in">byte</span>&gt; source)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt;(<span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;(), <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>[]&gt;());</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (source.Count &gt; <span class="number">4</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> totalLength = <span class="built_in">int</span>.Parse(CoreHelper.Encoding.GetString(ByteExtensions.GetSubByte(source.ToArray(), <span class="number">0</span>, <span class="number">4</span>)));</span><br><span class="line">            _logger.Info(<span class="string">$&quot;[Total Length]: <span class="subst">&#123;totalLength&#125;</span>&quot;</span>);</span><br><span class="line">            <span class="keyword">while</span> (totalLength &lt;= source.Count)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> subBytes = <span class="keyword">new</span> <span class="built_in">byte</span>[totalLength];</span><br><span class="line">                System.Buffer.BlockCopy(source.ToArray(), <span class="number">0</span>, subBytes, <span class="number">0</span>, totalLength);</span><br><span class="line">                _logger.Info(<span class="string">$&quot;[Sub byte]: <span class="subst">&#123;CoreHelper.Encoding.GetString(subBytes)&#125;</span>&quot;</span>);</span><br><span class="line">                <span class="keyword">var</span> newQueue = ByteExtensions.GetSubByte(source.ToArray(), totalLength, source.Count - totalLength);</span><br><span class="line">                _logger.Info(<span class="string">$&quot;[newQueue]: <span class="subst">&#123;CoreHelper.Encoding.GetString(newQueue)&#125;</span>&quot;</span>);</span><br><span class="line">                source = <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;();</span><br><span class="line">                <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; newQueue.Length; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    source.Add(newQueue[i]);</span><br><span class="line">                &#125;</span><br><span class="line">                result.Item2.Add(subBytes);</span><br><span class="line">                <span class="keyword">if</span> (newQueue.Length &gt; <span class="number">4</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    totalLength = <span class="built_in">int</span>.Parse(CoreHelper.Encoding.GetString(ByteExtensions.GetSubByte(newQueue, <span class="number">0</span>, <span class="number">4</span>)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        _logger.Error(<span class="string">$&quot;[CommSlicingByteFunc]: <span class="subst">&#123;ex&#125;</span>&quot;</span>);</span><br><span class="line">        <span class="comment">//throw;</span></span><br><span class="line">        result.Item2.Add(source.ToArray());</span><br><span class="line">        source = <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> source)</span><br><span class="line">    &#123;</span><br><span class="line">        result.Item1.Add(item);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>簡單解釋一下上述程式碼，我會先把前四碼封包內容解讀出來當作是切割的依據，切割完的封包加入至回傳封包資料集中，剩下的封包中繼續使用該方法切割到不能切割為止，若切割有錯誤當作byte內容有誤，整包原封不動往外拋出。</p>
+<h2 id="套用外部傳入之封包切割方法"><a href="#套用外部傳入之封包切割方法" class="headerlink" title="套用外部傳入之封包切割方法"></a>套用外部傳入之封包切割方法</h2><p>筆者當初設計時有些參數是從外部傳入，類似像<code>Socket</code>設定，<code>IP、Port</code>等等資訊，將包裝成<code>IOptions</code>項目，筆者於<code>SocketServiceRegistration</code>中設定，這樣任何物件中只要注入對應的<code>IOptions</code>項目即可使用外部傳入之參數，筆者這邊使用的物件為</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">SocketSettingOption</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MainSocketSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> SubSocketSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> HubUrlSetting &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 封包切割方法</span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; ClientSliceByteFunc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; ServerSliceByteFunc &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> DisconnectAfterClientReceive &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AppId &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> AppName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ServiceName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> MonitorService &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="keyword">region</span> ---ForLogging---</span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;<span class="built_in">byte</span>[], Type&gt; GetHeaderResponseModelType &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        = (data) =&gt; &#123; <span class="keyword">return</span> <span class="keyword">typeof</span>(HeaderResponseModel); &#125;;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> ConnectionStringKey &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="string">&quot;FMTR&quot;</span>;</span><br><span class="line">    <span class="meta">#<span class="keyword">endregion</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用方式為建構式中注入，並判斷是否為null，若為非<code>null</code>則使用外部串入之切割方法</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BaseClient.cs</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> MyTcpClient _client;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">BaseClient</span>(<span class="params">IAnalyzeService analyzeService</span></span></span><br><span class="line"><span class="params"><span class="function">            , IOptions&lt;SocketSettingOption&gt; socketSettingOption</span></span></span><br><span class="line"><span class="params"><span class="function">            , IConfiguration config</span></span></span><br><span class="line"><span class="params"><span class="function">            , SocketSettingType socketSettingType</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// ...以上省略</span></span><br><span class="line">		<span class="keyword">if</span> (options.ClientSliceByteFunc != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">				<span class="comment">// 若為非null則指定該切割方法</span></span><br><span class="line">        _client.SliceByteFunc = options.ClientSliceByteFunc;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...以下省略</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// MyTcpClient.cs</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyTcpClient</span> : <span class="title">NetCoreServer.TcpClient</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// ...以上省略</span></span><br><span class="line"></span><br><span class="line">		<span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 切割byte內容</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> Func&lt;List&lt;<span class="built_in">byte</span>&gt;, Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;Byte[]&gt;&gt;&gt; SliceByteFunc;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">MyTcpClient</span>(<span class="params">IPAddress address, <span class="built_in">int</span> port</span></span></span><br><span class="line"><span class="params"><span class="function">            , IOptions&lt;SocketSettingOption&gt; options</span>) : <span class="title">base</span>(<span class="params">address, port</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (SliceByteFunc == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">						<span class="comment">// 若為null則使用預設的切割方法</span></span><br><span class="line">            SliceByteFunc = ByteExtensions.CommSlicingByteFunc;</span><br><span class="line">        &#125;</span><br><span class="line">        _socketSetting = options.Value;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Client端使用方式"><a href="#Client端使用方式" class="headerlink" title="Client端使用方式"></a>Client端使用方式</h2><p>Client端使用方式參考，若自己切割方法與底層元件不符則自己宣告切割邏輯。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">services.AddMySocket(option =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// ...以上省略</span></span><br><span class="line">    option.ClientSliceByteFunc = ((source) =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> result = <span class="keyword">new</span> Tuple&lt;List&lt;<span class="built_in">byte</span>&gt;, List&lt;<span class="built_in">byte</span>[]&gt;&gt;(<span class="keyword">new</span> List&lt;<span class="built_in">byte</span>&gt;(), <span class="keyword">new</span> List&lt;<span class="built_in">byte</span>[]&gt;());</span><br><span class="line">        result.Item2.Add(source.ToArray());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// ...以下省略 </span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h1><p>筆者自從會使用<code>Func、Event、Action</code>這三個資料型別後，真的是有一種挖到寶的感覺，尤其是筆者偏向撰寫底層元件為主，為底層元件的邏輯處理更有彈性，且具有擴充性。</p>
+<hr>
+<div style="width: fit-content;
+          undefined
+          undefined
+          padding:8px">
+     <a target="_blank" rel="noopener" href="https://ko-fi.com/eugenesu0515">
+       <svg role="img" style="width: 24px; height:24px; fill:#000000">
+         <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"></path>
+       </svg>
+    Buy me a coffee
+     </a>
+    </div>
+    </div>
+
+    
+    
+    
+      <div>
+    <script type="text/javascript">
+      document.write(
+        "<iframe scrolling='no' frameborder='0' style='height: 212px; width: 100%;' " +
+        "sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation' " +
+        "src='https://button.like.co/in/embed/eugenesu0515/button?referrer=" +
+        encodeURIComponent(location.href.split("?")[0].split("#")[0]) + "'></iframe>");
+    </script>
+</div>
+
+      
+  <div class="popular-posts-header">相關文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/08/21/dotnetcore-socket-analyze/" rel="bookmark">[DotnetCore]Socket程式實作-解析封包</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/08/21/dotnetcore-socket/" rel="bookmark">[DotnetCore]Socket程式實作</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2021/09/01/dotnetcore-series/" rel="bookmark">DotnetCore系列文章目錄</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/11/27/dotnetcore-model-binding-middleware/" rel="bookmark">[DotnetCore]ModelBindingMiddleware</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/2023/11/27/dotnetcore-refit-api-gateway/" rel="bookmark">[DotnetCore]Refit:類ApiGateway實作</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>作者： </strong>Eugene Su
+  </li>
+  <li class="post-copyright-link">
+    <strong>文章連結：</strong>
+    <a href="https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/" title="[DotnetCore]Socket程式實作-切割封包">https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版權聲明： </strong>本網誌所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 許可協議。轉載請註明出處！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/dotnetcore/" rel="tag"><i class="fa fa-tag"></i> dotnetcore</a>
+              <a href="/tags/socket/" rel="tag"><i class="fa fa-tag"></i> socket</a>
+              <a href="/tags/netcoreserver/" rel="tag"><i class="fa fa-tag"></i> netcoreserver</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/21/dotnetcore-socket-analyze/" rel="prev" title="[DotnetCore]Socket程式實作-解析封包">
+      <i class="fa fa-chevron-left"></i> [DotnetCore]Socket程式實作-解析封包
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/08/21/dotnetcore-batch/" rel="next" title="[DotnetCore]Batch檔案執行及追縱">
+      [DotnetCore]Batch檔案執行及追縱 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E6%83%85%E6%8F%90%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A7%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">內容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%81%E5%8C%85%E5%88%87%E5%89%B2%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.</span> <span class="nav-text">封包切割方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A5%97%E7%94%A8%E5%A4%96%E9%83%A8%E5%82%B3%E5%85%A5%E4%B9%8B%E5%B0%81%E5%8C%85%E5%88%87%E5%89%B2%E6%96%B9%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">套用外部傳入之封包切割方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Client%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">2.3.</span> <span class="nav-text">Client端使用方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B5%90%E8%AB%96"><span class="nav-number">3.</span> <span class="nav-text">結論</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Eugene Su"
+      src="https://en.gravatar.com/userimage/116972281/ccb15211915a43f8a92f4d254131415c.png">
+  <p class="site-author-name" itemprop="name">Eugene Su</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">56</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/eugenesu0515" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;eugenesu0515" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+
+<div class="links-of-blogroll motion-element links-of-blogroll-block">
+<br>
+<div class="links-of-blogroll-title">
+    <!-- 設定你要的fa fa icon-->
+    <i class="fa fa-history fa-" aria-hidden="true"></i>
+    近期文章
+</div>
+<ul class="links-of-blogroll-list">
+    <!---->
+    
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:25:38+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-model-binding-middleware/" title="[DotnetCore]ModelBindingMiddleware">[DotnetCore]ModelBindingMiddleware</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:21:31+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-api-gateway/" title="[DotnetCore]Refit:類ApiGateway實作">[DotnetCore]Refit:類ApiGateway實作</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:15:51+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/fluent-validation-new/" title="[DotnetCore]FluentValidation再續前緣">[DotnetCore]FluentValidation再續前緣</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T01:11:15+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-polly/" title="[DotnetCore]Refit:Polly應用">[DotnetCore]Refit:Polly應用</a>
+      <br>
+    </li>
+    
+    <li class='pull-left' style="white-space:normal; text-align:left" >
+      <time title="創建時間" itemprop="dateCreated datePublished" datetime="2023-11-27T00:52:37+08:00">
+        11/27
+      </time>
+      <a href="/2023/11/27/dotnetcore-refit-http-handler/" title="[DotnetCore]Refit:HttpMessageHandler應用">[DotnetCore]Refit:HttpMessageHandler應用</a>
+      <br>
+    </li>
+    
+</ul>
+</div>
+
+      </div>
+
+      <!--google_adsense-->
+      
+      <!--/google_adsense-->
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Eugene Su</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="總字數">389k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">11:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+  <div class="addthis_inline_share_toolbox">
+    <script src="//s7.addthis.com/js/300/addthis_widget.js#pubid=61237a4a7011814e" async="async"></script>
+  </div>
+
+        
+
+
+
+
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey   : 'AIzaSyBm9TEypw1g4hyKYu3J3e6jZnP3f2ymjdU',
+      projectId: 'eugenesu-github-io'
+    });
+
+    function getCount(doc, increaseCount) {
+      // IncreaseCount will be false when not in article page
+      return doc.get().then(d => {
+        var count = 0;
+        if (!d.exists) { // Has no data, initialize count
+          if (increaseCount) {
+            doc.set({
+              count: 1
+            });
+            count = 1;
+          }
+        } else { // Has data
+          count = d.data().count;
+          if (increaseCount) {
+            // If first view this article
+            doc.set({ // Increase count
+              count: count + 1
+            });
+            count++;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    function appendCountTo(el) {
+      return count => {
+        el.innerText = count;
+      }
+    }
+  </script>
+  <script data-pjax>
+    (function() {
+      var db = firebase.firestore();
+      var articles = db.collection('articles');
+
+      if (CONFIG.page.isPost) { // Is article page
+        var title = document.querySelector('.post-title').innerText.trim();
+        var doc = articles.doc(title);
+        var increaseCount = CONFIG.hostname === location.hostname;
+        if (localStorage.getItem(title)) {
+          increaseCount = false;
+        } else {
+          // Mark as visited
+          localStorage.setItem(title, true);
+        }
+        getCount(doc, increaseCount).then(appendCountTo(document.querySelector('.firestore-visitors-count')));
+      } else if (CONFIG.page.isHome) { // Is index page
+        var promises = [...document.querySelectorAll('.post-title')].map(element => {
+          var title = element.innerText.trim();
+          var doc = articles.doc(title);
+          return getCount(doc);
+        });
+        Promise.all(promises).then(counts => {
+          var metas = document.querySelectorAll('.firestore-visitors-count');
+          counts.forEach((val, idx) => {
+            appendCountTo(metas[idx])(val);
+          });
+        });
+      }
+    })();
+  </script>
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/canvas_lines.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
+<script src="/js/algolia-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqusjs.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/disqusjs@1/dist/disqus.js', () => {
+    window.dsqjs = new DisqusJS({
+      api       : '' || 'https://disqus.com/api/',
+      apikey    : 'uxTYr1Dobuz4A0lzWDuAjXrch4CQS1zTNIiuT7OHTPI60ZaXBG6dvuYCy6zfTRGg',
+      shortname : 'https-eugenesu-me',
+      url       : "https://eugenesu.me/2021/08/21/dotnetcore-socket-slicing/",
+      identifier: "2021/08/21/dotnetcore-socket-slicing/",
+      title     : "[DotnetCore]Socket程式實作-切割封包",
+    });
+  }, window.DisqusJS);
+});
+</script>
+
+    </div>
+</body>
+</html>
