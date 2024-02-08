@@ -629,10 +629,10 @@
     <link href="https://eugenesu.me/2022/05/10/clean-architecture-new/"/>
     <id>https://eugenesu.me/2022/05/10/clean-architecture-new/</id>
     <published>2022-05-10T12:36:20.000Z</published>
-    <updated>2023-02-28T16:26:31.730Z</updated>
+    <updated>2024-02-08T17:58:28.419Z</updated>
     
     
-    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是以&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture%E7%9A%84%60template%60%E6%9E%B6%E6%A7%8B%EF%BC%8C%E5%9B%A0%60template%60%E7%94%A2%E5%87%BA%E4%B9%8B%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E5%8C%85%E5%90%AB%60Identity&quot;&gt;https://github.com/jasontaylordev/CleanArchitecture的`template`架構，因`template`產出之專案結構包含`Identity&lt;/a&gt; Server&lt;code&gt;，還有前端頁面等不需要的專案，因此筆者想要仿照該&lt;/code&gt;template&lt;code&gt;架構，自己手動建立純&lt;/code&gt;API&lt;code&gt;架構，順便熟悉一下其&lt;/code&gt;Clean Architecture`的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。&lt;/p&gt;</summary>
+    <summary type="html">&lt;h1 id=&quot;前情提要&quot;&gt;&lt;a href=&quot;#前情提要&quot; class=&quot;headerlink&quot; title=&quot;前情提要&quot;&gt;&lt;/a&gt;前情提要&lt;/h1&gt;&lt;p&gt;筆者這篇主要是以&lt;a href=&quot;https://github.com/jasontaylordev/CleanArchitecture&quot;&gt;CleanArchitecture&lt;/a&gt;的&lt;code&gt;template&lt;/code&gt;架構，因&lt;code&gt;template&lt;/code&gt;產出之專案結構包含&lt;code&gt;Identity Server&lt;/code&gt;，還有前端頁面等不需要的專案，因此筆者想要仿照該&lt;code&gt;template&lt;/code&gt;架構，自己手動建立純&lt;code&gt;API&lt;/code&gt;架構，順便熟悉一下其&lt;code&gt;Clean Architecture&lt;/code&gt;的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。&lt;/p&gt;</summary>
     
     
     

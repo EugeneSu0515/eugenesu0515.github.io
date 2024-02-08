@@ -2255,7 +2255,7 @@
   <entry>
     <title>[DotnetCore]CleanArchitecture手做系列-建立專案</title>
     <url>/2022/05/10/clean-architecture-new/</url>
-    <content><![CDATA[<h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者這篇主要是以<a href="https://github.com/jasontaylordev/CleanArchitecture%E7%9A%84%60template%60%E6%9E%B6%E6%A7%8B%EF%BC%8C%E5%9B%A0%60template%60%E7%94%A2%E5%87%BA%E4%B9%8B%E5%B0%88%E6%A1%88%E7%B5%90%E6%A7%8B%E5%8C%85%E5%90%AB%60Identity">https://github.com/jasontaylordev/CleanArchitecture的`template`架構，因`template`產出之專案結構包含`Identity</a> Server<code>，還有前端頁面等不需要的專案，因此筆者想要仿照該</code>template<code>架構，自己手動建立純</code>API<code>架構，順便熟悉一下其</code>Clean Architecture`的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。</p>
+    <content><![CDATA[<h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>筆者這篇主要是以<a href="https://github.com/jasontaylordev/CleanArchitecture">CleanArchitecture</a>的<code>template</code>架構，因<code>template</code>產出之專案結構包含<code>Identity Server</code>，還有前端頁面等不需要的專案，因此筆者想要仿照該<code>template</code>架構，自己手動建立純<code>API</code>架構，順便熟悉一下其<code>Clean Architecture</code>的專案結構，才能知己知彼，百戰百勝阿。此篇就以筆者手動建立的過程，筆者懶得截圖，主要以指令碼的方式進行相關建置作業。</p>
 <span id="more"></span>
 
 <h1 id="內容"><a href="#內容" class="headerlink" title="內容"></a>內容</h1><p>筆者這邊使用指令的方式手動建立相關專案及相依性並安裝套件，並使用<code>Visual Studio Code</code>撰寫其內容，一開始不免俗地放一張筆者參考的<code>template</code>專案的架構圖</p>
